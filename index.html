@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💍%3C/text%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>订婚卡 💍</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+<style>
+:root{
+  --note-a:#D6F3EA;--note-a-ink:#1F4D42;
+  --bg:#FFE6EE;--ink:#5B2338;--panel:#FFFFFF;--accent:#FF4D7E;--accent-deep:#D93066;--muted:#A8637C;
+  --track:#FFD0DD;--note:#FFF2A6;--note-ink:#5B4A12;--line:rgba(91,35,56,.16);--rim:#FFFFFF;--shadow:rgba(91,35,56,.14);
+  --display:"ZCOOL KuaiLe","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --text:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--note-a:#1F3B35;--note-a-ink:#CFF3E6;--bg:#2A1520;--ink:#FFE3EC;--panel:#3A1E2C;--accent:#FF6F98;--accent-deep:#C9426C;--muted:#D99AB0;
+    --track:#4F2738;--note:#4A4020;--note-ink:#FFF0B8;--line:rgba(255,227,236,.16);--rim:#5A2B3F;--shadow:rgba(0,0,0,.3);color-scheme:dark;}
+}
+:root[data-theme="dark"]{--note-a:#1F3B35;--note-a-ink:#CFF3E6;--bg:#2A1520;--ink:#FFE3EC;--panel:#3A1E2C;--accent:#FF6F98;--accent-deep:#C9426C;--muted:#D99AB0;
+  --track:#4F2738;--note:#4A4020;--note-ink:#FFF0B8;--line:rgba(255,227,236,.16);--rim:#5A2B3F;--shadow:rgba(0,0,0,.3);color-scheme:dark;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+*,*::before,*::after{box-sizing:inherit;}
+html,body{margin:0;min-height:100%;}
+body{background-color:var(--bg);background-repeat:repeat;color:var(--ink);font-family:var(--text);-webkit-tap-highlight-color:transparent;}
+main{max-width:440px;margin:0 auto;padding:18px 16px 44px;}
+button{font:inherit;}
+[hidden]{display:none!important;}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
+
+/* header */
+.hd{text-align:center;}
+.names{font-family:var(--display);font-size:30px;color:var(--ink);background:none;border:0;cursor:pointer;padding:4px 10px;display:inline-flex;gap:10px;align-items:baseline;border-radius:12px;}
+.names .amp{color:var(--accent);font-size:26px;}
+.sub{margin:2px 0 0;color:var(--muted);font-size:14px;}
+
+/* ring */
+.rg-wrap{position:relative;width:min(290px,80vw);margin:14px auto 4px;aspect-ratio:1;}
+.rg-svg{width:100%;height:100%;display:block;overflow:visible;}
+.rg-track{fill:none;stroke:var(--track);stroke-width:18;}
+.rg-bar{fill:none;stroke:var(--accent);stroke-width:18;stroke-linecap:round;transform:rotate(-90deg);transform-origin:150px 150px;transition:stroke-dashoffset .6s cubic-bezier(.3,1.2,.5,1);}
+.rg-center{position:absolute;inset:0;display:grid;place-content:center;text-align:center;pointer-events:none;}
+.rg-num{font-family:var(--display);font-size:72px;line-height:1;color:var(--accent);}
+.rg-num small{font-size:22px;color:var(--muted);}
+.rg-left{margin-top:6px;font-size:15px;color:var(--muted);}
+.hearts{display:flex;justify-content:center;gap:4px;font-size:21px;margin:2px 0 4px;}
+
+/* actions */
+.actions{display:grid;grid-template-columns:1fr 1.7fr 1fr;gap:10px;margin-top:16px;}
+.btn{font-size:15px;padding:13px 6px;border:0;cursor:pointer;color:var(--ink);background:var(--panel);border-radius:18px;box-shadow:0 4px 12px var(--shadow);touch-action:manipulation;}
+.btn.main{font-family:var(--display);font-size:22px;background:var(--accent);color:#fff;box-shadow:0 5px 0 var(--accent-deep);}
+.btn:active{transform:translateY(2px);}
+.btn.main:active{box-shadow:0 3px 0 var(--accent-deep);}
+.btn:disabled{opacity:.45;cursor:default;transform:none;}
+.btn.sm{padding:9px 14px;font-size:15px;flex:none;border-radius:12px;}
+#resetBtn.arm{background:var(--accent);color:#fff;}
+
+/* sticky note */
+.note{background:var(--note);color:var(--note-ink);padding:14px 16px;transform:rotate(-1.2deg);font-family:var(--display);font-size:17px;line-height:1.6;box-shadow:0 6px 14px var(--shadow);border-radius:2px;margin-top:24px;}
+
+.greet{margin:0 0 2px;font-size:14px;color:var(--muted);}
+.meta{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 14px;margin:6px 0 0;font-size:12px;color:var(--muted);letter-spacing:.04em;}
+.meta span+span::before{content:"";display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:.5;margin-right:14px;vertical-align:middle;position:relative;top:-1px;}
+
+/* story */
+.story{background:var(--panel);border-radius:18px;padding:18px 18px 14px;box-shadow:0 6px 16px var(--shadow);}
+.ch-top{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--muted);}
+.ch-count{font-family:var(--display);font-size:16px;color:var(--accent);}
+.ch-name{font-family:var(--display);font-size:32px;line-height:1.3;margin-top:2px;}
+.ch-text{margin:6px 0 14px;font-size:14px;line-height:1.75;color:var(--ink);opacity:.86;}
+.ch-write{display:block;margin:-6px 0 14px;padding:0;background:none;border:0;color:var(--accent);font-size:13px;cursor:pointer;}
+.bar{height:12px;border-radius:999px;background:var(--track);overflow:hidden;}
+.bar i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--accent),#FF8FB0);transition:width .6s cubic-bezier(.3,1.2,.5,1);}
+.bar.thin{height:6px;}
+.ch-pct{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--muted);margin-top:6px;}
+.ch-pct b{font-family:var(--display);font-weight:400;font-size:15px;color:var(--accent);}
+.main-line{margin-top:14px;padding-top:12px;border-top:1.5px dashed var(--line);}
+.main-line .ch-pct{margin:0 0 6px;}
+.ch-toggle{display:block;margin:12px auto 0;background:none;border:0;color:var(--accent);font-size:14px;cursor:pointer;padding:6px 10px;}
+.ch-list{list-style:none;margin:8px 0 0;padding:0;}
+.ch-list li{display:grid;grid-template-columns:28px 1fr;gap:8px;padding:10px 0;border-top:1.5px dashed var(--line);}
+.ch-list .ic{font-size:16px;text-align:center;padding-top:2px;}
+.ch-list .tt{font-family:var(--display);font-size:16px;}
+.ch-list .tt small{font-family:var(--text);font-size:12px;color:var(--muted);margin-left:6px;}
+.ch-list .ds{font-size:13px;color:var(--muted);line-height:1.6;margin-top:2px;}
+.ch-list li.lock .tt{opacity:.55;}
+.ch-list li.cur .tt{color:var(--accent);}
+
+/* footer */
+.foot{margin-top:36px;text-align:center;font-size:12px;color:var(--muted);line-height:1.8;}
+.foot p{margin:0;}
+.ver{margin-top:4px;opacity:.7;letter-spacing:.06em;}
+#footDays{font-family:var(--display);font-size:15px;color:var(--accent);margin-bottom:4px;}
+
+/* notes wall */
+.compose{background:var(--panel);border-radius:18px;padding:14px;box-shadow:0 6px 16px var(--shadow);}
+.compose textarea{margin-top:0;height:84px;}
+.emo{display:flex;flex-wrap:wrap;gap:2px;margin:8px 0 0;}
+.emo button{font-size:20px;background:none;border:0;padding:4px 5px;cursor:pointer;border-radius:8px;}
+.emo button:active{background:var(--track);}
+.compose-row{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.compose-row .main{margin-left:auto;font-size:17px;}
+.mailchk{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:4px;cursor:pointer;}
+.mailchk input{width:auto;flex:none;}
+.drawprev{position:relative;width:96px;margin-top:10px;}
+.drawprev img{width:96px;height:96px;border-radius:10px;border:1.5px solid var(--track);background:#fff;display:block;}
+.drawprev button{position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;border:0;background:var(--accent);color:#fff;cursor:pointer;font-size:12px;padding:0;}
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:18px 12px;margin-top:22px;align-items:start;padding:0 4px;}
+.nt{padding:12px 12px 8px;border-radius:3px;box-shadow:0 6px 14px var(--shadow);transform:rotate(var(--r));position:relative;min-width:0;}
+.nt.from-a{background:var(--note-a);color:var(--note-a-ink);}
+.nt.from-b{background:var(--note);color:var(--note-ink);}
+.nt-head{display:flex;justify-content:space-between;gap:6px;font-size:11px;opacity:.75;margin-bottom:6px;}
+.nt-text{font-family:var(--display);font-size:16px;line-height:1.5;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;}
+.nt img{display:block;width:100%;border-radius:6px;margin-top:6px;background:#fff;}
+.nt .new{position:absolute;top:-9px;left:-6px;background:var(--accent);color:#fff;font-size:10px;padding:2px 7px;border-radius:999px;}
+.nt-del{display:block;margin:6px 0 0 auto;font-size:11px;background:none;border:0;color:inherit;opacity:.55;cursor:pointer;padding:2px 6px;border-radius:999px;}
+.nt-del.arm{opacity:1;background:var(--accent);color:#fff;}
+#dwCanvas{display:block;width:100%;max-width:340px;aspect-ratio:1;margin:12px auto 10px;background:#fff;border-radius:14px;border:1.5px solid var(--track);touch-action:none;cursor:crosshair;}
+.dw-tools{display:flex;justify-content:center;gap:12px;}
+.dw-c{width:30px;height:30px;border-radius:50%;border:3px solid transparent;cursor:pointer;padding:0;box-shadow:0 0 0 1px var(--line);}
+.dw-c[aria-pressed="true"]{border-color:var(--panel);box-shadow:0 0 0 2px var(--ink);}
+.fab{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:12px;z-index:25;border:0;border-radius:999px;background:var(--accent);color:#fff;padding:9px 14px;font-size:14px;box-shadow:0 6px 16px var(--shadow);cursor:pointer;animation:pulse 1.6s ease-in-out infinite;}
+@keyframes pulse{50%{transform:scale(1.06)}}
+.lock{position:fixed;inset:0;z-index:60;background:var(--bg);display:grid;place-items:center;text-align:center;padding:24px;}
+.lock-ic{font-size:48px;}
+.lock p{font-family:var(--display);font-size:18px;color:var(--ink);max-width:300px;line-height:1.6;}
+.me-label{font-family:var(--display);font-size:17px;flex:1;}
+.col{display:flex;flex-direction:column;gap:8px;}
+
+/* love */
+.love{text-align:center;margin-top:18px;}
+.love-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+.love-btn{background:none;border:1.5px dashed var(--accent);color:var(--accent);border-radius:999px;padding:9px 16px;font-family:var(--display);font-size:16px;cursor:pointer;}
+.love-ans{margin:12px auto 0;max-width:320px;background:var(--panel);color:var(--ink);border-radius:16px;padding:10px 14px;font-family:var(--display);font-size:17px;line-height:1.5;box-shadow:0 4px 12px var(--shadow);position:relative;}
+.love-ans::before{content:"";position:absolute;top:-7px;left:50%;margin-left:-7px;border:7px solid transparent;border-top:0;border-bottom-color:var(--panel);}
+.love-ans.pop{animation:pop2 .35s cubic-bezier(.3,1.6,.5,1);}
+@keyframes pop2{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+
+/* letter */
+.letter{background:var(--panel);border-radius:4px;padding:18px 20px 16px;box-shadow:0 6px 14px var(--shadow);transform:rotate(.6deg);
+  background-image:repeating-linear-gradient(to bottom,transparent 0 31px,var(--track) 31px 32px);background-position:0 14px;}
+.letter p{margin:0;font-family:var(--display);font-size:16px;line-height:32px;}
+.letter .to{color:var(--accent);}
+.letter .sign{text-align:right;color:var(--muted);}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);background:var(--panel);border-radius:16px;margin-top:22px;padding:14px 4px;text-align:center;}
+.stats div+div{border-left:1.5px dashed var(--line);}
+.stats b{display:block;font-family:var(--display);font-size:22px;font-weight:400;color:var(--accent);line-height:1.3;}
+.stats span{font-size:12px;color:var(--muted);}
+
+h2{font-family:var(--display);font-weight:400;font-size:21px;margin:32px 0 14px;text-decoration:underline wavy var(--accent);text-underline-offset:7px;text-decoration-thickness:1.5px;}
+
+/* stickers */
+.stickers{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 6px;}
+.stk{text-align:center;background:none;border:0;padding:0;color:inherit;cursor:pointer;font:inherit;}
+.stk .face{width:58px;height:58px;margin:0 auto;border-radius:50%;background:var(--panel);display:grid;place-items:center;font-size:30px;box-shadow:0 0 0 3px var(--rim),0 5px 12px var(--shadow);transform:rotate(var(--r));}
+.stk.locked .face{background:transparent;box-shadow:none;border:2px dashed var(--line);font-size:24px;filter:grayscale(1);opacity:.4;transform:none;}
+.stk .nm{font-size:13px;margin-top:8px;}
+.stk .dt{font-size:11px;color:var(--muted);margin-top:1px;}
+.stk.fresh .face{animation:pop .55s cubic-bezier(.3,1.6,.5,1);}
+@keyframes pop{0%{transform:scale(.2) rotate(var(--r))}100%{transform:scale(1) rotate(var(--r))}}
+
+/* log */
+.log{list-style:none;margin:0;padding:0;background:var(--panel);border-radius:16px;overflow:hidden;}
+.log li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:12px 12px 12px 14px;border-top:1.5px dashed var(--line);}
+.log li:first-child{border-top:0;}
+.lg-no{font-family:var(--display);color:var(--accent);font-size:18px;min-width:3.4em;}
+.lg-body{text-align:left;background:none;border:0;padding:2px 0;color:inherit;cursor:pointer;min-width:0;}
+.lg-day{font-size:14px;}
+.lg-note{font-size:13px;color:var(--muted);margin-top:2px;overflow-wrap:anywhere;}
+.lg-del{font-size:12px;border:0;background:none;color:var(--muted);cursor:pointer;padding:6px 8px;border-radius:999px;}
+.lg-del.arm{color:#fff;background:var(--accent);}
+.more{display:block;margin:10px auto 0;background:none;border:0;color:var(--accent);cursor:pointer;font-size:14px;padding:8px;}
+.empty{color:var(--muted);font-size:14px;text-align:center;background:var(--panel);border-radius:16px;padding:18px;margin:0;}
+
+.fine{margin:8px 0 0;text-align:center;font-size:12px;color:var(--muted);}
+
+/* rules */
+.rules{position:relative;background:var(--panel);border-radius:16px;padding:16px 18px 18px;border:1.5px dashed var(--accent);}
+.rules ol{margin:0;padding-left:1.3em;font-size:14px;line-height:1.8;}
+.rules b{font-weight:600;color:var(--accent);}
+.final-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;}
+.rules .final{margin:0;font-family:var(--display);font-size:17px;line-height:1.5;color:var(--ink);}
+.rule6{color:var(--accent);}
+#rgRing{cursor:pointer;}
+.seal.stamp{animation:sealStamp .45s cubic-bezier(.3,1.6,.5,1);}
+@keyframes sealStamp{0%{transform:scale(1.7) rotate(-14deg);opacity:.2}100%{transform:scale(1) rotate(-14deg);opacity:.85}}
+.burst{position:fixed;pointer-events:none;font-size:20px;z-index:17;animation:burst .85s ease-out forwards;}
+@keyframes burst{to{transform:translate(var(--dx),var(--dy)) scale(.6);opacity:0}}
+.seal{flex:none;background:none;cursor:pointer;padding:0;width:64px;height:64px;border:2.5px solid #D7263D;color:#D7263D;border-radius:50%;
+  display:grid;place-items:center;text-align:center;font-family:var(--display);font-size:13px;line-height:1.15;transform:rotate(-14deg);opacity:.85;}
+
+/* settings */
+.field{background:var(--panel);border-radius:16px;padding:12px 14px;margin-bottom:10px;}
+.field label,.field .lb{display:block;font-size:13px;color:var(--muted);margin-bottom:8px;}
+.row{display:flex;gap:8px;align-items:center;}
+.row .amp{color:var(--accent);}
+input{font:inherit;font-size:16px;padding:9px 10px;border-radius:12px;border:1.5px solid var(--track);background:var(--bg);color:var(--ink);min-width:0;flex:1;width:100%;}
+.ro{margin:16px 0 0;font-size:14px;color:var(--muted);text-align:center;}
+
+/* sheets */
+.sheet{position:fixed;inset:0;background:rgba(40,10,25,.45);display:none;align-items:flex-end;justify-content:center;z-index:30;}
+.sheet.open{display:flex;}
+.sheet-box{background:var(--panel);color:var(--ink);width:100%;max-width:440px;border-radius:22px 22px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom,0px));animation:up .25s ease-out;}
+@keyframes up{from{transform:translateY(30px);opacity:.4}}
+.sheet-box h3{font-family:var(--display);font-weight:400;font-size:22px;margin:0;}
+.sheet-box p{margin:4px 0 0;font-size:13px;color:var(--muted);}
+.moods{display:flex;gap:6px;justify-content:space-between;margin:16px 0 12px;}
+.mood{font-size:24px;width:46px;height:46px;border-radius:50%;border:2px solid transparent;background:var(--bg);cursor:pointer;padding:0;}
+.mood[aria-pressed="true"]{border-color:var(--accent);background:var(--track);}
+.row2{display:grid;grid-template-columns:1fr 1.6fr;gap:10px;margin-top:14px;}
+.row2 .btn{box-shadow:none;background:var(--bg);}
+.row2 .btn.main{background:var(--accent);box-shadow:0 4px 0 var(--accent-deep);font-size:19px;}
+textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:1.5px solid var(--track);border-radius:12px;resize:none;background:var(--bg);color:var(--ink);margin-top:10px;}
+
+/* toast & fx */
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;pointer-events:none;
+  background:rgba(40,12,25,.92);color:#fff;padding:11px 18px;border-radius:999px;font-size:15px;max-width:88vw;text-align:center;transition:opacity .25s,transform .25s;z-index:40;}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+.float{position:fixed;pointer-events:none;font-family:var(--display);font-size:24px;color:var(--accent);animation:floatUp .8s ease-out forwards;z-index:15;}
+@keyframes floatUp{to{transform:translateY(-60px);opacity:0}}
+.confetti{position:fixed;top:-40px;pointer-events:none;font-size:24px;animation:fall linear forwards;z-index:16;}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<main>
+  <header class="hd">
+    <p class="greet" id="greet"></p>
+    <button class="names" id="namesBtn" aria-label="修改名字"><span id="nameA">弟弟</span><span class="amp">♡</span><span id="nameB">姐姐</span></button>
+    <p class="meta"><span>订婚卡 No.0001</span><span>限量 1 张</span><span>有效期：直到订婚那天</span></p>
+    <p class="sub" id="subLine">订婚进度手账</p>
+  </header>
+
+  <div class="rg-wrap">
+    <svg class="rg-svg" viewBox="0 0 300 300" aria-hidden="true">
+      <circle class="rg-track" cx="150" cy="150" r="120"/>
+      <circle class="rg-bar" id="rgBar" cx="150" cy="150" r="120"/>
+      <text id="rgRing" x="150" y="30" font-size="30" text-anchor="middle" dominant-baseline="central">💍</text>
+    </svg>
+    <div class="rg-center">
+      <div class="rg-num"><span id="numVal">0</span><small id="numOf">/100</small></div>
+      <div class="rg-left" id="rgLeft">还差 100 次</div>
+    </div>
+  </div>
+  <div class="hearts" id="hearts" aria-hidden="true"></div>
+
+  <div class="actions" id="actions">
+    <button class="btn" id="undoBtn">撤销</button>
+    <button class="btn main" id="plusBtn">+1 ♡</button>
+    <button class="btn" id="copyBtn">复制</button>
+  </div>
+
+  <h2>主线剧情</h2>
+  <section class="story" aria-label="主线剧情">
+    <div class="ch-top"><span class="ch-no" id="chNo">序章</span><span class="ch-count" id="chCount">0 / 10</span></div>
+    <div class="ch-name" id="chName">初见</div>
+    <p class="ch-text" id="chText"></p>
+    <button class="ch-write" id="chWrite" type="button">✎ 用你们的故事写这一章</button>
+    <div class="bar"><i id="chBar"></i></div>
+    <div class="ch-pct"><span>本章进度</span><b id="chPct">0%</b></div>
+    <div class="main-line">
+      <div class="ch-pct"><span>主线进度</span><b><span id="mainCount">0 / 100</span>　<span id="mainPct">0%</span></b></div>
+      <div class="bar thin"><i id="mainBar"></i></div>
+    </div>
+    <button class="ch-toggle" id="chToggle" type="button" aria-expanded="false">查看全部章节</button>
+    <ol class="ch-list" id="chList" hidden></ol>
+  </section>
+
+  <div class="note" id="note"></div>
+
+  <div class="love">
+    <div class="love-row">
+      <button class="love-btn" id="loveBtn" type="button">💌 你爱我吗？</button>
+      <button class="love-btn" id="hugBtn" type="button">🫂 要抱抱</button>
+    </div>
+    <p class="love-ans" id="loveAns" hidden></p>
+  </div>
+
+  <h2 id="notesTitle">小纸条</h2>
+  <section class="wall" id="wall" aria-label="小纸条">
+    <div class="compose">
+      <textarea id="ntText" maxlength="300" placeholder="写一张小纸条……"></textarea>
+      <div class="emo" id="ntEmo"></div>
+      <div class="drawprev" id="ntPrev" hidden><img id="ntImg" alt="涂鸦预览"><button type="button" id="ntImgDel" aria-label="去掉涂鸦">✕</button></div>
+      <div class="compose-row">
+        <button class="btn sm" id="ntDraw" type="button">🎨 涂鸦</button>
+        <label class="mailchk"><input type="checkbox" id="ntMail"> 📧 同时寄到邮箱</label>
+        <button class="btn main sm" id="ntSend" type="button">贴上去</button>
+      </div>
+    </div>
+    <div class="notes" id="notes"></div>
+    <p class="empty" id="notesEmpty">还没有纸条，写第一张吧</p>
+  </section>
+
+  <section class="stats" aria-label="统计">
+    <div><b id="stDays">—</b><span>开始第几天</span></div>
+    <div><b id="stStreak">—</b><span>最长连续天数</span></div>
+    <div><b id="stEta">—</b><span>预计订婚日</span></div>
+  </section>
+  <p class="fine">预计日期仅供参考，以发行方心情为准</p>
+
+  <h2>成就贴纸</h2>
+  <div class="stickers" id="stickers"></div>
+
+  <h2>我们的记录</h2>
+  <ol class="log" id="log"></ol>
+  <p class="empty" id="logEmpty">还没有记录，点上面的 +1 开始吧</p>
+  <button class="more" id="moreBtn" hidden>展开全部</button>
+
+  <div id="letterWrap" hidden>
+  <h2>发行方附言</h2>
+  <div class="letter">
+    <p class="to">致 <span data-name="b"></span>：</p>
+    <div id="letterLines"></div>
+    <p class="sign">—— 发行方 <span data-name="a"></span></p>
+  </div>
+  </div>
+
+  <h2 id="rulesTitle">活动规则</h2>
+  <div class="rules">
+    <ol>
+      <li>本卡由 <b id="ruleA"></b>（以下简称「发行方」）发行，<b id="ruleB"></b> 为唯一持卡人。</li>
+      <li>每盖满一个章记 1 次，集满 100 次可兑换「订婚」一次。</li>
+      <li>持卡人可以着急，但章只能一个一个盖；终点已经定好，不会变。</li>
+      <li>本卡不可转让、不可折现、不可找人代集。</li>
+      <li>集满后由 <b id="ruleA2"></b> 正式求婚，<b id="ruleB2"></b> 只需要点头。</li>
+      <li id="rule6" class="rule6" hidden>（隐藏条款）发行方可以随时耍赖要抱抱，持卡人不得拒绝。</li>
+    </ol>
+    <div class="final-row"><p class="final">本活动最终解释权<br>归发行方所有</p><button class="seal" id="sealBtn" type="button" aria-label="发行方认证章">发行方<br>认证</button></div>
+  </div>
+
+  <div id="settings">
+    <h2>设置</h2>
+    <div class="field">
+      <span class="lb">发行方 ♡ 持卡人</span>
+      <div class="row"><input id="inA" maxlength="10" placeholder="弟弟" aria-label="发行方"><span class="amp">♡</span><input id="inB" maxlength="10" placeholder="姐姐" aria-label="持卡人"><button class="btn sm" id="saveNames">保存</button></div>
+    </div>
+    <div class="field">
+      <span class="lb">这台设备是谁在用</span>
+      <div class="row"><span class="me-label" id="meLabel"></span><button class="btn sm" id="meSwitch" type="button">切换</button></div>
+    </div>
+    <div class="field">
+      <span class="lb">邮箱（纸条勾选「寄到邮箱」时，两个人都会收到）</span>
+      <div class="col"><input id="emA" type="email" placeholder="发行方的邮箱" aria-label="发行方邮箱"><input id="emB" type="email" placeholder="持卡人的邮箱" aria-label="持卡人邮箱"></div>
+      <button class="btn sm" id="saveEm" type="button" style="margin-top:8px">保存邮箱</button>
+    </div>
+    <div class="field">
+      <label for="inCount">导入旧进度（把总次数直接设成某个数）</label>
+      <div class="row"><input id="inCount" type="number" min="0" max="100" inputmode="numeric" placeholder="比如 12"><button class="btn sm" id="setCount" type="button">设置</button></div>
+    </div>
+    <div class="field">
+      <span class="lb">发行方附言（一行一句）</span>
+      <button class="btn sm" id="editLetter" type="button">编辑附言</button>
+    </div>
+    <div class="field">
+      <label for="inDay">补录漏记的一次</label>
+      <div class="row"><input type="date" id="inDay"><button class="btn sm" id="addPast">补录</button></div>
+    </div>
+    <div class="field">
+      <span class="lb">从头开始（会清空所有记录，点两下确认）</span>
+      <button class="btn sm" id="resetBtn">清空记录</button>
+    </div>
+  </div>
+  <p class="ro" id="roNote" hidden>现在是查看模式，只有发行方能盖章。</p>
+  <footer class="foot">
+    <p id="footDays"></p>
+    <p>© 2026 <span data-name="a"></span> 发行　<span data-name="b"></span> 专属　翻版必究</p>
+    <p class="ver">v1.1 小纸条版　2026年10月7日</p>
+  </footer>
+</main>
+
+<div class="sheet" id="composer">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="cpTitle">
+    <h3 id="cpTitle">记下啦</h3>
+    <p id="cpDay"></p>
+    <div class="moods" id="moods"></div>
+    <input id="cpNote" maxlength="40" placeholder="留一句悄悄话（可选）" aria-label="留言">
+    <div class="row2"><button class="btn" id="cpSkip">跳过</button><button class="btn main" id="cpSave">保存</button></div>
+  </div>
+</div>
+
+<div class="sheet" id="chSheet">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="chsTitle">
+    <h3 id="chsTitle">写这一章</h3>
+    <p>写一件只有你们知道的事，这一章就是你们的。留空就恢复默认文案。</p>
+    <textarea id="chInput" maxlength="80" placeholder="比如：那天……"></textarea>
+    <div class="row2"><button class="btn" id="chCancel">取消</button><button class="btn main" id="chSave">保存</button></div>
+  </div>
+</div>
+
+<div class="sheet" id="meSheet">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="meTitle">
+    <h3 id="meTitle">先告诉我，你是谁？</h3>
+    <p>只问这一次，用来区分纸条是谁写的。之后可以在设置里切换。</p>
+    <div class="row2" style="grid-template-columns:1fr 1fr"><button class="btn" id="meA" type="button"></button><button class="btn main" id="meB" type="button"></button></div>
+  </div>
+</div>
+
+<div class="sheet" id="drawSheet">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="dwTitle">
+    <h3 id="dwTitle">画一笔</h3>
+    <canvas id="dwCanvas" width="600" height="600"></canvas>
+    <div class="dw-tools" id="dwColors"></div>
+    <div class="row2"><button class="btn" id="dwClear" type="button">清空</button><button class="btn main" id="dwDone" type="button">贴到纸条上</button></div>
+  </div>
+</div>
+
+<div class="sheet" id="letterSheet">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="ltTitle">
+    <h3 id="ltTitle">编辑附言</h3>
+    <p>一行一句，开头的「致」和结尾的署名会自动加上。全部清空就不显示附言。</p>
+    <textarea id="ltInput" style="height:220px"></textarea>
+    <div class="row2"><button class="btn" id="ltCancel" type="button">取消</button><button class="btn main" id="ltSave" type="button">保存</button></div>
+  </div>
+</div>
+
+<div class="lock" id="lock" hidden><div><div class="lock-ic">🔒</div><p id="lockMsg"></p></div></div>
+<button class="fab" id="fab" type="button" hidden></button>
+
+<div class="sheet" id="copySheet">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="cs">
+    <h3 id="cs">手动复制</h3>
+    <p>自动复制没成功，长按下面的文字复制：</p>
+    <textarea id="copyText" readonly></textarea>
+    <div class="row2" style="grid-template-columns:1fr"><button class="btn main" id="copyClose">好了</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+  var TOTAL = 100, DAY = 86400000;
+  var MOODS = ['🥰','😳','🔥','🥹','😴','✨'];
+  var STICKERS = [
+    {k:'n1',  need:1,   icon:'🌱', name:'开张大吉'},
+    {k:'n10', need:10,  icon:'💗', name:'第一颗心'},
+    {k:'n25', need:25,  icon:'🍀', name:'偷偷开心'},
+    {k:'n50', need:50,  icon:'🎈', name:'过半啦'},
+    {k:'n75', need:75,  icon:'🚀', name:'最后冲刺'},
+    {k:'n99', need:99,  icon:'🫣', name:'某人很急'},
+    {k:'n100',need:100, icon:'💍', name:'订婚成功'},
+    {k:'s3',  streak:3, icon:'🔥', name:'热恋三连'}
+  ];
+  var store = {
+    get: function(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+    set: function(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+  };
+  function $(id){ return document.getElementById(id); }
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+  function ymd(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
+  function parseDay(s){ var p = String(s).split('-'); return new Date(+p[0], (+p[1] || 1) - 1, +p[2] || 1); }
+  function diffDays(a, b){ return Math.round((parseDay(b) - parseDay(a)) / DAY); }
+  var WK = '日一二三四五六';
+  function fmtDay(s, week){
+    var d = parseDay(s), t = (d.getMonth()+1) + '月' + d.getDate() + '日';
+    if (d.getFullYear() !== new Date().getFullYear()) t = d.getFullYear() + '年' + t;
+    if (week) t += ' 周' + WK[d.getDay()];
+    return t;
+  }
+  function str(v){ return typeof v === 'string' ? v : ''; }
+  function validDay(s){ return /^\d{4}-\d{2}-\d{2}$/.test(s); }
+
+  function newId(ts){ return ts + '_' + Math.random().toString(36).slice(2, 6); }
+  function normalizeMain(d){
+    d = d || {};
+    var names = { a: str(d.names && d.names.a).slice(0,10), b: str(d.names && d.names.b).slice(0,10) };
+    var chapters = [];
+    for (var ci = 0; ci < 7; ci++) chapters.push(Array.isArray(d.chapters) ? str(d.chapters[ci]).slice(0, 80) : '');
+    var letter = Array.isArray(d.letter) ? d.letter.map(function(x){ return str(x).slice(0, 40); }).filter(Boolean).slice(0, 24) : [];
+    var emails = { a: str(d.emails && d.emails.a).slice(0, 80), b: str(d.emails && d.emails.b).slice(0, 80) };
+    return { names: names, chapters: chapters, letter: letter, emails: emails };
+  }
+  function normEntries(arr){
+    var out = [];
+    (Array.isArray(arr) ? arr : []).forEach(function(e){
+      if (!e || !validDay(str(e.day))) return;
+      var ts = Number(e.ts) || parseDay(e.day).getTime();
+      out.push({ id: str(e.id) || newId(ts), day: e.day, ts: ts, mood: str(e.mood).slice(0,8), note: str(e.note).slice(0,40) });
+    });
+    out.sort(function(x, y){ return x.ts - y.ts; });
+    return out.slice(0, TOTAL);
+  }
+  var cached = null; try { cached = JSON.parse(store.get('ep3') || 'null'); } catch(e){}
+  var state = normalizeMain(cached || {});
+  state.entries = normEntries(cached && cached.entries);
+  function cache(){ store.set('ep3', JSON.stringify(state)); }
+  var notes = [];
+  var ME = store.get('ep_me') || '';
+
+  /* ---------- cloud config ---------- */
+  var FB = {
+    apiKey: "AIzaSyCv7AxByo54OA8poXy509nacgKRlvuI1KM",
+    authDomain: "love-card-548ec.firebaseapp.com",
+    projectId: "love-card-548ec",
+    storageBucket: "love-card-548ec.firebasestorage.app",
+    messagingSenderId: "415653383460",
+    appId: "1:415653383460:web:a3a5f29f71c0e25cf2f7b1"
+  };
+  function parseHash(){
+    var o = {};
+    location.hash.replace(/^#/, '').split('&').forEach(function(pr){ var i = pr.indexOf('='); if (i > 0) o[pr.slice(0, i)] = pr.slice(i + 1); });
+    return o;
+  }
+  var HP = parseHash();
+  var KEY = /^[a-z0-9]{12,64}$/.test(HP.k || '') ? HP.k : (store.get('ep_key') || '');
+  if (HP.k && KEY === HP.k) store.set('ep_key', KEY);
+  var INIT = null;
+  if (HP.init){ try { INIT = JSON.parse(decodeURIComponent(HP.init)); } catch(e){} }
+  if (KEY && location.hash !== '#k=' + KEY){ try { history.replaceState(null, '', location.pathname + location.search + '#k=' + KEY); } catch(e){} }
+  var FS = null, mainRef = null, entriesCol = null, notesCol = null;
+  function cloudFail(e){
+    if (e && e.code === 'permission-denied') showLock('这个链接打不开这张卡，检查一下链接是不是完整 🔒');
+    else toast('网络不太好，恢复后会自动同步');
+  }
+  function entryData(e){ return { day: e.day, ts: e.ts, mood: e.mood || '', note: e.note || '', by: ME || '' }; }
+  function cloudAdd(e){ cache(); if (entriesCol) entriesCol.doc(e.id).set(entryData(e)).catch(cloudFail); }
+  function cloudDel(e){ cache(); if (entriesCol) entriesCol.doc(e.id).delete().catch(cloudFail); }
+  function cloudUpd(e){ cache(); if (entriesCol) entriesCol.doc(e.id).set({ mood: e.mood || '', note: e.note || '' }, { merge: true }).catch(cloudFail); }
+  function saveMain(patch){ cache(); if (mainRef) mainRef.set(patch, { merge: true }).catch(cloudFail); }
+  function showLock(msg){ $('lockMsg').textContent = msg; $('lock').hidden = false; }
+  var readOnly = false, ref = null, pending = false, writeTimer = null, writing = Promise.resolve();
+  var showAll = false, freshStickers = {}, composerTs = null, composerMood = '';
+
+  /* ---------- analysis ---------- */
+  function analyze(){
+    var es = state.entries, n = es.length, today = ymd(new Date());
+    var days = []; es.forEach(function(e){ if (days.indexOf(e.day) < 0) days.push(e.day); }); days.sort();
+    var maxRun = 0, run = 0, prev = null, streak3Day = null;
+    days.forEach(function(d){
+      run = (prev && diffDays(prev, d) === 1) ? run + 1 : 1;
+      if (run > maxRun) maxRun = run;
+      if (run >= 3 && !streak3Day) streak3Day = d;
+      prev = d;
+    });
+    var first = days[0] || null, last = days[days.length-1] || null;
+    var since = first ? Math.max(1, diffDays(first, today) + 1) : 0;
+    var eta = null;
+    if (n >= 3 && n < TOTAL){
+      var rate = n / Math.max(1, since);
+      var remain = Math.ceil((TOTAL - n) / rate);
+      eta = ymd(new Date(Date.now() + remain * DAY));
+    }
+    var unlocked = {};
+    STICKERS.forEach(function(s){
+      if (s.need) unlocked[s.k] = n >= s.need ? es[s.need-1].day : null;
+      else unlocked[s.k] = streak3Day;
+    });
+    return { n: n, since: since, maxRun: maxRun, eta: eta, last: last, unlocked: unlocked };
+  }
+  var SPECIAL = {
+    13: '13 次：一生一世的「一生」先到了',
+    14: '14 次：1314，一生一世凑齐了 💞',
+    52: '52 次：我爱～（后面那个字请当面说）',
+    66: '66 次：六六大顺，顺顺利利',
+    88: '88 次：发发发，但不许说拜拜'
+  };
+  var CHAPTERS = [
+    { no:'序章',   name:'出发', start:0,   end:10,  story:'主线任务已接取：订婚。{FIRST}目标 100 次。' },
+    { no:'第一章', name:'心动', start:10,  end:25,  story:'第一颗心亮了。从这一章开始，某人每天都要来看一眼进度条。' },
+    { no:'第二章', name:'升温', start:25,  end:50,  story:'四分之一达成。章越盖越顺手，某人越来越急。' },
+    { no:'第三章', name:'过半', start:50,  end:75,  story:'一半的心都亮了，终点已经看得见了。' },
+    { no:'第四章', name:'冲刺', start:75,  end:99,  story:'只剩最后四分之一，接下来的每一个章都格外珍贵。' },
+    { no:'第五章', name:'求婚', start:99,  end:100, story:'只差最后一次。{A}会单膝跪地，{B}只需要点头。' },
+    { no:'终章',   name:'订婚', start:100, end:101, story:'{B}，这一局你赢了。主线剧情完成，新篇章「婚礼」敬请期待。' }
+  ];
+  function chapterIdx(n){ var k = 0; CHAPTERS.forEach(function(c, i){ if (n >= c.start) k = i; }); return k; }
+  function fill(t){
+    var first = state.entries.length ? '第一个章盖在' + fmtDay(state.entries[0].day) + '，' : '';
+    return t.replace(/\{A\}/g, A()).replace(/\{B\}/g, B()).replace(/\{FIRST\}/g, first);
+  }
+  function chStory(i){ var own = state.chapters[i]; return own ? own : fill(CHAPTERS[i].story); }
+  function shortB(){ var b = B(); return b.length === 3 ? b.slice(1) : b; }
+  var chOpen = false, lastWm = '';
+  function A(){ return state.names.a || '弟弟'; }
+  function B(){ return state.names.b || '姐姐'; }
+  function milestone(c){
+    var b = B(), a = A(), v;
+    if (c >= 100) return '💍 集满啦！' + a + '要单膝跪地了，' + b + '只需要说「我愿意」';
+    if (c >= 99) return '就差最后一次，请' + b + '保持冷静';
+    if (SPECIAL[c]) return SPECIAL[c];
+    if (c >= 75) v = ['最后冲刺，发行方在偷偷量戒指尺寸了', b + '已经在看日子了吧', '发行方表示：快了快了，求婚词在写了'];
+    else if (c >= 50) v = ['过半啦，婚纱照可以悄悄看起来了', '一半的心都亮了，某人还是很急', b + '的嘴角已经压不住了'];
+    else if (c >= 25) v = ['四分之一达成，' + b + '偷偷开心中', '进度喜人，发行方很满意', '某人很急，但进度条不急'];
+    else if (c >= 10) v = ['第一颗心亮了，' + b + '的嘴角压不住了', '两位数了，' + a + '表现不错', '稳步推进中，某人请耐心排队'];
+    else if (c >= 1) v = ['已经出发，某人很急', b + '又在偷偷数进度条了', '不着急，终点早就定好了'];
+    else return '准备出发，' + b + '先别急';
+    return v[c % v.length];
+  }
+
+  /* ---------- render ---------- */
+  var C = 2 * Math.PI * 120;
+  $('rgBar').setAttribute('stroke-dasharray', C.toFixed(2));
+
+  function render(){
+    var a = analyze(), n = a.n, p = n / TOTAL;
+    $('nameA').textContent = A();
+    $('nameB').textContent = B();
+    document.querySelectorAll('[data-name]').forEach(function(el){ el.textContent = el.getAttribute('data-name') === 'a' ? A() : B(); });
+    $('ruleA').textContent = A(); $('ruleA2').textContent = A(); $('ruleB').textContent = B(); $('ruleB2').textContent = B();
+    $('subLine').textContent = n >= TOTAL ? '订婚成功！' : (a.last ? '上次盖章：' + fmtDay(a.last, true) : B() + '专属订婚卡');
+
+    // ring
+    var rb = $('rgBar');
+    rb.style.opacity = n === 0 ? 0 : 1;
+    rb.style.strokeDashoffset = (C * (1 - p)).toFixed(2);
+    var ang = (-90 + 360 * p) * Math.PI / 180;
+    $('rgRing').setAttribute('x', (150 + 120 * Math.cos(ang)).toFixed(1));
+    $('rgRing').setAttribute('y', (150 + 120 * Math.sin(ang)).toFixed(1));
+    $('numVal').textContent = n >= TOTAL ? '💍' : n;
+    $('numOf').hidden = n >= TOTAL;
+    $('rgLeft').textContent = n >= TOTAL ? '100 次集满啦' : '还差 ' + (TOTAL - n) + ' 次';
+    var full = Math.floor(n / 10), h = '';
+    for (var k = 0; k < 10; k++) h += k < full ? '💗' : '🤍';
+    $('hearts').textContent = h;
+
+    $('note').textContent = milestone(n) + (n < TOTAL ? '。下一颗心还差 ' + (10 - n % 10) + ' 次。' : '');
+
+    // stats
+    $('stDays').textContent = a.since ? a.since : '—';
+    $('stStreak').textContent = a.maxRun ? a.maxRun : '—';
+    $('stEta').textContent = n >= TOTAL ? '已达成' : (a.eta ? fmtDay(a.eta) : (n ? '再记' + (3 - n) + '次' : '—'));
+
+    // greeting
+    var hr = new Date().getHours(), g;
+    if (hr < 5) g = '姐姐早点睡，弟弟好爱你 🌙';
+    else if (hr < 11) g = '姐姐早安，弟弟好爱你 ☀️';
+    else if (hr < 14) g = '姐姐记得吃饭，弟弟好爱你 🍱';
+    else if (hr < 18) g = '姐姐下午好，弟弟好爱你 ☕';
+    else g = '姐姐晚上好，弟弟好爱你 🌙';
+    $('greet').textContent = g;
+
+    // main story
+    var ci = chapterIdx(n), ch = CHAPTERS[ci], len = ch.end - ch.start;
+    var inCh = n >= TOTAL ? 1 : n - ch.start, chP = n >= TOTAL ? 1 : inCh / len;
+    $('chNo').textContent = ch.no;
+    $('chName').textContent = ch.name;
+    $('chText').textContent = chStory(ci);
+    $('chWrite').hidden = readOnly;
+    $('chWrite').textContent = state.chapters[ci] ? '✎ 改写这一章' : '✎ 用你们的故事写这一章';
+    $('chCount').textContent = n >= TOTAL ? '完成 ✓' : inCh + ' / ' + len;
+    $('chBar').style.width = (chP * 100).toFixed(1) + '%';
+    $('chPct').textContent = Math.floor(chP * 100) + '%';
+    $('mainCount').textContent = n + ' / 100';
+    $('mainPct').textContent = n + '%';
+    $('mainBar').style.width = n + '%';
+    var cl = $('chList'); cl.innerHTML = '';
+    CHAPTERS.forEach(function(c, i){
+      var done = i < ci || n >= TOTAL, cur = i === ci && n < TOTAL;
+      var li = document.createElement('li'); li.className = done ? 'done' : (cur ? 'cur' : 'lock');
+      var ic = document.createElement('span'); ic.className = 'ic'; ic.textContent = done ? '✓' : (cur ? '✦' : '🔒');
+      var bx = document.createElement('div');
+      var tt = document.createElement('div'); tt.className = 'tt';
+      tt.textContent = c.no + ' ' + (done || cur ? c.name : '？？？');
+      var sm = document.createElement('small');
+      sm.textContent = done ? '已完成' : (cur ? '进行中' : '第 ' + c.start + ' 次解锁');
+      tt.appendChild(sm);
+      var ds = document.createElement('div'); ds.className = 'ds';
+      ds.textContent = done || cur ? chStory(i) : '剧情未解锁';
+      bx.appendChild(tt); bx.appendChild(ds); li.appendChild(ic); li.appendChild(bx); cl.appendChild(li);
+    });
+
+    // footer + watermark
+    $('footDays').textContent = a.since ? '这张卡已经陪你们走了 ' + a.since + ' 天' : '这张卡正在等第一个章';
+    var wm = B() + '专属 ♡ ' + A() + '发行';
+    if (wm !== lastWm){
+      lastWm = wm;
+      var esc = wm.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="150"><text x="120" y="75" fill="#FF4D7E" fill-opacity="0.07" font-size="13" font-family="sans-serif" text-anchor="middle" transform="rotate(-22 120 75)">' + esc + '</text></svg>';
+      document.body.style.backgroundImage = 'url("data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '")';
+    }
+
+    // stickers
+    var sw = $('stickers'); sw.innerHTML = '';
+    STICKERS.forEach(function(s, i){
+      var got = a.unlocked[s.k];
+      var d = document.createElement('button'); d.type = 'button';
+      d.className = 'stk' + (got ? '' : ' locked') + (freshStickers[s.k] ? ' fresh' : '');
+      d.addEventListener('click', function(){
+        if (got) toast(s.icon + ' ' + s.name + '，' + fmtDay(got) + ' 解锁');
+        else toast(s.need ? '还差 ' + (s.need - n) + ' 次解锁，加油哦' : '连续 3 天盖章就能解锁 🔥');
+      });
+      d.style.setProperty('--r', (((i * 23) % 17) - 8) + 'deg');
+      var f = document.createElement('div'); f.className = 'face'; f.textContent = got ? s.icon : '?';
+      var nm = document.createElement('div'); nm.className = 'nm'; nm.textContent = s.name;
+      var dt = document.createElement('div'); dt.className = 'dt';
+      dt.textContent = got ? fmtDay(got) : (s.need ? '满 ' + s.need + ' 次' : '连续 3 天');
+      d.appendChild(f); d.appendChild(nm); d.appendChild(dt); sw.appendChild(d);
+    });
+    freshStickers = {};
+
+    // log
+    var log = $('log'); log.innerHTML = '';
+    var list = state.entries.map(function(e, i){ return { e: e, no: i + 1 }; }).reverse();
+    var shown = showAll ? list : list.slice(0, 8);
+    shown.forEach(function(it){
+      var li = document.createElement('li');
+      var no = document.createElement('span'); no.className = 'lg-no'; no.textContent = '第' + it.no + '次';
+      var body = document.createElement('button'); body.className = 'lg-body'; body.type = 'button';
+      body.setAttribute('aria-label', '编辑第' + it.no + '次的留言');
+      var dd = document.createElement('div'); dd.className = 'lg-day'; dd.textContent = fmtDay(it.e.day, true) + (it.e.mood ? '  ' + it.e.mood : '');
+      var nt = document.createElement('div'); nt.className = 'lg-note'; nt.textContent = it.e.note || (readOnly ? '' : '点这里留一句悄悄话');
+      body.appendChild(dd); body.appendChild(nt);
+      var del = document.createElement('button'); del.className = 'lg-del'; del.type = 'button'; del.textContent = '删除';
+      del.hidden = readOnly; body.disabled = readOnly;
+      body.addEventListener('click', function(){ openComposer(it.e.ts, false); });
+      del.addEventListener('click', function(){
+        if (!del.classList.contains('arm')){
+          del.classList.add('arm'); del.textContent = '确定？';
+          setTimeout(function(){ del.classList.remove('arm'); del.textContent = '删除'; }, 3000);
+          return;
+        }
+        removeEntry(it.e.ts); toast('已删除第' + it.no + '次');
+      });
+      li.appendChild(no); li.appendChild(body); li.appendChild(del); log.appendChild(li);
+    });
+    $('log').hidden = list.length === 0;
+    $('logEmpty').hidden = list.length > 0;
+    $('moreBtn').hidden = list.length <= 8;
+    $('moreBtn').textContent = showAll ? '收起' : '展开全部（' + list.length + '）';
+
+    // controls
+    $('plusBtn').textContent = n >= TOTAL ? '已集满 💍' : '+1 ♡';
+    $('plusBtn').disabled = readOnly || n >= TOTAL;
+    $('undoBtn').disabled = readOnly || n === 0;
+    $('actions').hidden = readOnly;
+    $('settings').hidden = readOnly;
+    $('roNote').hidden = !readOnly;
+    $('inDay').max = ymd(new Date());
+    if (state.names.b) document.title = state.names.b + '的订婚卡 💍';
+    var lt = state.letter || [], lb = $('letterLines');
+    $('letterWrap').hidden = !lt.length; lb.innerHTML = '';
+    lt.forEach(function(line){ var pp = document.createElement('p'); pp.textContent = line; lb.appendChild(pp); });
+    $('meLabel').textContent = ME ? (ME === 'a' ? A() + '（发行方）' : B() + '（持卡人）') : '还没选';
+    if (document.activeElement !== $('emA')) $('emA').value = state.emails.a || '';
+    if (document.activeElement !== $('emB')) $('emB').value = state.emails.b || '';
+    if (document.activeElement !== $('inA')) $('inA').value = state.names.a;
+    if (document.activeElement !== $('inB')) $('inB').value = state.names.b;
+  }
+
+  /* ---------- persistence ---------- */
+  function commit(){ cache(); }
+
+  /* ---------- fx ---------- */
+  var toastTimer;
+  function toast(msg){
+    var t = $('toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2600);
+  }
+  function floatPlus(){
+    var r = $('plusBtn').getBoundingClientRect(), f = document.createElement('span');
+    f.className = 'float'; f.textContent = '+1';
+    f.style.left = (r.left + r.width / 2 - 14) + 'px'; f.style.top = (r.top - 10) + 'px';
+    document.body.appendChild(f); setTimeout(function(){ f.remove(); }, 900);
+  }
+  function confetti(){
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var pool = ['💍','💗','✨','🎉','💐','💒'];
+    for (var i = 0; i < 40; i++){
+      var c = document.createElement('span'); c.className = 'confetti';
+      c.textContent = pool[i % pool.length];
+      c.style.left = (Math.random() * 100) + 'vw';
+      c.style.animationDuration = (2 + Math.random() * 1.8) + 's';
+      c.style.animationDelay = (Math.random() * 0.6) + 's';
+      document.body.appendChild(c);
+      (function(node){ setTimeout(function(){ node.remove(); }, 4500); })(c);
+    }
+  }
+
+  /* ---------- mutations ---------- */
+  function withUnlockCheck(fn){
+    var before = analyze().unlocked;
+    fn();
+    var after = analyze().unlocked, got = [];
+    STICKERS.forEach(function(s){ if (!before[s.k] && after[s.k]){ freshStickers[s.k] = true; got.push(s); } });
+    return got;
+  }
+  function announce(got, n, ctx, newCh){
+    if (newCh){
+      toast('新章节解锁：' + newCh.no + '「' + newCh.name + '」');
+      if (n === 100 || n === 25 || n === 50 || n === 75) confetti(); else hearts(window.innerWidth / 2, window.innerHeight / 3);
+      return;
+    }
+    if (got.length){
+      var s = got[got.length - 1];
+      toast('解锁贴纸 ' + s.icon + ' ' + s.name);
+      if (s.need === 100 || s.need === 50 || s.need === 25 || s.need === 75 || s.need === 10) confetti();
+      return;
+    }
+    if (SPECIAL[n]){ toast(SPECIAL[n]); hearts(window.innerWidth / 2, window.innerHeight / 2); return; }
+    if (n % 10 === 0 && n > 0){ toast('点亮第 ' + (n / 10) + ' 颗心 💗 ' + B() + '开心吗'); return; }
+    if (!ctx) return;
+    var d = ctx.now, md = (d.getMonth() + 1) + '-' + d.getDate(), hr = d.getHours();
+    if (md === '2-14'){ toast('情人节盖章，双倍甜 💝'); return; }
+    if (md === '5-20'){ toast('520 盖章，发行方今天格外大方'); return; }
+    if (ctx.prevTs && d.getTime() - ctx.prevTs < 10 * 60000){ toast('刚盖完又来？某人比' + B() + '还急'); return; }
+    if (hr < 5){ toast('这么晚还在盖章，发行方注意身体 🌙'); return; }
+    if (hr < 9){ toast('一大早就来盖章，某人是真的急 ☀️'); return; }
+  }
+  function hearts(x, y){
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    for (var i = 0; i < 8; i++){
+      var h = document.createElement('span'); h.className = 'burst'; h.textContent = ['💗','💞','💘','💕','🥰','✨'][Math.floor(Math.random() * 6)];
+      h.style.left = (x - 10) + 'px'; h.style.top = (y - 10) + 'px';
+      h.style.setProperty('--dx', (Math.cos(i / 8 * 6.283) * 60).toFixed(0) + 'px');
+      h.style.setProperty('--dy', (Math.sin(i / 8 * 6.283) * 60 - 30).toFixed(0) + 'px');
+      document.body.appendChild(h);
+      (function(node){ setTimeout(function(){ node.remove(); }, 900); })(h);
+    }
+  }
+  function removeEntry(ts){
+    var gone = state.entries.filter(function(e){ return e.ts === ts; });
+    state.entries = state.entries.filter(function(e){ return e.ts !== ts; });
+    gone.forEach(cloudDel); render();
+  }
+
+  $('plusBtn').addEventListener('click', function(){
+    if (readOnly || state.entries.length >= TOTAL) return;
+    var now = new Date(), entry = { id: newId(now.getTime()), day: ymd(now), ts: now.getTime(), mood: '', note: '' };
+    var prevTs = state.entries.reduce(function(m, e){ return Math.max(m, e.ts); }, 0);
+    var chB = chapterIdx(state.entries.length);
+    var got = withUnlockCheck(function(){ state.entries.push(entry); });
+    var chA = chapterIdx(state.entries.length);
+    try { navigator.vibrate && navigator.vibrate(15); } catch(e){}
+    cloudAdd(entry); render(); floatPlus();
+    announce(got, state.entries.length, { now: now, prevTs: prevTs }, chA > chB ? CHAPTERS[chA] : null);
+    setTimeout(function(){ openComposer(entry.ts, true); }, 350);
+  });
+  $('undoBtn').addEventListener('click', function(){
+    if (readOnly || !state.entries.length) return;
+    var last = state.entries.reduce(function(m, e){ return e.ts > m.ts ? e : m; });
+    removeEntry(last.ts); toast('已撤销，现在是 ' + state.entries.length + ' 次');
+  });
+  $('moreBtn').addEventListener('click', function(){ showAll = !showAll; render(); });
+  var ampTaps = 0, ampTimer;
+  $('namesBtn').addEventListener('click', function(ev){
+    if (ev.target && ev.target.classList && ev.target.classList.contains('amp')){
+      var r = ev.target.getBoundingClientRect(); hearts(r.left + r.width / 2, r.top + r.height / 2);
+      ampTaps++; clearTimeout(ampTimer); ampTimer = setTimeout(function(){ ampTaps = 0; }, 2500);
+      if (ampTaps === 10){ toast(B() + '，别点了，' + A() + '知道你爱他'); ampTaps = 0; }
+      return;
+    }
+    if (readOnly) return;
+    $('settings').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(function(){ $('inA').focus({ preventScroll: true }); }, 400);
+  });
+  $('saveNames').addEventListener('click', function(){
+    state.names = { a: $('inA').value.trim().slice(0,10), b: $('inB').value.trim().slice(0,10) };
+    saveMain({ names: state.names }); render(); toast('名字已保存');
+  });
+  $('addPast').addEventListener('click', function(){
+    var day = $('inDay').value, today = ymd(new Date());
+    if (!validDay(day)){ toast('先选一个日期'); return; }
+    if (day > today){ toast('不能补录未来的日期'); return; }
+    if (state.entries.length >= TOTAL){ toast('已经集满 100 次啦'); return; }
+    var pts = parseDay(day).getTime() + 12*3600000 + Math.floor(Math.random() * 60000);
+    var entry = { id: newId(pts), day: day, ts: pts, mood: '', note: '' };
+    var chB = chapterIdx(state.entries.length);
+    var got = withUnlockCheck(function(){
+      state.entries.push(entry);
+      state.entries.sort(function(x, y){ return x.ts - y.ts; });
+    });
+    var chA = chapterIdx(state.entries.length);
+    cloudAdd(entry); render();
+    if (got.length || chA > chB) announce(got, state.entries.length, null, chA > chB ? CHAPTERS[chA] : null); else toast('已补录 ' + fmtDay(day));
+  });
+
+  $('resetBtn').addEventListener('click', function(){
+    var b = $('resetBtn');
+    if (!b.classList.contains('arm')){
+      b.classList.add('arm'); b.textContent = '确定清空？';
+      setTimeout(function(){ b.classList.remove('arm'); b.textContent = '清空记录'; }, 3000);
+      return;
+    }
+    b.classList.remove('arm'); b.textContent = '清空记录';
+    if (FS && entriesCol){ var bt = FS.batch(); state.entries.forEach(function(e){ bt.delete(entriesCol.doc(e.id)); }); bt.commit().catch(cloudFail); }
+    state.entries = []; showAll = false; cache(); render(); toast('已清空，重新发行');
+  });
+
+  var LOVE = [
+    '爱。💗',
+    '爱，问一百遍答一百遍 💯',
+    '爱的是真实的你，不是想象里的姐姐 🫶',
+    '答案订婚那天当面说。剧透一下：爱 🤫',
+    '爱。这一条发行方永不调整 🔒',
+    '不用问，但你问一次我开心一次：爱 🥰',
+    '今天的份：爱 ✅ 明天的份：也爱 ✅',
+    '比昨天多一点，比明天少一点 📈',
+    '检测到持卡人有点缺爱，已自动补满 100% ❤️‍🔥',
+    '你猜？（猜对了，是爱）😏',
+    '爱。发行方签字画押 ✍️',
+    '这题我会！答案是：爱 🙋‍♂️',
+    '在哪都爱你，什么时候都爱你 🌍',
+    '爱。抱一下再问一遍 🫂',
+    '押我稳赢，这把你不会输 🎲',
+    '爱你这件事，没有进度条，一直是满格 🔋'
+  ];
+  var LOVE_SPECIAL = {
+    10: '已经问了 10 次啦，颁发「爱问宝宝」称号一枚 🏅',
+    52: '第 52 次：我爱～（后面那个字当面说）💋',
+    99: '第 99 次：长长久久 ♾️',
+    100: '第 100 次，答案还是：爱 💯 恭喜解锁「被爱满格」'
+  };
+  var HUGS = [
+    '发行方已张开双手，请就近领取 🫂',
+    '抱抱已发货，签收请回复「收到」📦',
+    '抱紧了，这次不松手 🤗',
+    '一个不够？发行方批准无限续抱 ♾️',
+    '已为你预约发行方的怀抱一个，有效期：永久 🎫',
+    '抱抱 +1，烦恼 -1 🧸',
+    '先抱一下，有什么事抱完再说 🫶'
+  ];
+  var BURST = ['💗','💞','💘','💕','🥰','✨'];
+  function bubble(text){
+    var ans = $('loveAns');
+    ans.textContent = text;
+    ans.hidden = false; ans.classList.remove('pop'); void ans.offsetWidth; ans.classList.add('pop');
+  }
+  $('loveBtn').addEventListener('click', function(ev){
+    var k = (parseInt(store.get('ep_love') || '0', 10) || 0) + 1;
+    store.set('ep_love', String(k));
+    bubble(LOVE_SPECIAL[k] || ((k > 1 ? '第 ' + k + ' 次问，' : '') + LOVE[(k - 1) % LOVE.length]));
+    hearts(ev.clientX || window.innerWidth / 2, ev.clientY || window.innerHeight / 2);
+    if (k === 100) confetti();
+  });
+  $('hugBtn').addEventListener('click', function(ev){
+    var k = (parseInt(store.get('ep_hug') || '0', 10) || 0) + 1;
+    store.set('ep_hug', String(k));
+    bubble(HUGS[(k - 1) % HUGS.length] + (k > 1 ? '（累计 ' + k + ' 个抱抱）' : ''));
+    hearts(ev.clientX || window.innerWidth / 2, ev.clientY || window.innerHeight / 2);
+  });
+  var chEditing = -1;
+  $('chWrite').addEventListener('click', function(){
+    if (readOnly) return;
+    chEditing = chapterIdx(state.entries.length);
+    var c = CHAPTERS[chEditing];
+    $('chsTitle').textContent = '写下' + c.no + '「' + c.name + '」';
+    $('chInput').value = state.chapters[chEditing] || '';
+    $('chSheet').classList.add('open');
+  });
+  function closeCh(){ $('chSheet').classList.remove('open'); chEditing = -1; }
+  $('chCancel').addEventListener('click', closeCh);
+  $('chSheet').addEventListener('click', function(ev){ if (ev.target === $('chSheet')) closeCh(); });
+  $('chSave').addEventListener('click', function(){
+    if (chEditing < 0) return;
+    var txt = $('chInput').value.trim().slice(0, 80);
+    state.chapters[chEditing] = txt;
+    saveMain({ chapters: state.chapters }); render(); closeCh();
+    toast(txt ? '这一章写好了 ✍️' : '已恢复默认文案');
+  });
+  $('chToggle').addEventListener('click', function(){
+    chOpen = !chOpen;
+    $('chList').hidden = !chOpen;
+    $('chToggle').textContent = chOpen ? '收起章节' : '查看全部章节';
+    $('chToggle').setAttribute('aria-expanded', chOpen ? 'true' : 'false');
+  });
+
+  var ringTaps = 0, ringTimer;
+  $('rgRing').addEventListener('click', function(ev){
+    ringTaps++; clearTimeout(ringTimer); ringTimer = setTimeout(function(){ ringTaps = 0; }, 2000);
+    if (ringTaps === 7){ ringTaps = 0; toast('被你发现了！发行方偷偷说：其实我也很急 🤫'); hearts(ev.clientX, ev.clientY); }
+  });
+  $('sealBtn').addEventListener('click', function(){
+    var b = $('sealBtn'); b.classList.remove('stamp'); void b.offsetWidth; b.classList.add('stamp');
+    toast('发行方本人确认 ✅ 解释权永久有效');
+  });
+  var ruleTaps = 0, ruleTimer;
+  function showRule6(){ $('rule6').hidden = false; }
+  if (store.get('ep_rule6') === '1') showRule6();
+  $('rulesTitle').addEventListener('click', function(){
+    ruleTaps++; clearTimeout(ruleTimer); ruleTimer = setTimeout(function(){ ruleTaps = 0; }, 2000);
+    if (ruleTaps === 5){
+      ruleTaps = 0;
+      if ($('rule6').hidden){ showRule6(); store.set('ep_rule6', '1'); toast('发现隐藏条款 🥚'); }
+      else toast('隐藏条款已经被你发现过啦');
+    }
+  });
+
+  /* ---------- composer ---------- */
+  var moodsEl = $('moods');
+  MOODS.forEach(function(m){
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'mood'; b.textContent = m;
+    b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', '心情 ' + m);
+    b.addEventListener('click', function(){ composerMood = composerMood === m ? '' : m; syncMoods(); });
+    moodsEl.appendChild(b);
+  });
+  function syncMoods(){
+    moodsEl.querySelectorAll('.mood').forEach(function(b){ b.setAttribute('aria-pressed', b.textContent === composerMood ? 'true' : 'false'); });
+  }
+  function openComposer(ts, isNew){
+    if (readOnly) return;
+    var idx = -1;
+    state.entries.forEach(function(e, i){ if (e.ts === ts) idx = i; });
+    if (idx < 0) return;
+    var e = state.entries[idx];
+    composerTs = ts; composerMood = e.mood || '';
+    $('cpTitle').textContent = isNew ? '第 ' + (idx + 1) + ' 次，发行方已盖章 ✓' : '第 ' + (idx + 1) + ' 次';
+    $('cpDay').textContent = fmtDay(e.day, true) + (isNew ? '　选个心情、留句悄悄话，或者直接跳过' : '');
+    $('cpNote').value = e.note || '';
+    syncMoods();
+    $('composer').classList.add('open');
+  }
+  function closeComposer(){ $('composer').classList.remove('open'); composerTs = null; }
+  $('cpSkip').addEventListener('click', closeComposer);
+  $('composer').addEventListener('click', function(ev){ if (ev.target === $('composer')) closeComposer(); });
+  $('cpSave').addEventListener('click', function(){
+    var e = null;
+    state.entries.forEach(function(x){ if (x.ts === composerTs) e = x; });
+    if (e){
+      e.mood = composerMood; e.note = $('cpNote').value.trim().slice(0, 40); cloudUpd(e); render();
+      if (/爱/.test(e.note)){ toast('收到这句话，发行方偷偷开心了 💗'); hearts(window.innerWidth / 2, window.innerHeight * 0.7); }
+      else if (/想你|想我/.test(e.note)){ toast('发行方也在想你 🥺'); }
+      else if (/抱/.test(e.note)){ toast('抱抱已安排 🫂'); }
+      else toast('保存好了');
+    }
+    closeComposer();
+  });
+
+  /* ---------- copy ---------- */
+  function textVersion(){
+    var n = state.entries.length, filled = Math.ceil(n / 10);
+    return '💍 ' + B() + '的订婚进度（发行方：' + A() + '）\n[ ' + n + ' / 100 ] ' + '▰'.repeat(filled) + '▱'.repeat(10 - filled) + ' ' + n + '%\n' + milestone(n) + '\n* 最终解释权归发行方所有';
+  }
+  function legacyCopy(txt){
+    try {
+      var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta);
+      ta.select(); ta.setSelectionRange(0, txt.length);
+      var ok = document.execCommand('copy'); ta.remove(); return ok;
+    } catch(e){ return false; }
+  }
+  $('copyBtn').addEventListener('click', function(){
+    var txt = textVersion();
+    var done = function(){ toast('已复制，去聊天框粘贴吧'); };
+    var fail = function(){
+      if (legacyCopy(txt)) done();
+      else { $('copyText').value = txt; $('copySheet').classList.add('open'); setTimeout(function(){ $('copyText').select(); }, 50); }
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, fail);
+      else fail();
+    } catch(e){ fail(); }
+  });
+  $('copyClose').addEventListener('click', function(){ $('copySheet').classList.remove('open'); });
+  $('copySheet').addEventListener('click', function(ev){ if (ev.target === $('copySheet')) $('copySheet').classList.remove('open'); });
+  document.addEventListener('keydown', function(ev){
+    if (ev.key === 'Escape'){ closeComposer(); closeCh(); ['copySheet','drawSheet','letterSheet'].forEach(function(id){ $(id).classList.remove('open'); }); }
+  });
+
+  /* ---------- who is using this device ---------- */
+  var meAsked = false;
+  function openMe(){
+    $('meA').textContent = '我是 ' + A();
+    $('meB').textContent = '我是 ' + B();
+    $('meSheet').classList.add('open');
+  }
+  function setMe(v){
+    ME = v; store.set('ep_me', v);
+    $('meSheet').classList.remove('open');
+    render(); renderNotes();
+    toast(v === 'a' ? '你好，发行方 ✍️' : '你好，持卡人 💗');
+  }
+  function maybeAskMe(){ if (!ME && !meAsked){ meAsked = true; openMe(); } }
+  $('meA').addEventListener('click', function(){ setMe('a'); });
+  $('meB').addEventListener('click', function(){ setMe('b'); });
+  $('meSwitch').addEventListener('click', openMe);
+
+  /* ---------- note wall ---------- */
+  var EMO = ['💗','🥰','😘','🥺','🫂','🤭','😤','🌙','☀️','🍓','🎀','✨'];
+  EMO.forEach(function(m){
+    var b = document.createElement('button'); b.type = 'button'; b.textContent = m; b.setAttribute('aria-label', '插入 ' + m);
+    b.addEventListener('click', function(){
+      var ta = $('ntText'), st = ta.selectionStart || ta.value.length, en = ta.selectionEnd || ta.value.length;
+      ta.value = (ta.value.slice(0, st) + m + ta.value.slice(en)).slice(0, 300);
+      ta.focus(); ta.selectionStart = ta.selectionEnd = st + m.length;
+    });
+    $('ntEmo').appendChild(b);
+  });
+  function fmtTime(ts){
+    var d = new Date(ts);
+    return (d.getMonth() + 1) + '月' + d.getDate() + '日 ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  }
+  function seenTs(){ return Number(store.get('ep_seen') || 0) || 0; }
+  function unread(){
+    if (!ME) return 0;
+    var s0 = seenTs();
+    return notes.filter(function(n){ return n.from !== ME && n.ts > s0; }).length;
+  }
+  function updateBadge(){
+    var u = unread(), fab = $('fab');
+    fab.hidden = u === 0;
+    if (u) fab.textContent = '💌 ' + (ME === 'a' ? B() : A()) + '给你留了 ' + u + ' 张纸条';
+  }
+  var wallVisible = false;
+  function markSeen(){
+    if (!ME) return;
+    var mx = seenTs();
+    notes.forEach(function(n){ if (n.from !== ME && n.ts > mx) mx = n.ts; });
+    store.set('ep_seen', String(mx));
+    updateBadge();
+  }
+  function renderNotes(){
+    var box = $('notes'); box.innerHTML = '';
+    var s0 = seenTs();
+    notes.forEach(function(nt, i){
+      var card = document.createElement('div');
+      card.className = 'nt ' + (nt.from === 'a' ? 'from-a' : 'from-b');
+      card.style.setProperty('--r', (((i * 37) % 7) - 3) * 0.6 + 'deg');
+      if (ME && nt.from !== ME && nt.ts > s0){ var nw = document.createElement('span'); nw.className = 'new'; nw.textContent = 'NEW'; card.appendChild(nw); }
+      var head = document.createElement('div'); head.className = 'nt-head';
+      var who = document.createElement('span'); who.textContent = nt.from === 'a' ? A() : B();
+      var when = document.createElement('span'); when.textContent = fmtTime(nt.ts);
+      head.appendChild(who); head.appendChild(when); card.appendChild(head);
+      if (nt.text){ var tx = document.createElement('p'); tx.className = 'nt-text'; tx.textContent = nt.text; card.appendChild(tx); }
+      if (nt.drawing && /^data:image\/(png|jpeg);base64,/.test(nt.drawing)){
+        var im = document.createElement('img'); im.src = nt.drawing; im.alt = '涂鸦'; im.loading = 'lazy'; card.appendChild(im);
+      }
+      if (ME && nt.from === ME){
+        var del = document.createElement('button'); del.type = 'button'; del.className = 'nt-del'; del.textContent = '撕掉';
+        del.addEventListener('click', function(){
+          if (!del.classList.contains('arm')){
+            del.classList.add('arm'); del.textContent = '确定撕掉？';
+            setTimeout(function(){ del.classList.remove('arm'); del.textContent = '撕掉'; }, 3000);
+            return;
+          }
+          if (notesCol) notesCol.doc(nt.id).delete().catch(cloudFail);
+        });
+        card.appendChild(del);
+      }
+      box.appendChild(card);
+    });
+    $('notesEmpty').hidden = notes.length > 0;
+    updateBadge();
+    if (wallVisible) setTimeout(markSeen, 2000);
+  }
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){
+      es.forEach(function(en){ wallVisible = en.isIntersecting; if (wallVisible) setTimeout(markSeen, 2000); });
+    }, { threshold: 0.15 }).observe($('wall'));
+  }
+  $('fab').addEventListener('click', function(){ $('notesTitle').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+
+  /* ---------- drawing ---------- */
+  var dw = $('dwCanvas'), dctx = dw.getContext('2d'), dColor = '#FF4D7E', dDown = false, dLast = null, dDirty = false, drawingData = '';
+  var DCOLORS = ['#FF4D7E', '#5B2338', '#2E9E8A', '#3A6FD8', '#F2A900'];
+  function dwReset(){ dctx.fillStyle = '#ffffff'; dctx.fillRect(0, 0, dw.width, dw.height); dDirty = false; }
+  dwReset();
+  DCOLORS.forEach(function(c){
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'dw-c'; b.style.background = c;
+    b.setAttribute('aria-label', '颜色'); b.setAttribute('aria-pressed', c === dColor ? 'true' : 'false');
+    b.addEventListener('click', function(){
+      dColor = c;
+      $('dwColors').querySelectorAll('.dw-c').forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    });
+    $('dwColors').appendChild(b);
+  });
+  function dpt(ev){ var r = dw.getBoundingClientRect(); return { x: (ev.clientX - r.left) * dw.width / r.width, y: (ev.clientY - r.top) * dw.height / r.height }; }
+  function dline(a, b){
+    dctx.strokeStyle = dColor; dctx.lineWidth = 12; dctx.lineCap = 'round'; dctx.lineJoin = 'round';
+    dctx.beginPath(); dctx.moveTo(a.x, a.y); dctx.lineTo(b.x, b.y); dctx.stroke(); dDirty = true;
+  }
+  dw.addEventListener('pointerdown', function(ev){
+    ev.preventDefault(); dDown = true; dLast = dpt(ev);
+    try { dw.setPointerCapture(ev.pointerId); } catch(e){}
+    dline(dLast, { x: dLast.x + 0.1, y: dLast.y + 0.1 });
+  });
+  dw.addEventListener('pointermove', function(ev){ if (!dDown) return; ev.preventDefault(); var pnt = dpt(ev); dline(dLast, pnt); dLast = pnt; });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(function(t){ dw.addEventListener(t, function(){ dDown = false; }); });
+  $('ntDraw').addEventListener('click', function(){ if (!drawingData) dwReset(); $('drawSheet').classList.add('open'); });
+  $('dwClear').addEventListener('click', dwReset);
+  $('drawSheet').addEventListener('click', function(ev){ if (ev.target === $('drawSheet')) $('drawSheet').classList.remove('open'); });
+  $('dwDone').addEventListener('click', function(){
+    $('drawSheet').classList.remove('open');
+    if (!dDirty){ drawingData = ''; $('ntPrev').hidden = true; return; }
+    var t = document.createElement('canvas'); t.width = t.height = 360;
+    t.getContext('2d').drawImage(dw, 0, 0, 360, 360);
+    var url = t.toDataURL('image/png');
+    if (url.length > 300000) url = t.toDataURL('image/jpeg', 0.8);
+    drawingData = url; $('ntImg').src = url; $('ntPrev').hidden = false;
+  });
+  $('ntImgDel').addEventListener('click', function(){ drawingData = ''; $('ntPrev').hidden = true; dwReset(); });
+
+  /* ---------- email ---------- */
+  function sendMail(nt){
+    var em = state.emails || {};
+    var to = em.a || em.b, cc = (em.a && em.b && em.a !== em.b) ? em.b : '';
+    if (!to){ toast('还没设置邮箱，去设置里填一下'); return; }
+    var fromName = nt.from === 'a' ? A() : B(), toName = nt.from === 'a' ? B() : A();
+    var body = {
+      _subject: '💌 ' + fromName + '给' + toName + '的小纸条',
+      _template: 'box', _captcha: 'false',
+      '来自': fromName,
+      '纸条': nt.text || '（这是一幅涂鸦）',
+      '涂鸦': nt.drawing ? '有一幅涂鸦，打开订婚卡查看' : '无',
+      '打开订婚卡': location.origin + location.pathname + '#k=' + KEY
+    };
+    if (cc) body._cc = cc;
+    fetch('https://formsubmit.co/ajax/' + encodeURIComponent(to), {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body)
+    }).then(function(r){ return r.json(); }).then(function(j){
+      if (j && (j.success === true || j.success === 'true')) toast('邮件也寄出啦 📧');
+      else if (j && /activat/i.test(String(j.message || ''))) toast('邮件要先激活：去 ' + A() + ' 的邮箱点一下确认链接');
+      else toast('邮件没寄出去，纸条已经贴上了');
+    }).catch(function(){ toast('邮件没寄出去，纸条已经贴上了'); });
+  }
+
+  $('ntSend').addEventListener('click', function(){
+    if (!ME){ openMe(); return; }
+    var text = $('ntText').value.trim().slice(0, 300);
+    if (!text && !drawingData){ toast('写点什么，或者画一笔吧'); return; }
+    if (!notesCol){ toast('云端还没连上，稍等一下'); return; }
+    var nt = { from: ME, text: text, drawing: drawingData || '', ts: Date.now() };
+    notesCol.add(nt).catch(cloudFail);
+    if ($('ntMail').checked) sendMail(nt);
+    else toast(/爱/.test(text) ? '纸条贴上去了，' + (ME === 'a' ? B() : A()) + '会很开心的 💗' : '纸条贴上去了 📌');
+    var r = $('ntSend').getBoundingClientRect(); hearts(r.left + r.width / 2, r.top);
+    $('ntText').value = ''; drawingData = ''; $('ntPrev').hidden = true; $('ntMail').checked = false; dwReset();
+  });
+
+  /* ---------- settings ---------- */
+  $('saveEm').addEventListener('click', function(){
+    var ok = function(v){ return !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); };
+    var a = $('emA').value.trim(), b = $('emB').value.trim();
+    if (!ok(a) || !ok(b)){ toast('邮箱格式好像不对'); return; }
+    state.emails = { a: a, b: b }; saveMain({ emails: state.emails }); render(); toast('邮箱已保存');
+  });
+  $('setCount').addEventListener('click', function(){
+    var v = parseInt($('inCount').value, 10), n = state.entries.length;
+    if (isNaN(v) || v < 0 || v > TOTAL){ toast('请输入 0 到 100 之间的数字'); return; }
+    if (v === n){ toast('现在就是 ' + v + ' 次'); return; }
+    var bt = FS && entriesCol ? FS.batch() : null;
+    if (v > n){
+      var now = Date.now(), day = ymd(new Date());
+      for (var i = 0; i < v - n; i++){
+        var e = { id: newId(now + i), day: day, ts: now + i, mood: '', note: '' };
+        state.entries.push(e);
+        if (bt) bt.set(entriesCol.doc(e.id), entryData(e));
+      }
+    } else {
+      var drop = state.entries.slice().sort(function(x, y){ return y.ts - x.ts; }).slice(0, n - v);
+      drop.forEach(function(e){ if (bt) bt.delete(entriesCol.doc(e.id)); });
+      state.entries = state.entries.filter(function(e){ return drop.indexOf(e) < 0; });
+    }
+    if (bt) bt.commit().catch(cloudFail);
+    cache(); render(); $('inCount').value = ''; toast('已设为 ' + v + ' 次');
+  });
+  $('editLetter').addEventListener('click', function(){ $('ltInput').value = (state.letter || []).join('\n'); $('letterSheet').classList.add('open'); });
+  $('ltCancel').addEventListener('click', function(){ $('letterSheet').classList.remove('open'); });
+  $('letterSheet').addEventListener('click', function(ev){ if (ev.target === $('letterSheet')) $('letterSheet').classList.remove('open'); });
+  $('ltSave').addEventListener('click', function(){
+    state.letter = $('ltInput').value.split('\n').map(function(x){ return x.trim().slice(0, 40); }).filter(Boolean).slice(0, 24);
+    saveMain({ letter: state.letter }); render(); $('letterSheet').classList.remove('open'); toast('附言已保存');
+  });
+
+  render(); renderNotes();
+
+  /* ---------- cloud sync ---------- */
+  (function(){
+    if (!KEY){ showLock('这张卡需要用专属链接打开 🔒'); return; }
+    if (!window.firebase || !firebase.initializeApp){ toast('云端没连上，先显示这台设备上的记录'); maybeAskMe(); return; }
+    try {
+      firebase.initializeApp(FB);
+      FS = firebase.firestore();
+      try { FS.enablePersistence({ synchronizeTabs: true }).catch(function(){}); } catch(e){}
+      mainRef = FS.collection('cards').doc(KEY);
+      entriesCol = mainRef.collection('entries');
+      notesCol = mainRef.collection('notes');
+      var initMain = false, initEntries = false, notesReady = false;
+
+      mainRef.onSnapshot(function(snap){
+        var d = snap.exists ? snap.data() : {};
+        var m = normalizeMain(d);
+        state.names = m.names; state.chapters = m.chapters; state.letter = m.letter; state.emails = m.emails;
+        if (INIT && !initMain && !snap.metadata.fromCache){
+          initMain = true;
+          var patch = {};
+          if (INIT.names && !(d.names && (d.names.a || d.names.b))) patch.names = INIT.names;
+          if (INIT.emails && !(d.emails && (d.emails.a || d.emails.b))) patch.emails = INIT.emails;
+          if (Array.isArray(INIT.letter) && !Array.isArray(d.letter)) patch.letter = INIT.letter;
+          if (Object.keys(patch).length) mainRef.set(patch, { merge: true }).catch(cloudFail);
+        }
+        cache(); render(); renderNotes();
+        if (!snap.metadata.fromCache) maybeAskMe();
+      }, cloudFail);
+
+      entriesCol.orderBy('ts').onSnapshot(function(snap){
+        var arr = [];
+        snap.forEach(function(doc){ var x = doc.data(); x.id = doc.id; arr.push(x); });
+        if (INIT && Array.isArray(INIT.entries) && !initEntries && !snap.metadata.fromCache){
+          initEntries = true;
+          if (snap.empty){
+            INIT.entries.forEach(function(e){
+              var se = { id: newId(e.ts), day: e.day, ts: e.ts, mood: '', note: '' };
+              entriesCol.doc(se.id).set(entryData(se)).catch(cloudFail);
+            });
+          }
+        }
+        state.entries = normEntries(arr);
+        cache(); render();
+      }, cloudFail);
+
+      notesCol.orderBy('ts', 'desc').limit(120).onSnapshot(function(snap){
+        var arr = [];
+        snap.forEach(function(doc){ var x = doc.data(); x.id = doc.id; x.ts = Number(x.ts) || 0; x.text = str(x.text).slice(0, 300); x.drawing = str(x.drawing); arr.push(x); });
+        if (notesReady && ME){
+          snap.docChanges().forEach(function(ch){
+            var x = ch.doc.data();
+            if (ch.type === 'added' && x.from && x.from !== ME && !ch.doc.metadata.hasPendingWrites){
+              toast('💌 ' + (x.from === 'a' ? A() : B()) + '给你贴了一张新纸条');
+              hearts(window.innerWidth - 60, 40);
+            }
+          });
+        }
+        if (!snap.metadata.fromCache) notesReady = true;
+        notes = arr; renderNotes();
+      }, cloudFail);
+    } catch(e){ toast('云端初始化失败，先显示这台设备上的记录'); }
+  })();
+})();
+</script>
+</body>
+</html>
