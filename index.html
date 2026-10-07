@@ -64,7 +64,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline
 /* sticky note */
 .note{background:var(--note);color:var(--note-ink);padding:14px 16px;transform:rotate(-1.2deg);font-family:var(--display);font-size:17px;line-height:1.6;box-shadow:0 6px 14px var(--shadow);border-radius:2px;margin-top:24px;}
 
-.greet{margin:0 0 2px;font-size:14px;color:var(--muted);}
+.greet{margin:0 0 2px;font-size:14px;color:var(--muted);min-height:1.5em;transition:opacity .6s;}
+.greet.fade{opacity:0;}
+.greet.rare{color:var(--accent);}
+.drift{position:fixed;bottom:-40px;pointer-events:none;font-size:22px;z-index:14;opacity:.85;animation:drift linear forwards;}
+@keyframes drift{to{transform:translate(var(--dx),-110vh) rotate(25deg);opacity:0}}
 .meta{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 14px;margin:6px 0 0;font-size:12px;color:var(--muted);letter-spacing:.04em;}
 .meta span+span::before{content:"";display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:.5;margin-right:14px;vertical-align:middle;position:relative;top:-1px;}
 
@@ -121,10 +125,16 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline
 .nt .new{position:absolute;top:-9px;left:-6px;background:var(--accent);color:#fff;font-size:10px;padding:2px 7px;border-radius:999px;}
 .nt-del{display:block;margin:6px 0 0 auto;font-size:11px;background:none;border:0;color:inherit;opacity:.55;cursor:pointer;padding:2px 6px;border-radius:999px;}
 .nt-del.arm{opacity:1;background:var(--accent);color:#fff;}
-#dwCanvas{display:block;width:100%;max-width:340px;aspect-ratio:1;margin:12px auto 10px;background:#fff;border-radius:14px;border:1.5px solid var(--track);touch-action:none;cursor:crosshair;}
+#dwCanvas{display:block;width:100%;max-width:320px;aspect-ratio:1;margin:12px auto 10px;background:#fff;border-radius:14px;border:1.5px solid var(--track);touch-action:none;cursor:crosshair;}
 .dw-tools{display:flex;justify-content:center;gap:12px;}
 .dw-c{width:30px;height:30px;border-radius:50%;border:3px solid transparent;cursor:pointer;padding:0;box-shadow:0 0 0 1px var(--line);}
 .dw-c[aria-pressed="true"]{border-color:var(--panel);box-shadow:0 0 0 2px var(--ink);}
+.dw-tools{flex-wrap:wrap;}
+.dw-row2{margin-top:10px;gap:6px;}
+.dw-t{display:inline-flex;align-items:center;gap:5px;border:1.5px solid var(--track);background:var(--bg);color:var(--ink);border-radius:999px;padding:6px 11px;font-size:13px;cursor:pointer;}
+.dw-t i{display:inline-block;border-radius:50%;background:currentColor;}
+.dw-t[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+.nt-act{display:inline-block;margin-top:6px;font-size:11px;background:none;border:0;color:inherit;opacity:.75;cursor:pointer;padding:2px 4px;}
 .fab{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:12px;z-index:25;border:0;border-radius:999px;background:var(--accent);color:#fff;padding:9px 14px;font-size:14px;box-shadow:0 6px 16px var(--shadow);cursor:pointer;animation:pulse 1.6s ease-in-out infinite;}
 @keyframes pulse{50%{transform:scale(1.06)}}
 .lockscreen{position:fixed;inset:0;z-index:60;background:var(--bg);display:grid;place-items:center;text-align:center;padding:24px;}
@@ -180,6 +190,105 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline
 .cap-opt[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
 .cv-text{margin-top:14px;padding:14px 16px;background:var(--note);color:var(--note-ink);border-radius:4px;font-family:var(--display);font-size:17px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere;max-height:50vh;overflow:auto;}
 #cvDel.arm{background:var(--accent);color:#fff;}
+
+/* v1.4 layout */
+main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px));}
+.tab > h2.first{margin-top:14px;}
+.hd{position:relative;}
+.gear{position:absolute;top:-4px;right:-6px;background:none;border:0;font-size:19px;cursor:pointer;opacity:.55;padding:6px;}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;background:var(--panel);background:color-mix(in srgb,var(--panel) 90%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));}
+.nav-in{display:grid;grid-template-columns:repeat(5,1fr);width:100%;max-width:440px;}
+.nav button{position:relative;background:none;border:0;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;padding:4px 0;cursor:pointer;}
+.nav .ni{font-size:21px;line-height:1.15;filter:grayscale(.7);opacity:.75;transition:transform .2s;}
+.nav button[aria-current="page"]{color:var(--accent);font-weight:600;}
+.nav button[aria-current="page"] .ni{filter:none;opacity:1;transform:translateY(-2px) scale(1.08);}
+.bd{position:absolute;top:0;left:calc(50% + 7px);min-width:17px;height:17px;border-radius:999px;background:var(--accent);color:#fff;font-size:10px;line-height:17px;padding:0 4px;text-align:center;}
+.bd.dot{min-width:9px;width:9px;height:9px;padding:0;top:3px;}
+body .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px));}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px;}
+.sum button{background:var(--panel);border:0;border-radius:14px;padding:10px 4px;box-shadow:0 4px 12px var(--shadow);color:var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;}
+.sum .si{font-size:22px;}
+.sum b{font-weight:600;font-size:12px;color:var(--accent);}
+.panel{background:var(--panel);border-radius:18px;padding:16px;box-shadow:0 6px 16px var(--shadow);}
+.sub-h{display:block;font-size:13px;color:var(--muted);margin:16px 0 8px;}
+.fine-l{margin:8px 0 0;font-size:12px;color:var(--muted);line-height:1.6;}
+.qa-from{margin:-6px 0 10px;font-size:12px;color:var(--accent);}
+.qa-from:empty{display:none;}
+.seg{display:flex;gap:6px;flex-wrap:wrap;}
+.seg button{border:1.5px solid var(--track);background:var(--bg);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+.greet.drop{color:var(--accent);font-family:var(--display);font-size:15px;}
+/* coupons */
+.cpn-list{display:flex;flex-direction:column;gap:12px;}
+.cpn{position:relative;display:flex;align-items:stretch;background:var(--panel);border-radius:14px;box-shadow:0 5px 14px var(--shadow);overflow:hidden;min-height:78px;}
+.cpn-stub{flex:none;width:66px;display:grid;place-items:center;font-size:30px;background:var(--track);border-right:2px dashed var(--panel);}
+.cpn-body{flex:1;padding:10px 12px;min-width:0;}
+.cpn-body b{font-family:var(--display);font-weight:400;font-size:17px;display:block;padding-right:34px;}
+.cpn-body p{margin:2px 0 0;font-size:13px;opacity:.85;overflow-wrap:anywhere;}
+.cpn-body small{display:block;margin-top:4px;font-size:11px;color:var(--muted);}
+.cpn-use{align-self:center;margin-right:10px;border:0;background:var(--accent);color:#fff;border-radius:999px;padding:8px 14px;font-size:14px;cursor:pointer;flex:none;}
+.cpn-use.arm{background:var(--accent-deep);}
+.cpn-del{position:absolute;top:6px;right:8px;border:0;background:none;color:var(--muted);font-size:11px;cursor:pointer;padding:2px 6px;border-radius:999px;}
+.cpn-del.arm{background:var(--accent);color:#fff;}
+.cpn.void{opacity:.55;}
+.cpn-stamp{position:absolute;right:14px;top:50%;transform:translateY(-50%) rotate(-12deg);border:2px solid #D7263D;color:#D7263D;border-radius:8px;padding:2px 8px;font-family:var(--display);font-size:14px;background:var(--panel);}
+.cpn.fresh{box-shadow:0 0 0 3px var(--accent),0 5px 14px var(--shadow);}
+/* wishes & lists */
+.wish-add{display:flex;gap:8px;align-items:center;}
+.wish-add input{flex:1;}
+.wish-list{list-style:none;margin:12px 0 0;padding:0;background:var(--panel);border-radius:16px;overflow:hidden;}
+.panel .wish-list{background:var(--bg);}
+.wish-list li{display:flex;align-items:center;gap:10px;padding:11px 12px;border-top:1.5px dashed var(--line);}
+.wish-list li:first-child{border-top:0;}
+.wish-ic{flex:none;font-size:18px;}
+.wish-ck{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);background:none;cursor:pointer;padding:0;}
+.wish-ck:active{background:var(--track);}
+.wish-tx{flex:1;min-width:0;font-size:15px;overflow-wrap:anywhere;}
+.wish-tx small{display:block;font-size:11px;color:var(--muted);margin-top:2px;}
+.wish-x{flex:none;border:0;background:none;color:var(--muted);font-size:12px;cursor:pointer;padding:4px 8px;border-radius:999px;}
+.wish-x.arm{background:var(--accent);color:#fff;}
+.mem-list{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;}
+.mem{background:var(--note);color:var(--note-ink);padding:12px;border-radius:3px;box-shadow:0 5px 12px var(--shadow);transform:rotate(var(--r));min-width:0;}
+.mem b{font-family:var(--display);font-weight:400;font-size:16px;display:block;overflow-wrap:anywhere;}
+.mem small{display:block;font-size:11px;opacity:.75;margin-top:4px;}
+.mem p{margin:6px 0 0;font-size:13px;line-height:1.6;overflow-wrap:anywhere;}
+/* achievements */
+.stk{position:relative;}
+.stk.add .face{background:transparent;box-shadow:none;border:2px dashed var(--accent);color:var(--accent);font-size:26px;transform:none;}
+.ach-x{position:absolute;top:-6px;right:2px;border:0;background:var(--panel);color:var(--muted);width:22px;height:22px;border-radius:50%;font-size:10px;cursor:pointer;padding:0;box-shadow:0 2px 6px var(--shadow);}
+.ach-x.arm{background:var(--accent);color:#fff;width:auto;padding:0 6px;}
+/* stories */
+.story-list{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
+.stc{text-align:left;background:var(--panel);border:0;border-radius:14px;padding:12px 14px;box-shadow:0 4px 12px var(--shadow);color:var(--ink);cursor:pointer;font:inherit;}
+.stc b{font-family:var(--display);font-weight:400;font-size:18px;display:block;}
+.stc small{font-size:11px;color:var(--muted);}
+.stc p{margin:6px 0 0;font-size:13px;color:var(--muted);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.read-body{margin-top:12px;max-height:56vh;overflow:auto;font-size:15px;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere;}
+/* note reactions */
+.nt-rx{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;align-items:center;}
+.rx{font-size:13px;background:rgba(255,255,255,.55);border-radius:999px;padding:1px 7px;}
+.rx-pick{display:flex;gap:2px;flex-wrap:wrap;margin-top:4px;}
+.rx-pick button{background:none;border:0;font-size:19px;cursor:pointer;padding:2px;}
+.nt-replies{margin-top:6px;border-top:1px dashed rgba(0,0,0,.15);padding-top:4px;}
+.nt-replies p{margin:3px 0 0;font-size:12px;line-height:1.5;overflow-wrap:anywhere;}
+.nt-replies b{font-weight:600;}
+/* recap */
+.recap{background:linear-gradient(160deg,var(--panel),var(--track));border-radius:20px;padding:16px 18px 10px;box-shadow:0 6px 16px var(--shadow);}
+.recap-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.recap-nav button{border:0;background:var(--panel);color:var(--accent);width:34px;height:34px;border-radius:50%;font-size:20px;cursor:pointer;}
+.recap-nav b{font-family:var(--display);font-weight:400;font-size:20px;}
+.rc-line{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1.5px dashed var(--line);font-size:14px;line-height:1.7;}
+.rc-line:first-child{border-top:0;}
+.rc-line .ri{font-size:20px;flex:none;}
+.rc-big{font-family:var(--display);font-size:22px;color:var(--accent);margin:0 2px;}
+/* love bubble styles */
+.love-ans.bs-note{background:var(--note);color:var(--note-ink);border-radius:3px;transform:rotate(-1.5deg);}
+.love-ans.bs-note::before{border-bottom-color:var(--note);}
+.love-ans.bs-fill{background:var(--accent);color:#fff;}
+.love-ans.bs-fill::before{border-bottom-color:var(--accent);}
+.love-ans.bs-letter{background:var(--panel);outline:1.5px dashed var(--accent);outline-offset:-5px;color:var(--accent);}
+.love-ans.bs-cloud{background:var(--note-a);color:var(--note-a-ink);border-radius:28px;}
+.love-ans.bs-cloud::before{border-bottom-color:var(--note-a);}
 
 /* love */
 .love{text-align:center;margin-top:18px;}
@@ -281,14 +390,15 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
 </head>
 <body>
 <main>
+<div class="tab" data-tab="home">
   <header class="hd">
+    <button class="gear" id="gearBtn" type="button" aria-label="设置">⚙️</button>
     <p class="greet" id="greet"></p>
     <button class="names" id="namesBtn" aria-label="修改名字"><span id="nameA">弟弟</span><span class="amp">♡</span><span id="nameB">姐姐</span></button>
     <div class="status-row" id="statusRow"></div>
     <p class="meta"><span>订婚卡 No.0001</span><span>限量 1 张</span><span>有效期：直到订婚那天</span></p>
     <p class="sub" id="subLine">订婚进度手账</p>
   </header>
-
   <div class="rg-wrap">
     <svg class="rg-svg" viewBox="0 0 300 300" aria-hidden="true">
       <circle class="rg-track" cx="150" cy="150" r="120"/>
@@ -301,13 +411,26 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     </div>
   </div>
   <div class="hearts" id="hearts" aria-hidden="true"></div>
-
   <div class="actions" id="actions">
     <button class="btn" id="undoBtn">撤销</button>
     <button class="btn main" id="plusBtn">+1 ♡</button>
     <button class="btn" id="copyBtn">复制</button>
   </div>
-
+  <div class="note" id="note"></div>
+  <div class="love">
+    <div class="love-row">
+      <button class="love-btn" id="loveBtn" type="button">💌 你爱我吗？</button>
+      <button class="love-btn" id="hugBtn" type="button">🫂 要抱抱</button>
+      <button class="love-btn" id="pokeBtn" type="button">🥺 想你了</button>
+    </div>
+    <p class="love-ans" id="loveAns" hidden></p>
+    <p class="poke-stat" id="pokeStat"></p>
+  </div>
+  <div class="sum" id="sum">
+    <button type="button" data-jump="notes"><span class="si">💌</span><span>小纸条</span><b id="sumNotes"></b></button>
+    <button type="button" data-jump="daily"><span class="si">💭</span><span>今日一问</span><b id="sumDaily"></b></button>
+    <button type="button" data-jump="fun"><span class="si">🎟️</span><span>券夹</span><b id="sumFun"></b></button>
+  </div>
   <h2>主线剧情</h2>
   <section class="story" aria-label="主线剧情">
     <div class="ch-top"><span class="ch-no" id="chNo">序章</span><span class="ch-count" id="chCount">0 / 10</span></div>
@@ -323,20 +446,15 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     <button class="ch-toggle" id="chToggle" type="button" aria-expanded="false">查看全部章节</button>
     <ol class="ch-list" id="chList" hidden></ol>
   </section>
-
-  <div class="note" id="note"></div>
-
-  <div class="love">
-    <div class="love-row">
-      <button class="love-btn" id="loveBtn" type="button">💌 你爱我吗？</button>
-      <button class="love-btn" id="hugBtn" type="button">🫂 要抱抱</button>
-      <button class="love-btn" id="pokeBtn" type="button">🥺 想你了</button>
-    </div>
-    <p class="love-ans" id="loveAns" hidden></p>
-    <p class="poke-stat" id="pokeStat"></p>
-  </div>
-
-  <h2 id="notesTitle">小纸条</h2>
+  <section class="stats" aria-label="统计">
+    <div><b id="stDays">—</b><span>开始第几天</span></div>
+    <div><b id="stStreak">—</b><span>最长连续天数</span></div>
+    <div><b id="stEta">—</b><span>预计订婚日</span></div>
+  </section>
+  <p class="fine">预计日期仅供参考，以发行方心情为准</p>
+</div>
+<div class="tab" data-tab="notes" hidden>
+  <h2 id="notesTitle" class="first">小纸条</h2>
   <section class="wall" id="wall" aria-label="小纸条">
     <div class="compose">
       <textarea id="ntText" maxlength="300" placeholder="写一张小纸条……"></textarea>
@@ -350,19 +468,61 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     </div>
     <div class="notes" id="notes"></div>
     <p class="empty" id="notesEmpty">还没有纸条，写第一张吧</p>
+    <button class="ch-toggle" id="notesMore" type="button" hidden>看更早的纸条</button>
   </section>
-
-  <h2>每日一问</h2>
+</div>
+<div class="tab" data-tab="daily" hidden>
+  <h2 class="first">每日一问</h2>
   <section class="qa" aria-label="每日一问">
     <span class="qa-day">今天的问题</span>
     <p class="qa-q" id="qaText"></p>
+    <p class="qa-from" id="qaFrom"></p>
     <div class="qa-grid" id="qaBoth"></div>
     <div class="qa-form" id="qaForm"><textarea id="qaInput" maxlength="200" placeholder="写下你的回答，对方答完才能看到"></textarea><button class="btn main sm" id="qaSend" type="button">藏好回答</button></div>
     <p class="qa-wait" id="qaWait"></p>
     <button class="ch-toggle" id="qaHistBtn" type="button" hidden>看看往期</button>
     <div class="qa-hist" id="qaHist" hidden></div>
   </section>
-
+  <h2>自己出题</h2>
+  <section class="panel">
+    <p class="caps-intro">出一道题藏进题库，对方不知道哪天会抽到。你们出的题会排在系统题前面。</p>
+    <div class="wish-add"><input id="qIn" maxlength="60" placeholder="比如：你第一次见我时在想什么？"><button class="btn main sm" id="qAdd" type="button">藏进去</button></div>
+    <p class="fine-l" id="qInfo"></p>
+    <ul class="wish-list" id="qList" hidden></ul>
+  </section>
+  <h2>往开场白里投一句话</h2>
+  <section class="panel">
+    <p class="caps-intro">写一句话，它会出现在首页最上面那一行。可以只给对方看，也可以两个人都看；可以随机冒出来，也可以定在某个时刻。</p>
+    <textarea id="dropText" maxlength="40" placeholder="比如：姐姐今天也是最可爱的" style="height:64px;margin-top:0"></textarea>
+    <span class="sub-h">给谁看</span>
+    <div class="seg" id="dropTo"><button type="button" data-v="other" aria-pressed="true">给对方</button><button type="button" data-v="both" aria-pressed="false">两个人都看</button></div>
+    <span class="sub-h">什么时候出现</span>
+    <div class="seg" id="dropMode"><button type="button" data-v="random" aria-pressed="true">随机冒出来</button><button type="button" data-v="time" aria-pressed="false">指定时刻</button></div>
+    <div class="row" id="dropTimeRow" hidden style="margin-top:10px"><input type="time" id="dropTime" value="21:00" aria-label="时间"><input type="date" id="dropDate" aria-label="日期（不填就是每天）"></div>
+    <p class="fine-l" id="dropHint">随机模式：开场白每次换句时，有一定概率换成这句。</p>
+    <button class="btn main sm" id="dropSend" type="button" style="display:block;margin:10px 0 0 auto">投出去</button>
+    <span class="sub-h">我投出去的</span>
+    <ul class="wish-list" id="dropList" hidden></ul>
+  </section>
+</div>
+<div class="tab" data-tab="fun" hidden>
+  <h2 class="first">兑换券</h2>
+  <section>
+    <button class="btn sm" id="cpnNew" type="button">🎟️ 发行一张券</button>
+    <span class="sub-h">我收到的券</span>
+    <div class="cpn-list" id="cpnRecv"></div><p class="caps-empty" id="cpnRecvEmpty">还没有收到券</p>
+    <span class="sub-h">我发出去的券</span>
+    <div class="cpn-list" id="cpnSent"></div><p class="caps-empty" id="cpnSentEmpty">还没有发过券</p>
+  </section>
+  <h2>心愿清单</h2>
+  <section>
+    <p class="caps-intro">想一起做的事都写进来。做到了就打勾，它会变成一张回忆卡。</p>
+    <div class="wish-add"><input id="wishIn" maxlength="40" placeholder="比如：一起看一次日出"><button class="btn main sm" id="wishAdd" type="button">加进去</button></div>
+    <ul class="wish-list" id="wishTodo" hidden></ul>
+    <p class="caps-empty" id="wishEmpty">清单还是空的，写下第一个心愿吧</p>
+    <span class="sub-h" id="memH" hidden>已经实现的 🎉</span>
+    <div class="mem-list" id="wishDone"></div>
+  </section>
   <h2>时光胶囊</h2>
   <section class="caps" aria-label="时光胶囊">
     <p class="caps-intro">写一段话锁起来，要等盖到指定的次数，对方才能打开。</p>
@@ -370,22 +530,30 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     <div class="cap-list" id="capList"></div>
     <p class="caps-empty" id="capEmpty">还没有胶囊，写下第一个吧</p>
   </section>
-
-  <section class="stats" aria-label="统计">
-    <div><b id="stDays">—</b><span>开始第几天</span></div>
-    <div><b id="stStreak">—</b><span>最长连续天数</span></div>
-    <div><b id="stEta">—</b><span>预计订婚日</span></div>
-  </section>
-  <p class="fine">预计日期仅供参考，以发行方心情为准</p>
-
-  <h2>成就贴纸</h2>
+  <h2>成就</h2>
+  <span class="sub-h">我们自己颁发的</span>
+  <div class="stickers" id="achList"></div>
+  <span class="sub-h" style="margin-top:22px">订婚卡成就</span>
   <div class="stickers" id="stickers"></div>
-
+</div>
+<div class="tab" data-tab="memory" hidden>
+  <h2 class="first">月度回忆卡</h2>
+  <section class="recap">
+    <div class="recap-nav"><button type="button" id="rcPrev" aria-label="上个月">‹</button><b id="rcMonth"></b><button type="button" id="rcNext" aria-label="下个月">›</button></div>
+    <div class="recap-body" id="rcBody"></div>
+    <button class="ch-toggle" id="rcLoad" type="button">生成回忆卡</button>
+  </section>
+  <h2>我们的故事</h2>
+  <section>
+    <p class="caps-intro">你们自己的故事本：某一天、某段对话、一篇小说，都可以写在这里。</p>
+    <button class="btn sm" id="storyNew" type="button">✍️ 写一篇</button>
+    <div class="story-list" id="storyList"></div>
+    <p class="caps-empty" id="storyEmpty">还没有故事，写下第一篇吧</p>
+  </section>
   <h2>我们的记录</h2>
   <ol class="log" id="log"></ol>
   <p class="empty" id="logEmpty">还没有记录，点上面的 +1 开始吧</p>
   <button class="more" id="moreBtn" hidden>展开全部</button>
-
   <div id="letterWrap" hidden>
   <h2>发行方附言</h2>
   <div class="letter">
@@ -394,7 +562,6 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     <p class="sign">—— 发行方 <span data-name="a"></span></p>
   </div>
   </div>
-
   <h2 id="rulesTitle">活动规则</h2>
   <div class="rules">
     <ol>
@@ -407,7 +574,6 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     </ol>
     <div class="final-row"><p class="final">本活动最终解释权<br>归发行方所有</p><button class="seal" id="sealBtn" type="button" aria-label="发行方认证章">发行方<br>认证</button></div>
   </div>
-
   <div id="settings">
     <h2>设置</h2>
     <div class="field">
@@ -436,6 +602,10 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
       <div class="row"><input type="date" id="inDay"><button class="btn sm" id="addPast">补录</button></div>
     </div>
     <div class="field">
+      <span class="lb">💾 备份（把所有盖章、纸条、问答、胶囊下载成一个文件，隔一阵子存一次）</span>
+      <button class="btn sm" id="backupBtn" type="button">下载备份</button>
+    </div>
+    <div class="field">
       <span class="lb">从头开始（会清空所有记录，点两下确认）</span>
       <button class="btn sm" id="resetBtn">清空记录</button>
     </div>
@@ -444,9 +614,17 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
   <footer class="foot">
     <p id="footDays"></p>
     <p>© 2026 <span data-name="a"></span> 发行　<span data-name="b"></span> 专属　翻版必究</p>
-    <p class="ver">v1.2.1 互动版　2026年10月7日</p>
+    <p class="ver">v1.4 宝箱版　2026年10月7日</p>
   </footer>
+</div>
 </main>
+<nav class="nav" aria-label="导航"><div class="nav-in">
+  <button type="button" data-go="home" aria-current="page"><span class="ni">🏠</span>首页</button>
+  <button type="button" data-go="notes"><span class="ni">💌</span>纸条<span class="bd" id="bdNotes" hidden></span></button>
+  <button type="button" data-go="daily"><span class="ni">💭</span>每日<span class="bd" id="bdDaily" hidden></span></button>
+  <button type="button" data-go="fun"><span class="ni">🎁</span>宝箱<span class="bd" id="bdFun" hidden></span></button>
+  <button type="button" data-go="memory"><span class="ni">📖</span>回忆</button>
+</div></nav>
 
 <div class="sheet" id="composer">
   <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="cpTitle">
@@ -480,6 +658,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     <h3 id="dwTitle">画一笔</h3>
     <canvas id="dwCanvas" width="600" height="600"></canvas>
     <div class="dw-tools" id="dwColors"></div>
+    <div class="dw-tools dw-row2" id="dwTools"></div>
     <div class="row2"><button class="btn" id="dwClear" type="button">清空</button><button class="btn main" id="dwDone" type="button">贴到纸条上</button></div>
   </div>
 </div>
@@ -523,6 +702,66 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     <p id="cvMeta"></p>
     <div class="cv-text" id="cvText"></div>
     <div class="row2"><button class="btn" id="cvDel" type="button">撕掉这个胶囊</button><button class="btn main" id="cvClose" type="button">收好了</button></div>
+  </div>
+</div>
+
+<div class="sheet" id="cpnSheet">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="cpnT">
+    <h3 id="cpnT">发行一张券</h3>
+    <p>对方随时可以用，用的时候你会收到提醒。</p>
+    <div class="st-emo" id="cpnEmo"></div>
+    <input id="cpnTitle" maxlength="16" placeholder="券的名字，比如：吹头发券">
+    <input id="cpnNote" maxlength="40" placeholder="说明（可选），比如：随叫随到，吹干为止" style="margin-top:8px">
+    <span class="sub-h">张数</span><div class="seg" id="cpnNum"></div>
+    <span class="sub-h">有效期</span><div class="seg" id="cpnExp"></div>
+    <div class="row2"><button class="btn" id="cpnCancel" type="button">取消</button><button class="btn main" id="cpnSave" type="button">发行</button></div>
+  </div>
+</div>
+<div class="sheet" id="wishSheet">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="wishT">
+    <h3 id="wishT">完成啦 🎉</h3>
+    <p id="wishWhat"></p>
+    <span class="sub-h">哪一天实现的</span>
+    <input type="date" id="wishDay">
+    <textarea id="wishMemo" maxlength="100" placeholder="记一句当时的感觉（可选）" style="height:80px"></textarea>
+    <div class="row2"><button class="btn" id="wishCancel" type="button">取消</button><button class="btn main" id="wishSave" type="button">变成回忆</button></div>
+  </div>
+</div>
+<div class="sheet" id="achSheet">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="achT">
+    <h3 id="achT">颁发一个成就</h3>
+    <p>给你们的第一次、小胜利颁个奖。</p>
+    <div class="st-emo" id="achEmo"></div>
+    <input id="achTitle" maxlength="12" placeholder="成就名，比如：第一次一起做饭">
+    <span class="sub-h">日期</span>
+    <input type="date" id="achDay">
+    <input id="achNote" maxlength="40" placeholder="一句话（可选）" style="margin-top:8px">
+    <div class="row2"><button class="btn" id="achCancel" type="button">取消</button><button class="btn main" id="achSave" type="button">颁发</button></div>
+  </div>
+</div>
+<div class="sheet" id="storySheet">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="stoT">
+    <h3 id="stoT">写一篇故事</h3>
+    <input id="stoTitle" maxlength="30" placeholder="标题" style="margin-top:10px">
+    <textarea id="stoBody" maxlength="3000" style="height:260px" placeholder="写你们自己的故事、某一天、一篇小说……"></textarea>
+    <div class="row2"><button class="btn" id="stoCancel" type="button">取消</button><button class="btn main" id="stoSave" type="button">保存</button></div>
+  </div>
+</div>
+<div class="sheet" id="readSheet">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="rdTitle">
+    <h3 id="rdTitle"></h3>
+    <p id="rdMeta"></p>
+    <div class="read-body" id="rdBody"></div>
+    <div class="row2"><button class="btn" id="rdEdit" type="button">编辑</button><button class="btn main" id="rdClose" type="button">合上</button></div>
+    <button class="nt-del" id="rdDel" type="button" style="margin-top:10px">删除这篇</button>
+  </div>
+</div>
+<div class="sheet" id="replySheet">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="rpT">
+    <h3 id="rpT">回复纸条</h3>
+    <p id="rpQuote"></p>
+    <input id="rpText" maxlength="80" placeholder="回一句……" style="margin-top:10px">
+    <div class="row2"><button class="btn" id="rpCancel" type="button">取消</button><button class="btn main" id="rpSave" type="button">回复</button></div>
   </div>
 </div>
 
@@ -737,13 +976,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     $('stEta').textContent = n >= TOTAL ? '已达成' : (a.eta ? fmtDay(a.eta) : (n ? '再记' + (3 - n) + '次' : '—'));
 
     // greeting
-    var hr = new Date().getHours(), g;
-    if (hr < 5) g = '姐姐早点睡，弟弟好爱你 🌙';
-    else if (hr < 11) g = '姐姐早安，弟弟好爱你 ☀️';
-    else if (hr < 14) g = '姐姐记得吃饭，弟弟好爱你 🍱';
-    else if (hr < 18) g = '姐姐下午好，弟弟好爱你 ☕';
-    else g = '姐姐晚上好，弟弟好爱你 🌙';
-    $('greet').textContent = g;
+    if (!$('greet').textContent) pickGreet(false);
 
     // main story
     var ci = chapterIdx(n), ch = CHAPTERS[ci], len = ch.end - ch.start;
@@ -847,7 +1080,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     $('letterWrap').hidden = !lt.length; lb.innerHTML = '';
     lt.forEach(function(line){ var pp = document.createElement('p'); pp.textContent = line; lb.appendChild(pp); });
     if ($('meSheet').classList.contains('open')){ $('meA').textContent = '我是 ' + A(); $('meB').textContent = '我是 ' + B(); }
-    renderStatus(); renderPokeStat(); renderCaps(); renderQA();
+    renderStatus(); renderPokeStat(); renderCaps(); renderQA(); renderCoupons(); renderWishes(); renderAchs(); renderStories(); renderDrops(); renderMyQs(); renderRecap(); updateNav();
     $('meLabel').textContent = ME ? (ME === 'a' ? A() + '（发行方）' : B() + '（持卡人）') : '还没选';
     if (document.activeElement !== $('emA')) $('emA').value = state.emails.a || '';
     if (document.activeElement !== $('emB')) $('emB').value = state.emails.b || '';
@@ -958,7 +1191,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
       return;
     }
     if (readOnly) return;
-    $('settings').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    goTab('memory', 'settings');
     setTimeout(function(){ $('inA').focus({ preventScroll: true }); }, 400);
   });
   $('saveNames').addEventListener('click', function(){
@@ -995,22 +1228,14 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
   });
 
   var LOVE = [
-    '爱。💗',
-    '爱，问一百遍答一百遍 💯',
-    '爱的是真实的你，不是想象里的姐姐 🫶',
-    '答案订婚那天当面说。剧透一下：爱 🤫',
-    '爱。这一条发行方永不调整 🔒',
-    '不用问，但你问一次我开心一次：爱 🥰',
-    '今天的份：爱 ✅ 明天的份：也爱 ✅',
-    '比昨天多一点，比明天少一点 📈',
-    '检测到持卡人有点缺爱，已自动补满 100% ❤️‍🔥',
-    '你猜？（猜对了，是爱）😏',
-    '爱。发行方签字画押 ✍️',
-    '这题我会！答案是：爱 🙋‍♂️',
-    '在哪都爱你，什么时候都爱你 🌍',
-    '爱。抱一下再问一遍 🫂',
-    '押我稳赢，这把你不会输 🎲',
-    '爱你这件事，没有进度条，一直是满格 🔋'
+    '爱。💗', '爱，问一百遍答一百遍 💯', '爱的是真实的你，不是想象里的姐姐 🫶', '答案订婚那天当面说。剧透一下：爱 🤫',
+    '爱。这一条发行方永不调整 🔒', '不用问，但你问一次我开心一次：爱 🥰', '今天的份：爱 ✅ 明天的份：也爱 ✅', '比昨天多一点，比明天少一点 📈',
+    '检测到持卡人有点缺爱，已自动补满 100% ❤️‍🔥', '你猜？（猜对了，是爱）😏', '爱。发行方签字画押 ✍️', '这题我会！答案是：爱 🙋‍♂️',
+    '在哪都爱你，什么时候都爱你 🌍', '爱。抱一下再问一遍 🫂', '押我稳赢，这把你不会输 🎲', '爱你这件事，没有进度条，一直是满格 🔋',
+    '正在计算……计算结果：超级爱 🧮', '爱，而且是非常非常非常爱 💞', '你是弟弟的标准答案 📝', '爱你，像盖章一样，一次比一次确定 💍',
+    '系统提示：该问题答案已锁定为「爱」🔐', '爱。顺便问一句，今天想我了吗？🥺', '不只是爱，是很想很想和你过一辈子 🏡', '爱你，从第一次盖章开始，到第一百次以后 ♾️',
+    '弟弟的回答：爱。弟弟的补充回答：很爱 💌', '偷偷告诉你，答案一直没变过 🤍', '爱。今天也是被你可爱到的一天 🌸', '再问就要亲你了 😘',
+    '爱你，比喜欢多一点，比一辈子还长一点 🌙', '收到提问，立即回复：爱爱爱 📮'
   ];
   var LOVE_SPECIAL = {
     10: '已经问了 10 次啦，颁发「爱问宝宝」称号一枚 🏅',
@@ -1019,19 +1244,23 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     100: '第 100 次，答案还是：爱 💯 恭喜解锁「被爱满格」'
   };
   var HUGS = [
-    '发行方已张开双手，请就近领取 🫂',
-    '抱抱已发货，签收请回复「收到」📦',
-    '抱紧了，这次不松手 🤗',
-    '一个不够？发行方批准无限续抱 ♾️',
-    '已为你预约发行方的怀抱一个，有效期：永久 🎫',
-    '抱抱 +1，烦恼 -1 🧸',
-    '先抱一下，有什么事抱完再说 🫶'
+    '发行方已张开双手，请就近领取 🫂', '抱抱已发货，签收请回复「收到」📦', '抱紧了，这次不松手 🤗', '一个不够？发行方批准无限续抱 ♾️',
+    '已为你预约发行方的怀抱一个，有效期：永久 🎫', '抱抱 +1，烦恼 -1 🧸', '先抱一下，有什么事抱完再说 🫶', '抱抱充电中…… 100% 🔋',
+    '从后面偷偷抱住你 🫣', '举高高抱一个！✨', '抱住不撒手，今天就这样了 🐨', '隔着屏幕先预支一个，见面补十个 💞',
+    '已抱，已亲，已蹭蹭 🐱', '抱你，像抱一只软软的小熊 🧸', '抱抱券自动兑换成功 🎟️'
   ];
   var BURST = ['💗','💞','💘','💕','🥰','✨'];
+  var bubbleTimer = null;
   function bubble(text){
-    var ans = $('loveAns');
-    ans.textContent = text;
-    ans.hidden = false; ans.classList.remove('pop'); void ans.offsetWidth; ans.classList.add('pop');
+    var ans = $('loveAns'), styles = ['', 'bs-note', 'bs-fill', 'bs-letter', 'bs-cloud'];
+    clearInterval(bubbleTimer);
+    ans.className = 'love-ans ' + styles[Math.floor(Math.random() * styles.length)];
+    ans.hidden = false; void ans.offsetWidth; ans.classList.add('pop');
+    if (Math.random() < 0.35){
+      var i = 0; ans.textContent = '';
+      bubbleTimer = setInterval(function(){ i++; ans.textContent = Array.from(text).slice(0, i).join(''); if (i >= Array.from(text).length) clearInterval(bubbleTimer); }, 55);
+    } else ans.textContent = text;
+    if (Math.random() < 0.1) confetti(['💗', '💕', '💞', '💘', '🥰']);
   }
   $('loveBtn').addEventListener('click', function(ev){
     var k = (parseInt(store.get('ep_love') || '0', 10) || 0) + 1;
@@ -1205,7 +1434,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
   }
   function updateBadge(){
     var u = unread(), fab = $('fab');
-    fab.hidden = u === 0;
+    fab.hidden = u === 0 || TAB === 'notes';
     if (u) fab.textContent = '💌 ' + (ME === 'a' ? B() : A()) + '给你留了 ' + u + ' 张纸条';
   }
   var wallVisible = false;
@@ -1225,12 +1454,15 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
       card.style.setProperty('--r', ((Math.floor(nt.ts / 1000) % 7) - 3) * 0.6 + 'deg');
       if (ME && nt.from !== ME && nt.ts > s0){ var nw = document.createElement('span'); nw.className = 'new'; nw.textContent = 'NEW'; card.appendChild(nw); }
       var head = document.createElement('div'); head.className = 'nt-head';
-      var who = document.createElement('span'); who.textContent = nt.from === 'a' ? A() : B();
+      var who = document.createElement('span'); who.textContent = (nt.from === 'a' ? A() : B()) + (nt.relay && nt.relay !== nt.from ? ' · 接力' + (nt.relay === 'a' ? A() : B()) + '的涂鸦' : '');
       var when = document.createElement('span'); when.textContent = fmtTime(nt.ts);
       head.appendChild(who); head.appendChild(when); card.appendChild(head);
       if (nt.text){ var tx = document.createElement('p'); tx.className = 'nt-text'; tx.textContent = nt.text; card.appendChild(tx); }
       if (nt.drawing && /^data:image\/(png|jpeg);base64,/.test(nt.drawing)){
         var im = document.createElement('img'); im.src = nt.drawing; im.alt = '涂鸦'; im.loading = 'lazy'; card.appendChild(im);
+        var rl = document.createElement('button'); rl.type = 'button'; rl.className = 'nt-act'; rl.textContent = '✏️ 接着画';
+        rl.addEventListener('click', function(){ relayDraw(nt); });
+        card.appendChild(rl);
       }
       if (ME && nt.from === ME){
         var del = document.createElement('button'); del.type = 'button'; del.className = 'nt-del'; del.textContent = '撕掉';
@@ -1244,10 +1476,12 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
         });
         card.appendChild(del);
       }
+      noteExtras(card, nt);
       box.appendChild(card);
     });
     $('notesEmpty').hidden = notes.length > 0;
-    updateBadge();
+    $('notesMore').hidden = notes.length < notesLimit;
+    updateBadge(); updateNav();
     if (wallVisible) setTimeout(markSeen, 2000);
   }
   if ('IntersectionObserver' in window){
@@ -1255,47 +1489,85 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
       es.forEach(function(en){ wallVisible = en.isIntersecting; if (wallVisible) setTimeout(markSeen, 2000); });
     }, { threshold: 0.15 }).observe($('wall'));
   }
-  $('fab').addEventListener('click', function(){ $('notesTitle').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  $('fab').addEventListener('click', function(){ goTab('notes'); });
 
   /* ---------- drawing ---------- */
   var dw = $('dwCanvas'), dctx = dw.getContext('2d'), dColor = '#FF4D7E', dDown = false, dLast = null, dDirty = false, drawingData = '';
-  var DCOLORS = ['#FF4D7E', '#5B2338', '#2E9E8A', '#3A6FD8', '#F2A900'];
-  function dwReset(){ dctx.fillStyle = '#ffffff'; dctx.fillRect(0, 0, dw.width, dw.height); dDirty = false; }
+  var DCOLORS = ['#FF4D7E', '#E63946', '#F2A900', '#2E9E8A', '#3A6FD8', '#8E6CEF', '#5B2338', '#222222'];
+  var dSize = 12, dErase = false, dUndo = [], relayFrom = '';
+  function dwReset(){ dctx.fillStyle = '#ffffff'; dctx.fillRect(0, 0, dw.width, dw.height); dDirty = false; dUndo = []; }
   dwReset();
+  function syncTools(){
+    $('dwColors').querySelectorAll('.dw-c').forEach(function(x){ x.setAttribute('aria-pressed', !dErase && x.getAttribute('data-c') === dColor ? 'true' : 'false'); });
+    $('dwTools').querySelectorAll('.dw-s').forEach(function(x){ x.setAttribute('aria-pressed', Number(x.getAttribute('data-s')) === dSize ? 'true' : 'false'); });
+    $('dwErase').setAttribute('aria-pressed', dErase ? 'true' : 'false');
+  }
   DCOLORS.forEach(function(c){
-    var b = document.createElement('button'); b.type = 'button'; b.className = 'dw-c'; b.style.background = c;
-    b.setAttribute('aria-label', '颜色'); b.setAttribute('aria-pressed', c === dColor ? 'true' : 'false');
-    b.addEventListener('click', function(){
-      dColor = c;
-      $('dwColors').querySelectorAll('.dw-c').forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
-    });
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'dw-c'; b.style.background = c; b.setAttribute('data-c', c);
+    b.setAttribute('aria-label', '颜色');
+    b.addEventListener('click', function(){ dColor = c; dErase = false; syncTools(); });
     $('dwColors').appendChild(b);
   });
+  [['细', 5], ['中', 12], ['粗', 24]].forEach(function(sz){
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'dw-t dw-s'; b.setAttribute('data-s', sz[1]);
+    var dot = document.createElement('i'); dot.style.width = dot.style.height = Math.max(4, sz[1] / 1.6) + 'px';
+    b.appendChild(dot); b.appendChild(document.createTextNode(sz[0]));
+    b.addEventListener('click', function(){ dSize = sz[1]; syncTools(); });
+    $('dwTools').appendChild(b);
+  });
+  (function(){
+    var er = document.createElement('button'); er.type = 'button'; er.className = 'dw-t'; er.id = 'dwErase'; er.textContent = '🧽 橡皮';
+    er.addEventListener('click', function(){ dErase = !dErase; syncTools(); });
+    var un = document.createElement('button'); un.type = 'button'; un.className = 'dw-t'; un.id = 'dwUndo'; un.textContent = '↩️ 撤销';
+    un.addEventListener('click', function(){ if (dUndo.length){ dctx.putImageData(dUndo.pop(), 0, 0); dDirty = true; } else toast('没有可以撤销的了'); });
+    $('dwTools').appendChild(er); $('dwTools').appendChild(un);
+  })();
+  syncTools();
   function dpt(ev){ var r = dw.getBoundingClientRect(); return { x: (ev.clientX - r.left) * dw.width / r.width, y: (ev.clientY - r.top) * dw.height / r.height }; }
   function dline(a, b){
-    dctx.strokeStyle = dColor; dctx.lineWidth = 12; dctx.lineCap = 'round'; dctx.lineJoin = 'round';
+    dctx.strokeStyle = dErase ? '#ffffff' : dColor; dctx.lineWidth = dErase ? dSize * 2 : dSize; dctx.lineCap = 'round'; dctx.lineJoin = 'round';
     dctx.beginPath(); dctx.moveTo(a.x, a.y); dctx.lineTo(b.x, b.y); dctx.stroke(); dDirty = true;
   }
   dw.addEventListener('pointerdown', function(ev){
-    ev.preventDefault(); dDown = true; dLast = dpt(ev);
+    ev.preventDefault();
+    try { dUndo.push(dctx.getImageData(0, 0, dw.width, dw.height)); if (dUndo.length > 10) dUndo.shift(); } catch(e){}
+    dDown = true; dLast = dpt(ev);
     try { dw.setPointerCapture(ev.pointerId); } catch(e){}
     dline(dLast, { x: dLast.x + 0.1, y: dLast.y + 0.1 });
   });
   dw.addEventListener('pointermove', function(ev){ if (!dDown) return; ev.preventDefault(); var pnt = dpt(ev); dline(dLast, pnt); dLast = pnt; });
   ['pointerup', 'pointercancel', 'pointerleave'].forEach(function(t){ dw.addEventListener(t, function(){ dDown = false; }); });
-  $('ntDraw').addEventListener('click', function(){ if (!drawingData) dwReset(); $('drawSheet').classList.add('open'); });
-  $('dwClear').addEventListener('click', dwReset);
+  $('ntDraw').addEventListener('click', function(){
+    if (!drawingData){ dwReset(); relayFrom = ''; }
+    $('dwTitle').textContent = relayFrom ? '接着' + (relayFrom === 'a' ? A() : B()) + '的涂鸦画' : '画一笔';
+    $('drawSheet').classList.add('open');
+  });
+  function relayDraw(nt){
+    if (!ME){ openMe(); return; }
+    var img = new Image();
+    img.onload = function(){
+      dwReset(); dctx.drawImage(img, 0, 0, dw.width, dw.height); dDirty = true; relayFrom = nt.from;
+      $('dwTitle').textContent = '接着' + (nt.from === 'a' ? A() : B()) + '的涂鸦画';
+      $('drawSheet').classList.add('open');
+    };
+    img.src = nt.drawing;
+  }
+  $('dwClear').addEventListener('click', function(){
+    try { dUndo.push(dctx.getImageData(0, 0, dw.width, dw.height)); if (dUndo.length > 10) dUndo.shift(); } catch(e){}
+    var keep = dUndo; dwReset(); dUndo = keep;
+  });
   $('drawSheet').addEventListener('click', function(ev){ if (ev.target === $('drawSheet')) $('drawSheet').classList.remove('open'); });
   $('dwDone').addEventListener('click', function(){
     $('drawSheet').classList.remove('open');
-    if (!dDirty){ drawingData = ''; $('ntPrev').hidden = true; return; }
+    if (!dDirty){ drawingData = ''; relayFrom = ''; $('ntPrev').hidden = true; return; }
     var t = document.createElement('canvas'); t.width = t.height = 360;
     t.getContext('2d').drawImage(dw, 0, 0, 360, 360);
     var url = t.toDataURL('image/png');
     if (url.length > 300000) url = t.toDataURL('image/jpeg', 0.8);
     drawingData = url; $('ntImg').src = url; $('ntPrev').hidden = false;
+    if (relayFrom){ toast('接力涂鸦准备好了，写句话一起贴上去吧'); $('ntText').focus(); }
   });
-  $('ntImgDel').addEventListener('click', function(){ drawingData = ''; $('ntPrev').hidden = true; dwReset(); });
+  $('ntImgDel').addEventListener('click', function(){ drawingData = ''; relayFrom = ''; $('ntPrev').hidden = true; dwReset(); });
 
   /* ---------- email ---------- */
   function sendMail(nt, isTest){
@@ -1341,12 +1613,12 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     var text = $('ntText').value.trim().slice(0, 300);
     if (!text && !drawingData){ toast('写点什么，或者画一笔吧'); return; }
     if (!notesCol){ toast('云端还没连上，稍等一下'); return; }
-    var nt = { from: ME, text: text, drawing: drawingData || '', ts: Date.now() };
+    var nt = { from: ME, text: text, drawing: drawingData || '', ts: Date.now(), relay: drawingData ? relayFrom : '' };
     notesCol.add(nt).catch(cloudFail);
     if ($('ntMail').checked) sendMail(nt);
     else toast(/爱/.test(text) ? '纸条贴上去了，' + (ME === 'a' ? B() : A()) + '会很开心的 💗' : '纸条贴上去了 📌');
     var r = $('ntSend').getBoundingClientRect(); hearts(r.left + r.width / 2, r.top);
-    $('ntText').value = ''; drawingData = ''; $('ntPrev').hidden = true; $('ntMail').checked = false; dwReset();
+    $('ntText').value = ''; drawingData = ''; relayFrom = ''; $('ntPrev').hidden = true; $('ntMail').checked = false; dwReset();
   });
 
   /* ---------- settings ---------- */
@@ -1483,9 +1755,17 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     '婚礼上想放哪首歌？', '如果可以，你最想送对方什么礼物？', '对方让你最安心的一个瞬间',
     '你觉得我们的爱是什么味道的？', '如果以后养一只宠物，叫什么名字？', '理想的周末约会是怎样的？',
     '最想和对方一起学会的一件事', '今天想对方了几次？', '以后我们的家里，一定要有什么？',
-    '用一个 emoji 形容今天的心情', '最想和对方一起完成的一件事', '对方身上你最想学的一点'
+    '用一个 emoji 形容今天的心情', '最想和对方一起完成的一件事', '对方身上你最想学的一点',
+    '如果用一部电影形容我们，是哪一部？', '最想和对方一起过的节日是？', '对方哪个表情你最喜欢？', '今天最想吃什么？想和我一起吃吗？',
+    '你觉得对方最像什么动物？', '想和对方一起养成的一个习惯', '如果我们一起开一家小店，卖什么？', '你最想保留的一张我们的照片是？',
+    '一句想对未来孩子说的话', '如果能回到某一天重来，你选哪天？', '最近一次偷偷想对方是在干什么？', '你心里对方的昵称还有哪些？',
+    '对方哪句话你记了很久？', '想和对方一起挑战的一件小事', '理想中我们的早晨是怎样的？', '下雨天最想和对方做什么？',
+    '如果给对方写一封信，第一句是什么？', '觉得对方今天会是什么心情？', '最想对对方说却一直没说的话', '你最喜欢我们之间的哪个小默契？',
+    '对方身上最让你骄傲的一点', '如果送对方一首歌，是哪一首？', '我们俩谁更粘人？为什么？', '最想和对方一起学的一道菜',
+    '你觉得我们第 100 次的时候会是什么样子？', '给今天的我们打几分？', '对方做过最让你脸红的事', '想和对方去看的一场演出或展览',
+    '如果有一天我们吵架了，你想先说哪句话？', '用一句话形容「和你在一起」的感觉'
   ];
-  var qaDocs = [], qaCol = null, qaHistOpen = false;
+  var qaDocs = [], qaCol = null, qaHistOpen = false, qaLimit = 15, resubQA = null, notesLimit = 60, resubNotes = null;
   function todayQ(){ var t = ymd(new Date()); return { day: t, qi: Math.floor(parseDay(t).getTime() / DAY) % QUESTIONS.length }; }
   function qaOf(day){ var r = null; (qaDocs || []).forEach(function(d){ if (d.day === day) r = d; }); return r || {}; }
   function qaCard(name, text, cls){
@@ -1498,7 +1778,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     if (!$('qaText') || !QUESTIONS) return;
     var tq = todayQ(), doc = qaOf(tq.day);
     var qi = typeof doc.q === 'number' ? doc.q : tq.qi;
-    $('qaText').textContent = QUESTIONS[qi % QUESTIONS.length];
+    var tqq = todayQuestion(doc, qi); $('qaText').textContent = tqq.text; $('qaFrom').textContent = tqq.from ? '🎲 这道题是' + nameOf(tqq.from) + '出的' : '';
     var otherK = ME === 'a' ? 'b' : 'a';
     var mine = ME ? str(doc[ME]) : '', other = ME ? str(doc[otherK]) : '';
     var oName = otherK === 'a' ? A() : B();
@@ -1523,13 +1803,18 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     past.forEach(function(d){
       var item = document.createElement('div'); item.className = 'qa-past';
       var h = document.createElement('div'); h.className = 'qa-past-h';
-      h.textContent = fmtDay(d.day) + '　' + QUESTIONS[(typeof d.q === 'number' ? d.q : 0) % QUESTIONS.length];
+      h.textContent = fmtDay(d.day) + '　' + (d.qtext ? str(d.qtext) : QUESTIONS[(typeof d.q === 'number' ? d.q : 0) % QUESTIONS.length]);
       item.appendChild(h);
       var g = document.createElement('div'); g.className = 'qa-grid';
       g.appendChild(qaCard(A(), d.a ? str(d.a) : '（没回答）', 'from-a'));
       g.appendChild(qaCard(B(), d.b ? str(d.b) : '（没回答）', 'from-b'));
       item.appendChild(g); hist.appendChild(item);
     });
+    if (qaHistOpen && (qaDocs || []).length >= qaLimit){
+      var more = document.createElement('button'); more.type = 'button'; more.className = 'ch-toggle'; more.textContent = '再往前看';
+      more.addEventListener('click', function(){ qaLimit += 30; if (resubQA) resubQA(); });
+      hist.appendChild(more);
+    }
     $('qaHistBtn').hidden = !past.length;
     $('qaHist').hidden = !qaHistOpen || !past.length;
     $('qaHistBtn').textContent = qaHistOpen ? '收起往期' : '看看往期（' + past.length + '）';
@@ -1542,6 +1827,8 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     if (!qaCol){ toast('云端还没连上，稍等一下'); return; }
     var tq = todayQ(), doc = qaOf(tq.day);
     var data = { day: tq.day, q: typeof doc.q === 'number' ? doc.q : tq.qi };
+    var tqq = todayQuestion(doc, data.q);
+    if (tqq.custom && !doc.qtext){ data.qtext = tqq.text; data.qfrom = tqq.from; if (qCol && tqq.id) qCol.doc(tqq.id).set({ usedDay: tq.day }, { merge: true }).catch(cloudFail); }
     data[ME] = text; data[ME + 'ts'] = Date.now();
     qaCol.doc(tq.day).set(data, { merge: true }).catch(cloudFail);
     var otherK = ME === 'a' ? 'b' : 'a';
@@ -1632,6 +1919,554 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     toast('胶囊封存好了，第 ' + capPick + ' 次才能打开 🔒');
   });
 
+  $('notesMore').addEventListener('click', function(){ notesLimit += 60; if (resubNotes) resubNotes(); });
+  $('backupBtn').addEventListener('click', function(){
+    if (!mainRef){ toast('云端还没连上，稍等一下'); return; }
+    toast('正在打包备份……');
+    Promise.all([mainRef.get(), entriesCol.get(), notesCol.get(), qaCol.get(), capCol.get()]).then(function(r){
+      function all(qs){ var a = []; qs.forEach(function(d){ var x = d.data(); x.id = d.id; a.push(x); }); return a; }
+      var data = { exportedAt: new Date().toISOString(), version: 'v1.3', card: r[0].exists ? r[0].data() : {}, entries: all(r[1]), notes: all(r[2]), qa: all(r[3]), capsules: all(r[4]) };
+      var blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = '订婚卡备份-' + ymd(new Date()) + '.json';
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+      toast('备份下载好了，存好它 💾');
+    }).catch(cloudFail);
+  });
+
+
+  /* ================= v1.4 ================= */
+  var coupons = [], wishes = [], achs = [], stories = [], drops = [], customQs = [];
+  var cpnCol = null, wishCol = null, achCol = null, storyCol = null, dropCol = null, qCol = null;
+  var TAB = 'home';
+  function nameOf(k){ return k === 'a' ? A() : B(); }
+  function otherK(){ return ME === 'a' ? 'b' : 'a'; }
+  function E(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function mkBtn(cls, text){ var b = E('button', cls, text); b.type = 'button'; return b; }
+  function twoTap(btn, idle, ask, fn){
+    btn.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      if (!btn.classList.contains('arm')){
+        btn.classList.add('arm'); btn.textContent = ask;
+        setTimeout(function(){ btn.classList.remove('arm'); btn.textContent = idle; }, 3000);
+        return;
+      }
+      btn.classList.remove('arm'); btn.textContent = idle; fn();
+    });
+  }
+  function seenMap(k){ try { return JSON.parse(store.get(k) || '{}') || {}; } catch(e){ return {}; } }
+  function needMe(){ if (!ME){ openMe(); return true; } return false; }
+  function needCloud(col){ if (!col){ toast('云端还没连上，稍等一下'); return true; } return false; }
+  function closeSheet(id){ $(id).classList.remove('open'); }
+  function openSheet(id){ $(id).classList.add('open'); }
+  ['cpnSheet', 'wishSheet', 'achSheet', 'storySheet', 'readSheet', 'replySheet'].forEach(function(id){
+    $(id).addEventListener('click', function(ev){ if (ev.target === $(id)) closeSheet(id); });
+  });
+  document.addEventListener('keydown', function(ev){
+    if (ev.key === 'Escape') document.querySelectorAll('.sheet.open').forEach(function(x){ x.classList.remove('open'); });
+  });
+  function segInit(id, onChange){
+    var box = $(id);
+    box.querySelectorAll('button').forEach(function(b){
+      b.addEventListener('click', function(){
+        box.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+        if (onChange) onChange(b.getAttribute('data-v'));
+      });
+    });
+  }
+  function segVal(id){ var b = $(id).querySelector('button[aria-pressed="true"]'); return b ? b.getAttribute('data-v') : ''; }
+  function segFill(id, items, cur, onPick){
+    var box = $(id); box.innerHTML = '';
+    items.forEach(function(it){
+      var b = mkBtn('', it[1]); b.setAttribute('data-v', String(it[0])); b.setAttribute('aria-pressed', String(it[0]) === String(cur) ? 'true' : 'false');
+      b.addEventListener('click', function(){ box.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); if (onPick) onPick(it[0]); });
+      box.appendChild(b);
+    });
+  }
+  function emoFill(id, list, cur, onPick){
+    var box = $(id); box.innerHTML = '';
+    list.forEach(function(m){
+      var b = mkBtn('mood', m); b.setAttribute('aria-pressed', m === cur ? 'true' : 'false');
+      b.addEventListener('click', function(){ box.querySelectorAll('.mood').forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); onPick(m); });
+      box.appendChild(b);
+    });
+  }
+
+  /* ---------- tabs & nav ---------- */
+  function goTab(t, anchor){
+    TAB = t;
+    document.querySelectorAll('.tab').forEach(function(x){ x.hidden = x.getAttribute('data-tab') !== t; });
+    document.querySelectorAll('.nav button').forEach(function(b){ b.setAttribute('aria-current', b.getAttribute('data-go') === t ? 'page' : 'false'); });
+    if (anchor && $(anchor)) setTimeout(function(){ $(anchor).scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 40);
+    else window.scrollTo(0, 0);
+    if (t === 'fun') markFunSeen();
+    if (t === 'memory' && !rcCache && !rcLoading) loadRecap();
+    updateNav();
+  }
+  document.querySelectorAll('.nav button').forEach(function(b){ b.addEventListener('click', function(){ goTab(b.getAttribute('data-go')); }); });
+  document.querySelectorAll('[data-jump]').forEach(function(b){ b.addEventListener('click', function(){ goTab(b.getAttribute('data-jump')); }); });
+  $('gearBtn').addEventListener('click', function(){ goTab('memory', 'settings'); });
+  function setBadge(id, v){
+    var b = $(id); if (!b) return;
+    b.hidden = !v; b.classList.toggle('dot', v === true); b.textContent = (v && v !== true) ? String(v) : '';
+  }
+  function funNew(){
+    if (!ME) return 0;
+    var seen = seenMap('ep_cpn_seen'), n = 0;
+    (coupons || []).forEach(function(c){ if (c.from !== ME && !seen[c.id]) n++; });
+    return n + (lastReady > 0 ? lastReady : 0);
+  }
+  function markFunSeen(){
+    var seen = seenMap('ep_cpn_seen');
+    (coupons || []).forEach(function(c){ if (c.from !== ME) seen[c.id] = 1; });
+    store.set('ep_cpn_seen', JSON.stringify(seen));
+  }
+  function updateNav(){
+    setBadge('bdNotes', TAB === 'notes' ? 0 : (unread() || 0));
+    var d = qaOf(todayQ().day);
+    setBadge('bdDaily', !!(ME && !d[ME]));
+    setBadge('bdFun', TAB === 'fun' ? 0 : (funNew() || 0));
+    renderSummary();
+  }
+  function renderSummary(){
+    if (!$('sumNotes')) return;
+    var u = unread();
+    $('sumNotes').textContent = u ? u + ' 张新纸条' : '去贴一张';
+    var d = qaOf(todayQ().day), ok = otherK();
+    $('sumDaily').textContent = !ME ? '先选身份' : d[ME] ? (d[ok] ? '已揭晓 🎉' : '等对方回答') : (d[ok] ? '对方答完了！' : '还没回答');
+    var today = ymd(new Date());
+    var usable = (coupons || []).filter(function(c){ return ME && c.from !== ME && (c.total === 0 || c.used < c.total) && !(c.exp && c.exp < today); }).length;
+    $('sumFun').textContent = usable ? usable + ' 张可用' : '发一张券';
+  }
+
+  /* ---------- coupons ---------- */
+  var CPN_EMO = ['🎟️', '💆‍♀️', '🍜', '🧋', '🫂', '🎬', '🛍️', '💋', '🍳', '🎮', '💐', '🚗'];
+  var cpnPick = { e: '🎟️', n: 1, exp: 0 };
+  $('cpnNew').addEventListener('click', function(){
+    if (needMe()) return;
+    cpnPick = { e: '🎟️', n: 1, exp: 0 };
+    emoFill('cpnEmo', CPN_EMO, cpnPick.e, function(m){ cpnPick.e = m; });
+    segFill('cpnNum', [[1, '1 张'], [3, '3 张'], [5, '5 张'], [0, '不限']], 1, function(v){ cpnPick.n = v; });
+    segFill('cpnExp', [[0, '一直有效'], [7, '7 天'], [30, '30 天']], 0, function(v){ cpnPick.exp = v; });
+    $('cpnTitle').value = ''; $('cpnNote').value = '';
+    $('cpnT').textContent = '发行一张券给' + nameOf(otherK());
+    openSheet('cpnSheet');
+  });
+  $('cpnCancel').addEventListener('click', function(){ closeSheet('cpnSheet'); });
+  $('cpnSave').addEventListener('click', function(){
+    var t = $('cpnTitle').value.trim().slice(0, 16);
+    if (!t){ toast('给券起个名字吧'); return; }
+    if (needCloud(cpnCol)) return;
+    var exp = cpnPick.exp ? ymd(new Date(Date.now() + cpnPick.exp * DAY)) : '';
+    cpnCol.add({ from: ME, e: cpnPick.e, title: t, note: $('cpnNote').value.trim().slice(0, 40), total: cpnPick.n, used: 0, exp: exp, ts: Date.now() }).catch(cloudFail);
+    closeSheet('cpnSheet'); toast('「' + t + '」发行成功 ' + cpnPick.e); confetti([cpnPick.e, '🎟️', '✨']);
+  });
+  function useCoupon(c){
+    if (needCloud(cpnCol)) return;
+    var inc = (window.firebase && firebase.firestore && firebase.firestore.FieldValue) ? firebase.firestore.FieldValue.increment(1) : (c.used + 1);
+    cpnCol.doc(c.id).set({ used: inc, lastUsed: Date.now(), lastUser: ME }, { merge: true }).catch(cloudFail);
+    toast('「' + c.title + '」已使用，' + nameOf(c.from) + '会收到提醒 ' + c.e);
+    confetti([c.e, '🎟️', '✨', '💗']);
+  }
+  function renderCoupons(){
+    var rec = $('cpnRecv'), snt = $('cpnSent'); if (!rec) return;
+    rec.innerHTML = ''; snt.innerHTML = '';
+    var today = ymd(new Date()), seen = seenMap('ep_cpn_seen');
+    (coupons || []).forEach(function(c){
+      var mine = ME && c.from === ME, left = c.total > 0 ? c.total - c.used : Infinity;
+      var expired = !!(c.exp && c.exp < today), done = left <= 0;
+      var card = E('div', 'cpn' + (done || expired ? ' void' : '') + (!mine && !seen[c.id] ? ' fresh' : ''));
+      card.appendChild(E('div', 'cpn-stub', c.e));
+      var body = E('div', 'cpn-body');
+      body.appendChild(E('b', '', c.title));
+      if (c.note) body.appendChild(E('p', '', c.note));
+      body.appendChild(E('small', '', (mine ? '发给' + nameOf(otherK()) : nameOf(c.from) + '发行') + '　' +
+        (c.total > 0 ? '剩 ' + Math.max(0, left) + ' / ' + c.total + ' 张' : '不限次数') +
+        (c.exp ? '　有效期至 ' + fmtDay(c.exp) : '') + (c.used ? '　已用 ' + c.used + ' 次' : '')));
+      card.appendChild(body);
+      if (done) card.appendChild(E('span', 'cpn-stamp', '已用完'));
+      else if (expired) card.appendChild(E('span', 'cpn-stamp', '已过期'));
+      else if (!mine){ var u = mkBtn('cpn-use', '使用'); twoTap(u, '使用', '确定？', function(){ useCoupon(c); }); card.appendChild(u); }
+      if (mine){ var d = mkBtn('cpn-del', '撤回'); twoTap(d, '撤回', '确定撤回？', function(){ cpnCol.doc(c.id).delete().catch(cloudFail); }); card.appendChild(d); }
+      (mine ? snt : rec).appendChild(card);
+    });
+    $('cpnRecvEmpty').hidden = rec.children.length > 0;
+    $('cpnSentEmpty').hidden = snt.children.length > 0;
+  }
+
+  /* ---------- greeting drops ---------- */
+  segInit('dropTo');
+  segInit('dropMode', function(v){
+    $('dropTimeRow').hidden = v !== 'time';
+    $('dropHint').textContent = v === 'time' ? '指定时刻：到了那个时间，开场白会换成这句，持续 1 小时。日期不填就是每天这个时间都出现。' : '随机模式：开场白每次换句时，有一定概率换成这句。';
+  });
+  function visibleDrops(){ return (drops || []).filter(function(d){ return !ME || d.to === 'both' || d.from !== ME; }); }
+  function dropActive(d){
+    if (d.mode !== 'time' || !/^\d{2}:\d{2}$/.test(d.time)) return false;
+    var now = new Date(), today = ymd(now);
+    if (d.date && d.date !== today) return false;
+    var t = Number(d.time.slice(0, 2)) * 60 + Number(d.time.slice(3, 5)), m = now.getHours() * 60 + now.getMinutes();
+    return m >= t && m < t + 60;
+  }
+  $('dropSend').addEventListener('click', function(){
+    if (needMe()) return;
+    var text = $('dropText').value.trim().slice(0, 40);
+    if (!text){ toast('先写一句话'); return; }
+    if (needCloud(dropCol)) return;
+    var mode = segVal('dropMode'), data = { from: ME, to: segVal('dropTo') || 'other', text: text, mode: mode || 'random', time: '', date: '', ts: Date.now() };
+    if (mode === 'time'){
+      data.time = $('dropTime').value || '21:00';
+      data.date = validDay($('dropDate').value) ? $('dropDate').value : '';
+    }
+    dropCol.add(data).catch(cloudFail);
+    $('dropText').value = '';
+    toast(data.to === 'both' ? '投进去了，你们俩都会看到 💬' : '投进去了，' + nameOf(otherK()) + '会在某个时刻看到 🤫');
+  });
+  function dropDesc(d){
+    var who = d.to === 'both' ? '两个人都看' : '给' + nameOf(d.from === 'a' ? 'b' : 'a');
+    var when = d.mode === 'time' ? (d.date ? fmtDay(d.date) + ' ' : '每天 ') + d.time : '随机冒出来';
+    return who + ' · ' + when;
+  }
+  function renderDrops(){
+    var box = $('dropList'); if (!box) return; box.innerHTML = '';
+    (drops || []).filter(function(d){ return ME && d.from === ME; }).forEach(function(d){
+      var li = E('li');
+      var tx = E('div', 'wish-tx', d.text); tx.appendChild(E('small', '', dropDesc(d)));
+      var x = mkBtn('wish-x', '删除'); twoTap(x, '删除', '确定？', function(){ dropCol.doc(d.id).delete().catch(cloudFail); });
+      li.appendChild(E('span', 'wish-ic', '💬')); li.appendChild(tx); li.appendChild(x); box.appendChild(li);
+    });
+    box.hidden = !box.children.length;
+  }
+  setInterval(function(){
+    var t = visibleDrops().filter(dropActive);
+    if (t.length && $('greet').textContent.indexOf(t[0].text) < 0) pickGreet(true);
+  }, 30000);
+
+  /* ---------- your own questions ---------- */
+  function todayQuestion(doc, qi){
+    if (doc && doc.qtext) return { text: str(doc.qtext), from: str(doc.qfrom), custom: true };
+    if (doc && (doc.a || doc.b)) return { text: QUESTIONS[qi % QUESTIONS.length], from: '', custom: false };
+    var today = ymd(new Date());
+    var pend = (customQs || []).filter(function(q){ return q.usedDay === today; });
+    if (!pend.length) pend = (customQs || []).filter(function(q){ return !q.usedDay; }).sort(function(x, y){ return x.ts - y.ts; });
+    if (pend.length) return { text: pend[0].text, from: pend[0].from, id: pend[0].id, custom: true };
+    return { text: QUESTIONS[qi % QUESTIONS.length], from: '', custom: false };
+  }
+  $('qAdd').addEventListener('click', function(){
+    if (needMe()) return;
+    var t = $('qIn').value.trim().slice(0, 60);
+    if (!t){ toast('先写一道题'); return; }
+    if (needCloud(qCol)) return;
+    qCol.add({ from: ME, text: t, ts: Date.now(), usedDay: '' }).catch(cloudFail);
+    $('qIn').value = ''; toast('题藏进题库了，' + nameOf(otherK()) + '不知道是哪天 🎲');
+  });
+  function renderMyQs(){
+    var box = $('qList'); if (!box) return; box.innerHTML = '';
+    var pend = (customQs || []).filter(function(q){ return !q.usedDay; });
+    var mine = pend.filter(function(q){ return ME && q.from === ME; }), theirs = pend.length - mine.length;
+    mine.forEach(function(q){
+      var li = E('li');
+      li.appendChild(E('span', 'wish-ic', '🎲'));
+      li.appendChild(E('div', 'wish-tx', q.text));
+      var x = mkBtn('wish-x', '删除'); twoTap(x, '删除', '确定？', function(){ qCol.doc(q.id).delete().catch(cloudFail); });
+      li.appendChild(x); box.appendChild(li);
+    });
+    box.hidden = !mine.length;
+    $('qInfo').textContent = '题库：系统题 ' + QUESTIONS.length + ' 道，每天一道轮着来。' +
+      (mine.length ? '你藏了 ' + mine.length + ' 道还没抽到。' : '') + (theirs > 0 && ME ? nameOf(otherK()) + '也藏了 ' + theirs + ' 道，内容保密 🤫' : '');
+  }
+
+  /* ---------- wishes → memories ---------- */
+  var wishDoing = null;
+  $('wishAdd').addEventListener('click', function(){
+    if (needMe()) return;
+    var t = $('wishIn').value.trim().slice(0, 40);
+    if (!t){ toast('写一个想一起做的事'); return; }
+    if (needCloud(wishCol)) return;
+    wishCol.add({ from: ME, text: t, ts: Date.now(), done: false }).catch(cloudFail);
+    $('wishIn').value = ''; toast('心愿加进清单了 🌈');
+  });
+  $('wishIn').addEventListener('keydown', function(ev){ if (ev.key === 'Enter') $('wishAdd').click(); });
+  $('wishCancel').addEventListener('click', function(){ closeSheet('wishSheet'); });
+  $('wishSave').addEventListener('click', function(){
+    if (!wishDoing || needCloud(wishCol)) return;
+    var day = validDay($('wishDay').value) ? $('wishDay').value : ymd(new Date());
+    wishCol.doc(wishDoing.id).set({ done: true, doneDay: day, memo: $('wishMemo').value.trim().slice(0, 100), doneBy: ME }, { merge: true }).catch(cloudFail);
+    closeSheet('wishSheet'); toast('「' + wishDoing.text + '」变成回忆啦 🎉'); confetti(['🎉', '🌈', '💗', '✨']);
+  });
+  function renderWishes(){
+    var todo = $('wishTodo'), done = $('wishDone'); if (!todo) return;
+    todo.innerHTML = ''; done.innerHTML = '';
+    var list = (wishes || []).slice();
+    list.filter(function(w){ return !w.done; }).sort(function(x, y){ return x.ts - y.ts; }).forEach(function(w){
+      var li = E('li');
+      var ck = mkBtn('wish-ck', ''); ck.setAttribute('aria-label', '完成这个心愿');
+      ck.addEventListener('click', function(){
+        if (needMe()) return;
+        wishDoing = w; $('wishWhat').textContent = '「' + w.text + '」'; $('wishDay').value = ymd(new Date()); $('wishDay').max = ymd(new Date()); $('wishMemo').value = '';
+        openSheet('wishSheet');
+      });
+      var tx = E('div', 'wish-tx', w.text); tx.appendChild(E('small', '', nameOf(w.from) + '的心愿'));
+      li.appendChild(ck); li.appendChild(tx);
+      if (ME && w.from === ME){ var x = mkBtn('wish-x', '删除'); twoTap(x, '删除', '确定？', function(){ wishCol.doc(w.id).delete().catch(cloudFail); }); li.appendChild(x); }
+      todo.appendChild(li);
+    });
+    list.filter(function(w){ return w.done; }).sort(function(x, y){ return (y.doneDay || '').localeCompare(x.doneDay || ''); }).forEach(function(w){
+      var c = E('div', 'mem'); c.style.setProperty('--r', ((Math.floor(w.ts / 1000) % 5) - 2) * 0.7 + 'deg');
+      c.appendChild(E('b', '', '🎉 ' + w.text));
+      c.appendChild(E('small', '', (w.doneDay ? fmtDay(w.doneDay) : '') + ' 实现'));
+      if (w.memo) c.appendChild(E('p', '', w.memo));
+      done.appendChild(c);
+    });
+    todo.hidden = !todo.children.length;
+    $('memH').hidden = !done.children.length;
+    $('wishEmpty').hidden = !!list.length;
+  }
+
+  /* ---------- custom achievements ---------- */
+  var ACH_EMO = ['🏆', '🥇', '🍳', '🎂', '✈️', '🎡', '🌅', '🎬', '🤝', '🧸', '💍', '🌟', '📸', '🏠', '🐾', '🍰'];
+  var achPick = '🏆';
+  function openAch(){
+    if (needMe()) return;
+    achPick = '🏆'; emoFill('achEmo', ACH_EMO, achPick, function(m){ achPick = m; });
+    $('achTitle').value = ''; $('achNote').value = ''; $('achDay').value = ymd(new Date()); $('achDay').max = ymd(new Date());
+    openSheet('achSheet');
+  }
+  $('achCancel').addEventListener('click', function(){ closeSheet('achSheet'); });
+  $('achSave').addEventListener('click', function(){
+    var t = $('achTitle').value.trim().slice(0, 12);
+    if (!t){ toast('给成就起个名字'); return; }
+    if (needCloud(achCol)) return;
+    achCol.add({ from: ME, e: achPick, title: t, day: validDay($('achDay').value) ? $('achDay').value : ymd(new Date()), note: $('achNote').value.trim().slice(0, 40), ts: Date.now() }).catch(cloudFail);
+    closeSheet('achSheet'); toast('成就「' + t + '」颁发成功 ' + achPick); confetti([achPick, '🏅', '✨']);
+  });
+  function renderAchs(){
+    var box = $('achList'); if (!box) return; box.innerHTML = '';
+    (achs || []).slice().sort(function(x, y){ return (x.day || '').localeCompare(y.day || '') || x.ts - y.ts; }).forEach(function(a, i){
+      var d = mkBtn('stk', '');
+      d.style.setProperty('--r', (((i * 23) % 17) - 8) + 'deg');
+      d.appendChild(E('div', 'face', a.e)); d.appendChild(E('div', 'nm', a.title)); d.appendChild(E('div', 'dt', a.day ? fmtDay(a.day) : ''));
+      d.addEventListener('click', function(){
+        toast(a.e + ' ' + a.title + '　' + nameOf(a.from) + '颁发' + (a.note ? '：' + a.note : ''));
+      });
+      if (ME && a.from === ME){
+        var x = mkBtn('ach-x', '✕'); x.setAttribute('aria-label', '删除这个成就');
+        twoTap(x, '✕', '删?', function(){ achCol.doc(a.id).delete().catch(cloudFail); });
+        d.appendChild(x);
+      }
+      box.appendChild(d);
+    });
+    var add = mkBtn('stk add', ''); add.appendChild(E('div', 'face', '＋')); add.appendChild(E('div', 'nm', '颁发成就')); add.appendChild(E('div', 'dt', '记录你们的第一次'));
+    add.addEventListener('click', openAch); box.appendChild(add);
+  }
+
+  /* ---------- story book ---------- */
+  var storyEditing = null, storyReading = null;
+  $('storyNew').addEventListener('click', function(){
+    if (needMe()) return;
+    storyEditing = null; $('stoT').textContent = '写一篇故事'; $('stoTitle').value = ''; $('stoBody').value = '';
+    openSheet('storySheet');
+  });
+  $('stoCancel').addEventListener('click', function(){ closeSheet('storySheet'); });
+  $('stoSave').addEventListener('click', function(){
+    var t = $('stoTitle').value.trim().slice(0, 30), b = $('stoBody').value.trim().slice(0, 3000);
+    if (!t || !b){ toast('标题和正文都写一点'); return; }
+    if (needCloud(storyCol)) return;
+    if (storyEditing) storyCol.doc(storyEditing.id).set({ title: t, body: b, updatedTs: Date.now() }, { merge: true }).catch(cloudFail);
+    else storyCol.add({ from: ME, title: t, body: b, ts: Date.now(), updatedTs: Date.now() }).catch(cloudFail);
+    closeSheet('storySheet'); toast(storyEditing ? '故事改好了 📖' : '新故事写进故事本了 📖');
+  });
+  function openStory(s){
+    storyReading = s;
+    $('rdTitle').textContent = s.title;
+    $('rdMeta').textContent = nameOf(s.from) + ' 写于 ' + fmtDay(ymd(new Date(s.ts))) + (s.updatedTs && s.updatedTs - s.ts > 60000 ? '（改过）' : '');
+    $('rdBody').textContent = s.body;
+    var mine = ME && s.from === ME;
+    $('rdEdit').hidden = !mine; $('rdDel').hidden = !mine;
+    openSheet('readSheet');
+  }
+  $('rdClose').addEventListener('click', function(){ closeSheet('readSheet'); });
+  $('rdEdit').addEventListener('click', function(){
+    if (!storyReading) return;
+    storyEditing = storyReading; closeSheet('readSheet');
+    $('stoT').textContent = '编辑故事'; $('stoTitle').value = storyReading.title; $('stoBody').value = storyReading.body;
+    openSheet('storySheet');
+  });
+  twoTap($('rdDel'), '删除这篇', '确定删除？删了找不回', function(){
+    if (storyReading && storyCol) storyCol.doc(storyReading.id).delete().catch(cloudFail);
+    closeSheet('readSheet'); toast('故事删掉了');
+  });
+  function renderStories(){
+    var box = $('storyList'); if (!box) return; box.innerHTML = '';
+    (stories || []).forEach(function(s){
+      var c = mkBtn('stc', '');
+      c.appendChild(E('b', '', s.title));
+      c.appendChild(E('small', '', nameOf(s.from) + ' · ' + fmtDay(ymd(new Date(s.ts)))));
+      c.appendChild(E('p', '', s.body.slice(0, 80)));
+      c.addEventListener('click', function(){ openStory(s); });
+      box.appendChild(c);
+    });
+    $('storyEmpty').hidden = !!(stories || []).length;
+  }
+
+  /* ---------- note reactions & replies ---------- */
+  var RX = ['❤️', '😂', '🥺', '😘', '👍', '🔥'];
+  var replyTo = null;
+  function noteExtras(card, nt){
+    var rx = nt.reacts || {}, row = E('div', 'nt-rx');
+    ['a', 'b'].forEach(function(k){ if (rx[k]){ var r = E('span', 'rx', rx[k]); r.title = nameOf(k); row.appendChild(r); } });
+    var pick = mkBtn('nt-act', '＋表情');
+    var pk = E('div', 'rx-pick'); pk.hidden = true;
+    RX.forEach(function(m){
+      var b = mkBtn('', m);
+      b.addEventListener('click', function(){
+        if (needMe() || needCloud(notesCol)) return;
+        var v = (rx[ME] === m) ? '' : m, patch = { reacts: {} }; patch.reacts[ME] = v;
+        notesCol.doc(nt.id).set(patch, { merge: true }).catch(cloudFail);
+        pk.hidden = true;
+      });
+      pk.appendChild(b);
+    });
+    pick.addEventListener('click', function(){ pk.hidden = !pk.hidden; });
+    var rep = mkBtn('nt-act', '💬 回复');
+    rep.addEventListener('click', function(){
+      if (needMe()) return;
+      replyTo = nt; $('rpQuote').textContent = '「' + (nt.text ? nt.text.slice(0, 40) : '一幅涂鸦') + '」'; $('rpText').value = '';
+      openSheet('replySheet');
+    });
+    row.appendChild(pick); row.appendChild(rep);
+    card.appendChild(row); card.appendChild(pk);
+    var reps = Array.isArray(nt.replies) ? nt.replies : [];
+    if (reps.length){
+      var rb = E('div', 'nt-replies');
+      reps.forEach(function(r){ var p = E('p'); p.appendChild(E('b', '', nameOf(r.from) + '：')); p.appendChild(document.createTextNode(r.text)); rb.appendChild(p); });
+      card.appendChild(rb);
+    }
+  }
+  $('rpCancel').addEventListener('click', function(){ closeSheet('replySheet'); });
+  $('rpSave').addEventListener('click', function(){
+    var t = $('rpText').value.trim().slice(0, 80);
+    if (!t){ toast('回一句什么吧'); return; }
+    if (!replyTo || needCloud(notesCol)) return;
+    var reps = (Array.isArray(replyTo.replies) ? replyTo.replies : []).concat([{ from: ME, text: t, ts: Date.now() }]).slice(-30);
+    notesCol.doc(replyTo.id).set({ replies: reps }, { merge: true }).catch(cloudFail);
+    closeSheet('replySheet'); toast('回复贴上去了 💬');
+  });
+
+  /* ---------- monthly recap ---------- */
+  var rcY = new Date().getFullYear(), rcM = new Date().getMonth(), rcCache = null, rcLoading = false;
+  function loadRecap(){
+    if (!notesCol || !qaCol){ renderRecap(); return; }
+    rcLoading = true; renderRecap();
+    Promise.all([notesCol.orderBy('ts', 'desc').limit(1500).get(), qaCol.get()]).then(function(r){
+      var ns = [], qs = [];
+      r[0].forEach(function(d){ var x = d.data(); ns.push({ from: str(x.from), text: str(x.text), drawing: !!x.drawing, relay: str(x.relay), ts: Number(x.ts) || 0 }); });
+      r[1].forEach(function(d){ var x = d.data(); x.day = str(x.day) || d.id; qs.push(x); });
+      rcCache = { notes: ns, qa: qs }; rcLoading = false; renderRecap();
+    }).catch(function(e){ rcLoading = false; cloudFail(e); renderRecap(); });
+  }
+  $('rcPrev').addEventListener('click', function(){ rcM--; if (rcM < 0){ rcM = 11; rcY--; } renderRecap(); });
+  $('rcNext').addEventListener('click', function(){ rcM++; if (rcM > 11){ rcM = 0; rcY++; } renderRecap(); });
+  $('rcLoad').addEventListener('click', loadRecap);
+  function rcLine(icon, parts){
+    var l = E('div', 'rc-line'); l.appendChild(E('span', 'ri', icon));
+    var t = E('div');
+    parts.forEach(function(p){ if (typeof p === 'number') t.appendChild(E('span', 'rc-big', String(p))); else t.appendChild(document.createTextNode(p)); });
+    l.appendChild(t); return l;
+  }
+  function renderRecap(){
+    if (!$('rcBody')) return;
+    $('rcMonth').textContent = rcY + '年' + (rcM + 1) + '月';
+    var body = $('rcBody'); body.innerHTML = '';
+    $('rcLoad').textContent = rcCache ? '刷新' : '生成回忆卡';
+    if (rcLoading){ body.appendChild(E('p', 'fine', '正在翻你们的回忆……')); return; }
+    if (!rcCache){ body.appendChild(E('p', 'fine', '把这个月你们留下的东西拼成一张卡')); return; }
+    var mk = rcY + '-' + pad(rcM + 1), start = new Date(rcY, rcM, 1).getTime(), end = new Date(rcY, rcM + 1, 1).getTime();
+    var stamps = state.entries.filter(function(e){ return e.day.slice(0, 7) === mk; }).length;
+    var ns = rcCache.notes.filter(function(n){ return n.ts >= start && n.ts < end; });
+    var na = ns.filter(function(n){ return n.from === 'a'; }).length, nb = ns.length - na;
+    var dr = ns.filter(function(n){ return n.drawing; }).length, rl = ns.filter(function(n){ return n.relay && n.relay !== n.from; }).length;
+    var qa = rcCache.qa.filter(function(d){ return str(d.day).slice(0, 7) === mk && d.a && d.b; }).length;
+    var wd = (wishes || []).filter(function(w){ return w.done && str(w.doneDay).slice(0, 7) === mk; });
+    var ac = (achs || []).filter(function(a){ return str(a.day).slice(0, 7) === mk; });
+    var st = (stories || []).filter(function(s){ return s.ts >= start && s.ts < end; });
+    var txt = ns.filter(function(n){ return n.text; });
+    var longest = txt.slice().sort(function(x, y){ return y.text.length - x.text.length; })[0];
+    var first = txt.slice().sort(function(x, y){ return x.ts - y.ts; })[0];
+    if (!stamps && !ns.length && !qa && !wd.length && !ac.length && !st.length){
+      body.appendChild(E('p', 'fine', '这个月还是一张白纸 ✨ 去创造一点回忆吧'));
+      return;
+    }
+    if (stamps) body.appendChild(rcLine('💍', ['盖了 ', stamps, ' 个章']));
+    if (ns.length) body.appendChild(rcLine('💌', ['贴了 ', ns.length, ' 张纸条（' + A() + ' ' + na + ' 张，' + B() + ' ' + nb + ' 张）' + (dr ? '，画了 ' + dr + ' 幅涂鸦' : '') + (rl ? '，接力了 ' + rl + ' 次' : '')]));
+    if (qa) body.appendChild(rcLine('💭', ['一起回答了 ', qa, ' 道题']));
+    if (wd.length) body.appendChild(rcLine('🌈', ['实现了 ', wd.length, ' 个心愿：' + wd.map(function(w){ return w.text; }).join('、')]));
+    if (ac.length) body.appendChild(rcLine('🏅', ['颁发了 ', ac.length, ' 个成就：' + ac.map(function(a){ return a.e + a.title; }).join('、')]));
+    if (st.length) body.appendChild(rcLine('📖', ['写了 ', st.length, ' 篇故事：' + st.map(function(s){ return '《' + s.title + '》'; }).join('')]));
+    if (first) body.appendChild(rcLine('🌱', ['这个月的第一张纸条，' + nameOf(first.from) + '写的：「' + first.text.slice(0, 50) + '」']));
+    if (longest && longest !== first) body.appendChild(rcLine('📜', ['最长的一张纸条，' + nameOf(longest.from) + '写的：「' + longest.text.slice(0, 60) + (longest.text.length > 60 ? '……' : '') + '」']));
+  }
+
+  /* ---------- living greeting & little surprises ---------- */
+  var GREETS = {
+    late:  ['姐姐早点睡，弟弟好爱你 🌙', '这么晚了还不睡？快去睡觉，梦里见 💤', '晚安姐姐，弟弟在梦里等你 🌌', '姐姐乖乖睡觉，明天弟弟继续爱你 🌙'],
+    morn:  ['姐姐早安，弟弟好爱你 ☀️', '姐姐醒了吗？弟弟已经在想你了 ☀️', '早安姐姐，今天也要被我爱着哦 🌤️', '姐姐早，记得吃早饭，弟弟会检查的 🥐'],
+    noon:  ['姐姐记得吃饭，弟弟好爱你 🍱', '姐姐午安，吃饱了才有力气想我 🍙', '中午好姐姐，弟弟在偷偷想你 🍜'],
+    after: ['姐姐下午好，弟弟好爱你 ☕', '下午有点困吧，弟弟给你续一杯爱 ☕', '姐姐今天下午也辛苦啦 🍰', '姐姐，下午也要记得想我 🌸'],
+    eve:   ['姐姐晚上好，弟弟好爱你 🌙', '姐姐今天累不累？弟弟抱抱 🫂', '晚上好姐姐，今天也很想你 🌙', '姐姐，今天也被弟弟爱着哦 💗']
+  };
+  var RARE = ['✨ 稀有台词：姐姐是全世界最好的姐姐', '✨ 恭喜触发隐藏台词：弟弟今天也超级超级爱你', '✨ 彩蛋：发行方偷偷说，想快点盖满 100 个章',
+              '✨ 今日幸运色：粉色　今日幸运人物：弟弟', '✨ 稀有掉落：一个弟弟的亲亲，请当面领取'];
+  var lastGreet = '';
+  function greetPool(){
+    var d = new Date(), hr = d.getHours(), md = (d.getMonth() + 1) + '-' + d.getDate(), wk = d.getDay();
+    if (md === '2-14') return ['情人节快乐姐姐，弟弟永远爱你 💝'];
+    if (md === '5-20') return ['520 快乐，姐姐，弟弟爱你 💗'];
+    if (md === '12-24' || md === '12-25') return ['圣诞快乐姐姐，弟弟就是你的圣诞礼物 🎄'];
+    if (md === '1-1') return ['新年快乐姐姐，今年也要一直在一起 🎆'];
+    var pool = hr < 5 ? GREETS.late : hr < 11 ? GREETS.morn : hr < 14 ? GREETS.noon : hr < 18 ? GREETS.after : hr < 23 ? GREETS.eve : GREETS.late;
+    if ((wk === 0 || wk === 6) && hr >= 7 && hr < 12) pool = pool.concat(['周末快乐姐姐，今天想和你黏在一起 🧸']);
+    return pool;
+  }
+  function pickGreet(animate){
+    var node = $('greet'), cls = '', g;
+    var dl = visibleDrops(), timed = dl.filter(dropActive);
+    if (timed.length){ g = '💬 ' + timed[0].text + '　—— ' + nameOf(timed[0].from); cls = 'drop'; }
+    else {
+      var rnd = dl.filter(function(d){ return d.mode !== 'time'; });
+      if (rnd.length && Math.random() < 0.4){ var r = rnd[Math.floor(Math.random() * rnd.length)]; g = '💬 ' + r.text + '　—— ' + nameOf(r.from); cls = 'drop'; }
+      else {
+        var rare = Math.random() < 0.06, pool = rare ? RARE : greetPool();
+        g = pool[Math.floor(Math.random() * pool.length)];
+        if (pool.length > 1 && g === lastGreet) g = pool[(pool.indexOf(g) + 1) % pool.length];
+        cls = rare ? 'rare' : '';
+      }
+    }
+    lastGreet = g;
+    var apply = function(){ node.textContent = g; node.classList.toggle('rare', cls === 'rare'); node.classList.toggle('drop', cls === 'drop'); };
+    if (!animate){ apply(); return; }
+    node.classList.add('fade');
+    setTimeout(function(){ apply(); node.classList.remove('fade'); }, 650);
+  }
+  (function loop(){ setTimeout(function(){ if (!document.hidden) pickGreet(true); loop(); }, 45000 + Math.random() * 45000); })();
+  (function drift(){
+    setTimeout(function(){
+      if (!document.hidden && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+        var f = document.createElement('span'); f.className = 'drift';
+        f.textContent = ['💗', '🌸', '✨', '💕', '🫧', '⭐'][Math.floor(Math.random() * 6)];
+        f.style.left = (10 + Math.random() * 80) + 'vw'; f.style.setProperty('--dx', (Math.random() * 80 - 40) + 'px');
+        f.style.animationDuration = (7 + Math.random() * 5) + 's';
+        document.body.appendChild(f); setTimeout(function(){ f.remove(); }, 13000);
+      }
+      drift();
+    }, 90000 + Math.random() * 150000);
+  })();
+  var realTitle = '';
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden){ realTitle = document.title; document.title = '姐姐快回来 🥺'; }
+    else { if (realTitle) document.title = realTitle; if (Math.random() < 0.5) pickGreet(true); }
+  });
+
   render(); renderNotes();
 
   /* ---------- cloud sync ---------- */
@@ -1697,9 +2532,11 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
         }
       }, cloudFail);
 
-      notesCol.orderBy('ts', 'desc').limit(120).onSnapshot(function(snap){
+      var unsubNotes = null, notePrev = {}, noteRx = {};
+      resubNotes = function(){ if (unsubNotes) unsubNotes(); notesReady = false; unsubNotes = notesCol.orderBy('ts', 'desc').limit(notesLimit).onSnapshot(onNotes, cloudFail); };
+      function onNotes(snap){
         var arr = [];
-        snap.forEach(function(doc){ var x = doc.data(); x.id = doc.id; x.ts = Number(x.ts) || 0; x.text = str(x.text).slice(0, 300); x.drawing = str(x.drawing); arr.push(x); });
+        snap.forEach(function(doc){ var x = doc.data(); x.id = doc.id; x.ts = Number(x.ts) || 0; x.text = str(x.text).slice(0, 300); x.drawing = str(x.drawing); x.relay = str(x.relay); x.reacts = (x.reacts && typeof x.reacts === 'object') ? { a: str(x.reacts.a).slice(0, 8), b: str(x.reacts.b).slice(0, 8) } : {}; x.replies = Array.isArray(x.replies) ? x.replies.filter(function(r){ return r && r.text; }).map(function(r){ return { from: str(r.from), text: str(r.text).slice(0, 80), ts: Number(r.ts) || 0 }; }) : []; arr.push(x); });
         if (notesReady && ME){
           snap.docChanges().forEach(function(ch){
             var x = ch.doc.data();
@@ -1707,13 +2544,23 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
               toast('💌 ' + (x.from === 'a' ? A() : B()) + '给你贴了一张新纸条');
               hearts(window.innerWidth - 60, 40);
             }
+            if (ch.type === 'modified' && !ch.doc.metadata.hasPendingWrites){
+              var rp = Array.isArray(x.replies) ? x.replies : [], last = rp[rp.length - 1];
+              var prevN = notePrev[ch.doc.id] || 0;
+              if (rp.length > prevN && last && last.from && last.from !== ME) toast('💬 ' + nameOf(last.from) + '回复了纸条：' + str(last.text).slice(0, 20));
+              else if (x.reacts && x.reacts[otherK()] && x.reacts[otherK()] !== (noteRx[ch.doc.id] || '')) toast(nameOf(otherK()) + '给纸条点了 ' + x.reacts[otherK()]);
+            }
           });
         }
         if (!snap.metadata.fromCache) notesReady = true;
+        arr.forEach(function(n){ notePrev[n.id] = n.replies.length; noteRx[n.id] = n.reacts[otherK()] || ''; });
         notes = arr; renderNotes();
-      }, cloudFail);
+      }
+      resubNotes();
 
-      qaCol.orderBy('day', 'desc').limit(15).onSnapshot(function(snap){
+      var unsubQA = null;
+      resubQA = function(){ if (unsubQA) unsubQA(); qaReady = false; unsubQA = qaCol.orderBy('day', 'desc').limit(qaLimit).onSnapshot(onQA, cloudFail); };
+      function onQA(snap){
         var before = ME ? str(qaOf(todayQ().day)[ME === 'a' ? 'b' : 'a']) : '';
         var arr = [];
         snap.forEach(function(doc){ var x = doc.data(); x.day = str(x.day) || doc.id; arr.push(x); });
@@ -1723,8 +2570,9 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
           if (after && !before) toast((ME === 'a' ? B() : A()) + '回答了今天的问题 👀');
         }
         if (!snap.metadata.fromCache) qaReady = true;
-        renderQA();
-      }, cloudFail);
+        renderQA(); updateNav();
+      }
+      resubQA();
 
       capCol.orderBy('ts', 'desc').limit(60).onSnapshot(function(snap){
         var arr = [];
@@ -1733,6 +2581,64 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
           arr.push({ id: doc.id, from: str(x.from), text: str(x.text).slice(0, 500), unlock: Math.max(1, Math.min(TOTAL, Number(x.unlock) || TOTAL)), ts: Number(x.ts) || 0 });
         });
         caps = arr; renderCaps();
+      }, cloudFail);
+      cpnCol = mainRef.collection('coupons'); wishCol = mainRef.collection('wishes'); achCol = mainRef.collection('achievements');
+      storyCol = mainRef.collection('stories'); dropCol = mainRef.collection('drops'); qCol = mainRef.collection('questions');
+      var cpnReady = false, cpnPrev = {}, wishReady = false, wishPrev = {}, achReady = false, storyReady = false;
+      cpnCol.orderBy('ts', 'desc').limit(150).onSnapshot(function(snap){
+        var arr = [];
+        snap.forEach(function(d){ var x = d.data(); arr.push({ id: d.id, from: str(x.from), e: str(x.e).slice(0, 8) || '🎟️', title: str(x.title).slice(0, 16), note: str(x.note).slice(0, 40), total: Math.max(0, Number(x.total) || 0), used: Math.max(0, Number(x.used) || 0), exp: validDay(str(x.exp)) ? x.exp : '', ts: Number(x.ts) || 0, lastUser: str(x.lastUser) }); });
+        if (cpnReady && ME){
+          arr.forEach(function(c){
+            var pv = cpnPrev[c.id];
+            if (pv === undefined && c.from !== ME){ toast('🎟️ ' + nameOf(c.from) + '发给你一张「' + c.title + '」'); hearts(innerWidth / 2, innerHeight / 3); }
+            else if (pv !== undefined && c.used > pv && c.from === ME && c.lastUser !== ME){ toast(c.e + ' ' + nameOf(otherK()) + '使用了你发的「' + c.title + '」！'); confetti([c.e, '🎟️', '💗']); }
+          });
+        }
+        cpnPrev = {}; arr.forEach(function(c){ cpnPrev[c.id] = c.used; });
+        if (!snap.metadata.fromCache) cpnReady = true;
+        coupons = arr; renderCoupons(); updateNav();
+      }, cloudFail);
+      wishCol.orderBy('ts', 'desc').limit(400).onSnapshot(function(snap){
+        var arr = [];
+        snap.forEach(function(d){ var x = d.data(); arr.push({ id: d.id, from: str(x.from), text: str(x.text).slice(0, 40), ts: Number(x.ts) || 0, done: !!x.done, doneDay: validDay(str(x.doneDay)) ? x.doneDay : '', memo: str(x.memo).slice(0, 100), doneBy: str(x.doneBy) }); });
+        if (wishReady && ME){
+          arr.forEach(function(w){
+            var pv = wishPrev[w.id];
+            if (pv === undefined && w.from !== ME) toast('🌈 ' + nameOf(w.from) + '加了一个心愿：' + w.text);
+            else if (pv === false && w.done && w.doneBy && w.doneBy !== ME){ toast('🎉 ' + nameOf(w.doneBy) + '把「' + w.text + '」变成了回忆'); confetti(['🎉', '🌈', '💗']); }
+          });
+        }
+        wishPrev = {}; arr.forEach(function(w){ wishPrev[w.id] = w.done; });
+        if (!snap.metadata.fromCache) wishReady = true;
+        wishes = arr; renderWishes(); renderRecap();
+      }, cloudFail);
+      achCol.orderBy('ts', 'desc').limit(200).onSnapshot(function(snap){
+        var arr = [], seenIds = {};
+        achs.forEach(function(a){ seenIds[a.id] = 1; });
+        snap.forEach(function(d){ var x = d.data(); arr.push({ id: d.id, from: str(x.from), e: str(x.e).slice(0, 8) || '🏆', title: str(x.title).slice(0, 12), day: validDay(str(x.day)) ? x.day : '', note: str(x.note).slice(0, 40), ts: Number(x.ts) || 0 }); });
+        if (achReady && ME) arr.forEach(function(a){ if (!seenIds[a.id] && a.from !== ME){ toast('🏅 ' + nameOf(a.from) + '颁发了新成就：' + a.e + a.title); confetti([a.e, '🏅', '✨']); } });
+        if (!snap.metadata.fromCache) achReady = true;
+        achs = arr; renderAchs(); renderRecap();
+      }, cloudFail);
+      storyCol.orderBy('ts', 'desc').limit(200).onSnapshot(function(snap){
+        var arr = [], seenIds = {};
+        stories.forEach(function(x){ seenIds[x.id] = 1; });
+        snap.forEach(function(d){ var x = d.data(); arr.push({ id: d.id, from: str(x.from), title: str(x.title).slice(0, 30), body: str(x.body).slice(0, 3000), ts: Number(x.ts) || 0, updatedTs: Number(x.updatedTs) || 0 }); });
+        if (storyReady && ME) arr.forEach(function(x){ if (!seenIds[x.id] && x.from !== ME) toast('📖 ' + nameOf(x.from) + '写了一篇新故事《' + x.title + '》'); });
+        if (!snap.metadata.fromCache) storyReady = true;
+        stories = arr; renderStories(); renderRecap();
+      }, cloudFail);
+      dropCol.orderBy('ts', 'desc').limit(200).onSnapshot(function(snap){
+        var arr = [];
+        snap.forEach(function(d){ var x = d.data(); arr.push({ id: d.id, from: str(x.from), to: x.to === 'both' ? 'both' : 'other', text: str(x.text).slice(0, 40), mode: x.mode === 'time' ? 'time' : 'random', time: str(x.time).slice(0, 5), date: validDay(str(x.date)) ? x.date : '', ts: Number(x.ts) || 0 }); });
+        drops = arr; renderDrops();
+        if (visibleDrops().filter(dropActive).length) pickGreet(true);
+      }, cloudFail);
+      qCol.orderBy('ts', 'asc').limit(300).onSnapshot(function(snap){
+        var arr = [];
+        snap.forEach(function(d){ var x = d.data(); arr.push({ id: d.id, from: str(x.from), text: str(x.text).slice(0, 60), ts: Number(x.ts) || 0, usedDay: validDay(str(x.usedDay)) ? x.usedDay : '' }); });
+        customQs = arr; renderMyQs(); renderQA(); updateNav();
       }, cloudFail);
     } catch(e){ toast('云端初始化失败，先显示这台设备上的记录'); }
   })();
