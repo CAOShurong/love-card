@@ -421,7 +421,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     <div class="field">
       <span class="lb">邮箱（纸条勾选「寄到邮箱」时，两个人都会收到）</span>
       <div class="col"><input id="emA" type="email" placeholder="发行方的邮箱" aria-label="发行方邮箱"><input id="emB" type="email" placeholder="持卡人的邮箱" aria-label="持卡人邮箱"></div>
-      <button class="btn sm" id="saveEm" type="button" style="margin-top:8px">保存邮箱</button>
+      <div class="row" style="margin-top:8px"><button class="btn sm" id="saveEm" type="button">保存邮箱</button><button class="btn sm" id="testMail" type="button">📧 发测试邮件</button></div>
     </div>
     <div class="field">
       <label for="inCount">导入旧进度（把总次数直接设成某个数）</label>
@@ -444,7 +444,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
   <footer class="foot">
     <p id="footDays"></p>
     <p>© 2026 <span data-name="a"></span> 发行　<span data-name="b"></span> 专属　翻版必究</p>
-    <p class="ver">v1.2 互动版　2026年10月7日</p>
+    <p class="ver">v1.2.1 互动版　2026年10月7日</p>
   </footer>
 </main>
 
@@ -1298,12 +1298,19 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
   $('ntImgDel').addEventListener('click', function(){ drawingData = ''; $('ntPrev').hidden = true; dwReset(); });
 
   /* ---------- email ---------- */
-  function sendMail(nt){
+  function sendMail(nt, isTest){
     var em = state.emails || {};
-    var to = em.a || em.b, cc = (em.a && em.b && em.a !== em.b) ? em.b : '';
-    if (!to){ toast('还没设置邮箱，去设置里填一下'); return; }
+    var targets = [];
+    if (em.a) targets.push({ k: 'a', to: em.a });
+    if (em.b && em.b !== em.a) targets.push({ k: 'b', to: em.b });
+    if (!targets.length){ toast('还没设置邮箱，去设置里填一下'); return; }
     var fromName = nt.from === 'a' ? A() : B(), toName = nt.from === 'a' ? B() : A();
-    var body = {
+    var body = isTest ? {
+      _subject: '💌 订婚卡测试邮件',
+      _template: 'box', _captcha: 'false',
+      '说明': '收到这封邮件，说明小纸条的邮件通知已经通了 🎉',
+      '打开订婚卡': location.origin + location.pathname + '#k=' + KEY
+    } : {
       _subject: '💌 ' + fromName + '给' + toName + '的小纸条',
       _template: 'box', _captcha: 'false',
       '来自': fromName,
@@ -1311,15 +1318,23 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
       '涂鸦': nt.drawing ? '有一幅涂鸦，打开订婚卡查看' : '无',
       '打开订婚卡': location.origin + location.pathname + '#k=' + KEY
     };
-    if (cc) body._cc = cc;
-    fetch('https://formsubmit.co/ajax/' + encodeURIComponent(to), {
-      method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body)
-    }).then(function(r){ return r.json(); }).then(function(j){
-      if (j && (j.success === true || j.success === 'true')) toast('邮件也寄出啦 📧');
-      else if (j && /activat/i.test(String(j.message || ''))) toast('邮件要先激活：去 ' + A() + ' 的邮箱点一下确认链接');
+    var sends = targets.map(function(t){
+      return fetch('https://formsubmit.co/ajax/' + encodeURIComponent(t.to), {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body)
+      }).then(function(r){ return r.json(); }).then(function(j){
+        if (j && (j.success === true || j.success === 'true')) return { k: t.k, ok: true };
+        return { k: t.k, ok: false, act: !!(j && /activat/i.test(String(j.message || ''))) };
+      }).catch(function(){ return { k: t.k, ok: false }; });
+    });
+    Promise.all(sends).then(function(res){
+      var fail = res.filter(function(r){ return !r.ok; });
+      if (!fail.length){ toast(targets.length > 1 ? '邮件寄出啦，你们俩都会收到 📧' : '邮件寄出啦 📧'); return; }
+      var act = fail.filter(function(r){ return r.act; }).map(function(r){ return r.k === 'a' ? A() : B(); });
+      if (act.length) toast(act.join('和') + '的邮箱要先激活一次：去邮箱里找 FormSubmit 的邮件，点 ACTIVATE FORM');
       else toast('邮件没寄出去，纸条已经贴上了');
-    }).catch(function(){ toast('邮件没寄出去，纸条已经贴上了'); });
+    });
   }
+  $('testMail').addEventListener('click', function(){ sendMail({ from: ME || 'a', text: '', drawing: '' }, true); toast('测试邮件寄出中……'); });
 
   $('ntSend').addEventListener('click', function(){
     if (!ME){ openMe(); return; }
