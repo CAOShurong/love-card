@@ -89,7 +89,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline
 .ch-list .tt{font-family:var(--display);font-size:16px;}
 .ch-list .tt small{font-family:var(--text);font-size:12px;color:var(--muted);margin-left:6px;}
 .ch-list .ds{font-size:13px;color:var(--muted);line-height:1.6;margin-top:2px;}
-.ch-list li.lock .tt{opacity:.55;}
+.ch-list li.ch-lock .tt{opacity:.55;}
 .ch-list li.cur .tt{color:var(--accent);}
 
 /* footer */
@@ -127,11 +127,59 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline
 .dw-c[aria-pressed="true"]{border-color:var(--panel);box-shadow:0 0 0 2px var(--ink);}
 .fab{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:12px;z-index:25;border:0;border-radius:999px;background:var(--accent);color:#fff;padding:9px 14px;font-size:14px;box-shadow:0 6px 16px var(--shadow);cursor:pointer;animation:pulse 1.6s ease-in-out infinite;}
 @keyframes pulse{50%{transform:scale(1.06)}}
-.lock{position:fixed;inset:0;z-index:60;background:var(--bg);display:grid;place-items:center;text-align:center;padding:24px;}
-.lock-ic{font-size:48px;}
-.lock p{font-family:var(--display);font-size:18px;color:var(--ink);max-width:300px;line-height:1.6;}
+.lockscreen{position:fixed;inset:0;z-index:60;background:var(--bg);display:grid;place-items:center;text-align:center;padding:24px;}
+.lockscreen .lock-ic{font-size:48px;}
+.lockscreen p{font-family:var(--display);font-size:18px;color:var(--ink);max-width:300px;line-height:1.6;}
 .me-label{font-family:var(--display);font-size:17px;flex:1;}
 .col{display:flex;flex-direction:column;gap:8px;}
+
+/* status */
+.status-row{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:8px 0 2px;}
+.st-chip{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--track);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;max-width:100%;}
+.st-chip b{font-weight:600;color:var(--accent);}
+.st-chip.empty span{color:var(--muted);}
+.st-chip.mine{border-style:dashed;border-color:var(--accent);}
+.st-emo{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:14px 0 12px;justify-items:center;}
+/* poke */
+.poke-stat{margin:10px 0 0;font-size:12px;color:var(--muted);}
+.poke-banner{white-space:nowrap;position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:45;background:var(--panel);color:var(--accent);font-family:var(--display);font-size:24px;padding:18px 26px;border-radius:22px;box-shadow:0 12px 32px var(--shadow);pointer-events:none;text-align:center;max-width:86vw;}
+.poke-banner.show{animation:bannerIn .5s cubic-bezier(.3,1.6,.5,1);}
+@keyframes bannerIn{0%{transform:translate(-50%,-50%) scale(.4);opacity:0}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+/* daily question */
+.qa{background:var(--panel);border-radius:18px;padding:16px 16px 12px;box-shadow:0 6px 16px var(--shadow);}
+.qa-day{font-size:12px;color:var(--muted);}
+.qa-q{font-family:var(--display);font-size:21px;line-height:1.45;margin:4px 0 12px;}
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.qa-grid:empty{display:none;}
+.qa-card{border-radius:12px;padding:10px 12px;min-width:0;}
+.qa-card.from-a{background:var(--note-a);color:var(--note-a-ink);}
+.qa-card.from-b{background:var(--note);color:var(--note-ink);}
+.qa-card b{display:block;font-size:12px;opacity:.75;font-weight:600;margin-bottom:4px;}
+.qa-card p{margin:0;font-size:14px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;}
+.qa-form textarea{margin-top:0;height:76px;}
+.qa-form .btn{display:block;margin:8px 0 0 auto;}
+.qa-wait{margin:10px 0 0;font-size:13px;color:var(--muted);text-align:center;}
+.qa-wait:empty{display:none;}
+.qa-past{border-top:1.5px dashed var(--line);padding-top:10px;margin-top:10px;}
+.qa-past-h{font-size:13px;color:var(--muted);margin-bottom:8px;}
+/* capsules */
+.caps-intro{margin:0 0 10px;font-size:13px;color:var(--muted);}
+.cap-list{display:flex;flex-direction:column;gap:10px;margin-top:14px;}
+.cap{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--panel);border:1.5px solid var(--track);border-radius:16px;padding:12px 14px;color:var(--ink);cursor:pointer;font:inherit;}
+.cap-ic{font-size:28px;flex:none;}
+.cap-bx{display:flex;flex-direction:column;min-width:0;}
+.cap-bx b{font-family:var(--display);font-weight:400;font-size:16px;}
+.cap-bx small{font-size:12px;color:var(--muted);margin-top:2px;}
+.cap.ready{border-color:var(--accent);}
+.cap.glow{box-shadow:0 0 0 3px var(--track),0 6px 16px var(--shadow);animation:pulse 1.6s ease-in-out infinite;}
+.cap.shake{animation:shake .4s;}
+@keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.caps-empty{margin:12px 0 0;font-size:13px;color:var(--muted);text-align:center;}
+.cap-opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.cap-opt{border:1.5px solid var(--track);background:var(--bg);color:var(--ink);border-radius:999px;padding:7px 14px;font-size:14px;cursor:pointer;}
+.cap-opt[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+.cv-text{margin-top:14px;padding:14px 16px;background:var(--note);color:var(--note-ink);border-radius:4px;font-family:var(--display);font-size:17px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere;max-height:50vh;overflow:auto;}
+#cvDel.arm{background:var(--accent);color:#fff;}
 
 /* love */
 .love{text-align:center;margin-top:18px;}
@@ -236,6 +284,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
   <header class="hd">
     <p class="greet" id="greet"></p>
     <button class="names" id="namesBtn" aria-label="修改名字"><span id="nameA">弟弟</span><span class="amp">♡</span><span id="nameB">姐姐</span></button>
+    <div class="status-row" id="statusRow"></div>
     <p class="meta"><span>订婚卡 No.0001</span><span>限量 1 张</span><span>有效期：直到订婚那天</span></p>
     <p class="sub" id="subLine">订婚进度手账</p>
   </header>
@@ -281,8 +330,10 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     <div class="love-row">
       <button class="love-btn" id="loveBtn" type="button">💌 你爱我吗？</button>
       <button class="love-btn" id="hugBtn" type="button">🫂 要抱抱</button>
+      <button class="love-btn" id="pokeBtn" type="button">🥺 想你了</button>
     </div>
     <p class="love-ans" id="loveAns" hidden></p>
+    <p class="poke-stat" id="pokeStat"></p>
   </div>
 
   <h2 id="notesTitle">小纸条</h2>
@@ -299,6 +350,25 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     </div>
     <div class="notes" id="notes"></div>
     <p class="empty" id="notesEmpty">还没有纸条，写第一张吧</p>
+  </section>
+
+  <h2>每日一问</h2>
+  <section class="qa" aria-label="每日一问">
+    <span class="qa-day">今天的问题</span>
+    <p class="qa-q" id="qaText"></p>
+    <div class="qa-grid" id="qaBoth"></div>
+    <div class="qa-form" id="qaForm"><textarea id="qaInput" maxlength="200" placeholder="写下你的回答，对方答完才能看到"></textarea><button class="btn main sm" id="qaSend" type="button">藏好回答</button></div>
+    <p class="qa-wait" id="qaWait"></p>
+    <button class="ch-toggle" id="qaHistBtn" type="button" hidden>看看往期</button>
+    <div class="qa-hist" id="qaHist" hidden></div>
+  </section>
+
+  <h2>时光胶囊</h2>
+  <section class="caps" aria-label="时光胶囊">
+    <p class="caps-intro">写一段话锁起来，要等盖到指定的次数，对方才能打开。</p>
+    <button class="btn sm" id="capNew" type="button">✉️ 写一个胶囊</button>
+    <div class="cap-list" id="capList"></div>
+    <p class="caps-empty" id="capEmpty">还没有胶囊，写下第一个吧</p>
   </section>
 
   <section class="stats" aria-label="统计">
@@ -374,7 +444,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
   <footer class="foot">
     <p id="footDays"></p>
     <p>© 2026 <span data-name="a"></span> 发行　<span data-name="b"></span> 专属　翻版必究</p>
-    <p class="ver">v1.1 小纸条版　2026年10月7日</p>
+    <p class="ver">v1.2 互动版　2026年10月7日</p>
   </footer>
 </main>
 
@@ -423,8 +493,38 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
   </div>
 </div>
 
-<div class="lock" id="lock" hidden><div><div class="lock-ic">🔒</div><p id="lockMsg"></p></div></div>
+<div class="lockscreen" id="lock" hidden><div><div class="lock-ic">🔒</div><p id="lockMsg"></p></div></div>
 <button class="fab" id="fab" type="button" hidden></button>
+<div class="poke-banner" id="pokeBanner" hidden></div>
+
+<div class="sheet" id="statusSheet">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="stTitle">
+    <h3 id="stTitle">今天的状态</h3>
+    <p>选一个表情，再写几个字（可选），对方打开卡片就能看到。</p>
+    <div class="st-emo" id="stEmo"></div>
+    <input id="stText" maxlength="12" placeholder="比如：在实验室搬砖" aria-label="状态文字">
+    <div class="row2"><button class="btn" id="stCancel" type="button">取消</button><button class="btn main" id="stSave" type="button">更新状态</button></div>
+  </div>
+</div>
+
+<div class="sheet" id="capSheet">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="capTitle">
+    <h3 id="capTitle">写一个时光胶囊</h3>
+    <p id="capHint"></p>
+    <textarea id="capText" maxlength="500" style="height:150px" placeholder="写给未来的对方……"></textarea>
+    <div class="cap-opts" id="capOpts"></div>
+    <div class="row2"><button class="btn" id="capCancel" type="button">取消</button><button class="btn main" id="capSave" type="button">封存</button></div>
+  </div>
+</div>
+
+<div class="sheet" id="capView">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="cvTitle">
+    <h3 id="cvTitle"></h3>
+    <p id="cvMeta"></p>
+    <div class="cv-text" id="cvText"></div>
+    <div class="row2"><button class="btn" id="cvDel" type="button">撕掉这个胶囊</button><button class="btn main" id="cvClose" type="button">收好了</button></div>
+  </div>
+</div>
 
 <div class="sheet" id="copySheet">
   <div class="sheet-box" role="dialog" aria-modal="true" aria-labelledby="cs">
@@ -480,7 +580,11 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     for (var ci = 0; ci < 7; ci++) chapters.push(Array.isArray(d.chapters) ? str(d.chapters[ci]).slice(0, 80) : '');
     var letter = Array.isArray(d.letter) ? d.letter.map(function(x){ return str(x).slice(0, 40); }).filter(Boolean).slice(0, 24) : [];
     var emails = { a: str(d.emails && d.emails.a).slice(0, 80), b: str(d.emails && d.emails.b).slice(0, 80) };
-    return { names: names, chapters: chapters, letter: letter, emails: emails };
+    var poke = d.poke && typeof d.poke === 'object' ? { from: str(d.poke.from), ts: Number(d.poke.ts) || 0 } : null;
+    var pokes = { a: Number(d.pokes && d.pokes.a) || 0, b: Number(d.pokes && d.pokes.b) || 0 };
+    var status = {};
+    ['a', 'b'].forEach(function(k){ var sx = d.status && d.status[k]; status[k] = sx ? { e: str(sx.e).slice(0, 8), t: str(sx.t).slice(0, 12), day: str(sx.day) } : null; });
+    return { names: names, chapters: chapters, letter: letter, emails: emails, poke: poke, pokes: pokes, status: status };
   }
   function normEntries(arr){
     var out = [];
@@ -658,7 +762,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     var cl = $('chList'); cl.innerHTML = '';
     CHAPTERS.forEach(function(c, i){
       var done = i < ci || n >= TOTAL, cur = i === ci && n < TOTAL;
-      var li = document.createElement('li'); li.className = done ? 'done' : (cur ? 'cur' : 'lock');
+      var li = document.createElement('li'); li.className = done ? 'ch-done' : (cur ? 'cur' : 'ch-lock');
       var ic = document.createElement('span'); ic.className = 'ic'; ic.textContent = done ? '✓' : (cur ? '✦' : '🔒');
       var bx = document.createElement('div');
       var tt = document.createElement('div'); tt.className = 'tt';
@@ -742,6 +846,8 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     var lt = state.letter || [], lb = $('letterLines');
     $('letterWrap').hidden = !lt.length; lb.innerHTML = '';
     lt.forEach(function(line){ var pp = document.createElement('p'); pp.textContent = line; lb.appendChild(pp); });
+    if ($('meSheet').classList.contains('open')){ $('meA').textContent = '我是 ' + A(); $('meB').textContent = '我是 ' + B(); }
+    renderStatus(); renderPokeStat(); renderCaps(); renderQA();
     $('meLabel').textContent = ME ? (ME === 'a' ? A() + '（发行方）' : B() + '（持卡人）') : '还没选';
     if (document.activeElement !== $('emA')) $('emA').value = state.emails.a || '';
     if (document.activeElement !== $('emB')) $('emB').value = state.emails.b || '';
@@ -764,9 +870,9 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     f.style.left = (r.left + r.width / 2 - 14) + 'px'; f.style.top = (r.top - 10) + 'px';
     document.body.appendChild(f); setTimeout(function(){ f.remove(); }, 900);
   }
-  function confetti(){
+  function confetti(custom){
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    var pool = ['💍','💗','✨','🎉','💐','💒'];
+    var pool = custom || ['💍','💗','✨','🎉','💐','💒'];
     for (var i = 0; i < 40; i++){
       var c = document.createElement('span'); c.className = 'confetti';
       c.textContent = pool[i % pool.length];
@@ -1116,7 +1222,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     notes.forEach(function(nt, i){
       var card = document.createElement('div');
       card.className = 'nt ' + (nt.from === 'a' ? 'from-a' : 'from-b');
-      card.style.setProperty('--r', (((i * 37) % 7) - 3) * 0.6 + 'deg');
+      card.style.setProperty('--r', ((Math.floor(nt.ts / 1000) % 7) - 3) * 0.6 + 'deg');
       if (ME && nt.from !== ME && nt.ts > s0){ var nw = document.createElement('span'); nw.className = 'new'; nw.textContent = 'NEW'; card.appendChild(nw); }
       var head = document.createElement('div'); head.className = 'nt-head';
       var who = document.createElement('span'); who.textContent = nt.from === 'a' ? A() : B();
@@ -1263,6 +1369,254 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     saveMain({ letter: state.letter }); render(); $('letterSheet').classList.remove('open'); toast('附言已保存');
   });
 
+  /* ---------- today's status ---------- */
+  var ST_EMO = ['🥰','😴','😋','🥺','😤','🤒','📚','🧪','💪','🎮','✨','😭'];
+  var stPick = '';
+  function renderStatus(){
+    var row = $('statusRow'); if (!row || !state.status) return;
+    row.innerHTML = '';
+    var today = ymd(new Date());
+    ['a', 'b'].forEach(function(k){
+      var s = state.status[k], fresh = !!(s && s.day === today && s.e);
+      var chip = document.createElement('button'); chip.type = 'button';
+      chip.className = 'st-chip' + (k === ME ? ' mine' : '') + (fresh ? '' : ' empty');
+      var nm = document.createElement('b'); nm.textContent = k === 'a' ? A() : B();
+      var tx = document.createElement('span');
+      tx.textContent = fresh ? s.e + (s.t ? ' ' + s.t : '') : (k === ME ? '＋ 今天的状态' : '今天还没更新');
+      chip.appendChild(nm); chip.appendChild(tx);
+      chip.addEventListener('click', function(){
+        if (k === ME) openStatus();
+        else if (!ME) openMe();
+        else toast(fresh ? (k === 'a' ? A() : B()) + ' 今天：' + s.e + (s.t ? ' ' + s.t : '') : '对方今天还没更新状态');
+      });
+      row.appendChild(chip);
+    });
+  }
+  ST_EMO.forEach(function(m){
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'mood'; b.textContent = m;
+    b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', '状态 ' + m);
+    b.addEventListener('click', function(){ stPick = m; syncStEmo(); });
+    $('stEmo').appendChild(b);
+  });
+  function syncStEmo(){ $('stEmo').querySelectorAll('.mood').forEach(function(b){ b.setAttribute('aria-pressed', b.textContent === stPick ? 'true' : 'false'); }); }
+  function openStatus(){
+    if (!ME){ openMe(); return; }
+    var s = state.status && state.status[ME], today = ymd(new Date());
+    stPick = s && s.day === today ? s.e : '';
+    $('stText').value = s && s.day === today ? s.t : '';
+    syncStEmo(); $('statusSheet').classList.add('open');
+  }
+  $('stCancel').addEventListener('click', function(){ $('statusSheet').classList.remove('open'); });
+  $('statusSheet').addEventListener('click', function(ev){ if (ev.target === $('statusSheet')) $('statusSheet').classList.remove('open'); });
+  $('stSave').addEventListener('click', function(){
+    if (!stPick){ toast('先选一个表情'); return; }
+    var mine = { e: stPick, t: $('stText').value.trim().slice(0, 12), day: ymd(new Date()) };
+    state.status[ME] = mine;
+    var patch = { status: {} }; patch.status[ME] = mine;
+    saveMain(patch); render(); $('statusSheet').classList.remove('open'); toast('状态更新好了 ' + stPick);
+  });
+
+  /* ---------- miss you (poke) ---------- */
+  var pokeCool = 0;
+  function renderPokeStat(){
+    var el = $('pokeStat'); if (!el || !state.pokes) return;
+    var pa = state.pokes.a || 0, pb = state.pokes.b || 0;
+    var parts = [];
+    if (pa) parts.push(A() + '想了' + B() + ' ' + pa + ' 次');
+    if (pb) parts.push(B() + '想了' + A() + ' ' + pb + ' 次');
+    el.textContent = parts.join('　');
+  }
+  $('pokeBtn').addEventListener('click', function(ev){
+    if (!ME){ openMe(); return; }
+    if (Date.now() - pokeCool < 3000){ toast('慢一点，想念已经在路上了 💨'); return; }
+    pokeCool = Date.now();
+    if (mainRef && window.firebase && firebase.firestore && firebase.firestore.FieldValue){
+      var inc = {}; inc[ME] = firebase.firestore.FieldValue.increment(1);
+      mainRef.set({ poke: { from: ME, ts: Date.now() }, pokes: inc }, { merge: true }).catch(cloudFail);
+    }
+    state.pokes[ME] = (state.pokes[ME] || 0) + 1; renderPokeStat();
+    toast('已经告诉' + (ME === 'a' ? B() + '你想她' : A() + '你想他') + '了 💌');
+    hearts(ev.clientX || innerWidth / 2, ev.clientY || innerHeight / 2);
+  });
+  function pokeRain(fromName, ago){
+    var bn = $('pokeBanner');
+    bn.textContent = '🥺 ' + fromName + (ago ? ago : '') + '想你了';
+    bn.hidden = false; bn.classList.remove('show'); void bn.offsetWidth; bn.classList.add('show');
+    setTimeout(function(){ bn.hidden = true; }, 3400);
+    confetti(['💗', '💕', '💞', '🥺', '💘']);
+    try { navigator.vibrate && navigator.vibrate([60, 60, 60]); } catch(e){}
+  }
+  function checkPoke(){
+    var pk = state.poke; if (!pk || !ME || !pk.from || pk.from === ME) return;
+    var seen = Number(store.get('ep_poke_seen') || 0) || 0;
+    if (pk.ts <= seen) return;
+    store.set('ep_poke_seen', String(pk.ts));
+    var age = Date.now() - pk.ts;
+    if (age > 24 * 3600000) return;
+    var ago = age < 90000 ? '' : (age < 3600000 ? ' ' + Math.round(age / 60000) + ' 分钟前' : ' ' + Math.round(age / 3600000) + ' 小时前');
+    pokeRain(pk.from === 'a' ? A() : B(), ago);
+  }
+
+  /* ---------- daily question ---------- */
+  var QUESTIONS = [
+    '今天最想对对方说的一句话是？', '最近一次被对方打动，是因为什么？', '你觉得我们俩最像的地方是？',
+    '如果明天放假一天，你想和对方做什么？', '用三个词形容现在的我们', '对方做的哪件小事，让你觉得被爱？',
+    '你最喜欢对方身上的哪一点？', '最想和对方一起去的一个地方', '如果给我们的感情起个名字，叫什么？',
+    '第一次心动的瞬间是？', '今天有什么开心的事想分享？', '你希望十年后的我们是什么样子？',
+    '最想听对方说的一句话是？', '闹别扭之后，你最希望对方怎么做？', '一起做过的事里，最想再来一次的是？',
+    '对方最可爱的一个小习惯是？', '想对一年后的对方说什么？', '订婚那天，你想穿什么？',
+    '婚礼上想放哪首歌？', '如果可以，你最想送对方什么礼物？', '对方让你最安心的一个瞬间',
+    '你觉得我们的爱是什么味道的？', '如果以后养一只宠物，叫什么名字？', '理想的周末约会是怎样的？',
+    '最想和对方一起学会的一件事', '今天想对方了几次？', '以后我们的家里，一定要有什么？',
+    '用一个 emoji 形容今天的心情', '最想和对方一起完成的一件事', '对方身上你最想学的一点'
+  ];
+  var qaDocs = [], qaCol = null, qaHistOpen = false;
+  function todayQ(){ var t = ymd(new Date()); return { day: t, qi: Math.floor(parseDay(t).getTime() / DAY) % QUESTIONS.length }; }
+  function qaOf(day){ var r = null; (qaDocs || []).forEach(function(d){ if (d.day === day) r = d; }); return r || {}; }
+  function qaCard(name, text, cls){
+    var c = document.createElement('div'); c.className = 'qa-card ' + cls;
+    var n = document.createElement('b'); n.textContent = name;
+    var t = document.createElement('p'); t.textContent = text;
+    c.appendChild(n); c.appendChild(t); return c;
+  }
+  function renderQA(){
+    if (!$('qaText') || !QUESTIONS) return;
+    var tq = todayQ(), doc = qaOf(tq.day);
+    var qi = typeof doc.q === 'number' ? doc.q : tq.qi;
+    $('qaText').textContent = QUESTIONS[qi % QUESTIONS.length];
+    var otherK = ME === 'a' ? 'b' : 'a';
+    var mine = ME ? str(doc[ME]) : '', other = ME ? str(doc[otherK]) : '';
+    var oName = otherK === 'a' ? A() : B();
+    var both = $('qaBoth'); both.innerHTML = '';
+    $('qaForm').hidden = !ME || !!mine;
+    var w = '';
+    if (mine && other){
+      both.appendChild(qaCard(A(), str(doc.a), 'from-a'));
+      both.appendChild(qaCard(B(), str(doc.b), 'from-b'));
+      w = '🎉 两个人都答完啦';
+    } else if (mine){
+      both.appendChild(qaCard('你的回答（已藏好）', mine, ME === 'a' ? 'from-a' : 'from-b'));
+      w = oName + '还没回答，答完就一起揭晓 👀';
+    } else if (other){
+      w = '🔒 ' + oName + '已经回答了，你答完就能看到';
+    } else if (!ME){
+      w = '先在设置里选一下你是谁';
+    }
+    $('qaWait').textContent = w;
+    var hist = $('qaHist'); hist.innerHTML = '';
+    var past = (qaDocs || []).filter(function(d){ return d.day < tq.day && (d.a || d.b); });
+    past.forEach(function(d){
+      var item = document.createElement('div'); item.className = 'qa-past';
+      var h = document.createElement('div'); h.className = 'qa-past-h';
+      h.textContent = fmtDay(d.day) + '　' + QUESTIONS[(typeof d.q === 'number' ? d.q : 0) % QUESTIONS.length];
+      item.appendChild(h);
+      var g = document.createElement('div'); g.className = 'qa-grid';
+      g.appendChild(qaCard(A(), d.a ? str(d.a) : '（没回答）', 'from-a'));
+      g.appendChild(qaCard(B(), d.b ? str(d.b) : '（没回答）', 'from-b'));
+      item.appendChild(g); hist.appendChild(item);
+    });
+    $('qaHistBtn').hidden = !past.length;
+    $('qaHist').hidden = !qaHistOpen || !past.length;
+    $('qaHistBtn').textContent = qaHistOpen ? '收起往期' : '看看往期（' + past.length + '）';
+  }
+  $('qaHistBtn').addEventListener('click', function(){ qaHistOpen = !qaHistOpen; renderQA(); });
+  $('qaSend').addEventListener('click', function(){
+    if (!ME){ openMe(); return; }
+    var text = $('qaInput').value.trim().slice(0, 200);
+    if (!text){ toast('先写下你的回答'); return; }
+    if (!qaCol){ toast('云端还没连上，稍等一下'); return; }
+    var tq = todayQ(), doc = qaOf(tq.day);
+    var data = { day: tq.day, q: typeof doc.q === 'number' ? doc.q : tq.qi };
+    data[ME] = text; data[ME + 'ts'] = Date.now();
+    qaCol.doc(tq.day).set(data, { merge: true }).catch(cloudFail);
+    var otherK = ME === 'a' ? 'b' : 'a';
+    $('qaInput').value = '';
+    toast(doc[otherK] ? '揭晓！去看看对方怎么回答的 🎉' : '回答藏好了，等对方答完一起揭晓 🤫');
+  });
+
+  /* ---------- time capsules ---------- */
+  var caps = [], capCol = null, capPick = 0, lastReady = -1, capViewing = null;
+  function openedMap(){ try { return JSON.parse(store.get('ep_opened') || '{}') || {}; } catch(e){ return {}; } }
+  function renderCaps(){
+    var box = $('capList'); if (!box) return;
+    box.innerHTML = '';
+    var n = state.entries.length, op = openedMap(), readyNew = 0;
+    var otherName = ME === 'a' ? B() : A();
+    (caps || []).forEach(function(cp){
+      var mine = ME && cp.from === ME, ready = n >= cp.unlock;
+      if (!mine && ready && !op[cp.id]) readyNew++;
+      var card = document.createElement('button'); card.type = 'button';
+      card.className = 'cap' + (ready ? ' ready' : '') + (mine ? ' mine' : '') + (!mine && ready && !op[cp.id] ? ' glow' : '');
+      var ic = document.createElement('span'); ic.className = 'cap-ic';
+      ic.textContent = mine ? '📮' : (ready ? (op[cp.id] ? '💌' : '✉️') : '🔒');
+      var bx = document.createElement('span'); bx.className = 'cap-bx';
+      var t = document.createElement('b');
+      t.textContent = mine ? '你写给' + otherName + '的胶囊' : (cp.from === 'a' ? A() : B()) + '写给你的胶囊';
+      var m = document.createElement('small');
+      m.textContent = ready ? '第 ' + cp.unlock + ' 次 · 已开启' + (!mine && !op[cp.id] ? '，点开看看' : '') : '第 ' + cp.unlock + ' 次开启，还差 ' + (cp.unlock - n) + ' 次';
+      bx.appendChild(t); bx.appendChild(m); card.appendChild(ic); card.appendChild(bx);
+      card.addEventListener('click', function(){
+        if (mine || ready) openCap(cp, mine);
+        else { card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake'); toast('还没到时间哦，再盖 ' + (cp.unlock - n) + ' 个章 🔒'); }
+      });
+      box.appendChild(card);
+    });
+    $('capEmpty').hidden = (caps || []).length > 0;
+    if (lastReady >= 0 && readyNew > lastReady){ setTimeout(function(){ toast('💌 有一个时光胶囊可以打开了！'); confetti(['💌', '✉️', '💗', '✨']); }, 1400); }
+    lastReady = readyNew;
+  }
+  function openCap(cp, mine){
+    capViewing = cp;
+    $('cvTitle').textContent = mine ? '你写给' + (ME === 'a' ? B() : A()) + '的胶囊' : '来自' + (cp.from === 'a' ? A() : B()) + '的时光胶囊';
+    $('cvMeta').textContent = '写于 ' + fmtDay(ymd(new Date(cp.ts))) + '，第 ' + cp.unlock + ' 次开启' + (mine && state.entries.length < cp.unlock ? '（现在只有你看得到）' : '');
+    $('cvText').textContent = cp.text;
+    $('cvDel').hidden = !mine;
+    $('capView').classList.add('open');
+    if (!mine){ var op = openedMap(); if (!op[cp.id]){ op[cp.id] = 1; store.set('ep_opened', JSON.stringify(op)); hearts(innerWidth / 2, innerHeight / 2); } renderCaps(); }
+  }
+  $('cvClose').addEventListener('click', function(){ $('capView').classList.remove('open'); });
+  $('capView').addEventListener('click', function(ev){ if (ev.target === $('capView')) $('capView').classList.remove('open'); });
+  $('cvDel').addEventListener('click', function(){
+    var b = $('cvDel');
+    if (!b.classList.contains('arm')){ b.classList.add('arm'); b.textContent = '确定撕掉？'; setTimeout(function(){ b.classList.remove('arm'); b.textContent = '撕掉这个胶囊'; }, 3000); return; }
+    b.classList.remove('arm'); b.textContent = '撕掉这个胶囊';
+    if (capCol && capViewing) capCol.doc(capViewing.id).delete().catch(cloudFail);
+    $('capView').classList.remove('open'); toast('胶囊撕掉了');
+  });
+  function capOptions(){
+    var n = state.entries.length, opts = [];
+    var next10 = Math.min(TOTAL, (Math.floor(n / 10) + 1) * 10);
+    [next10, 25, 50, 75, 99, 100].forEach(function(v){ if (v > n && v <= TOTAL && opts.indexOf(v) < 0) opts.push(v); });
+    opts.sort(function(x, y){ return x - y; });
+    return opts;
+  }
+  $('capNew').addEventListener('click', function(){
+    if (!ME){ openMe(); return; }
+    var opts = capOptions();
+    if (!opts.length){ toast('已经集满了，胶囊都可以直接打开啦'); return; }
+    capPick = opts[0];
+    var box = $('capOpts'); box.innerHTML = '';
+    opts.forEach(function(v){
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'cap-opt'; b.textContent = '第 ' + v + ' 次';
+      b.setAttribute('aria-pressed', v === capPick ? 'true' : 'false');
+      b.addEventListener('click', function(){ capPick = v; box.querySelectorAll('.cap-opt').forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); });
+      box.appendChild(b);
+    });
+    $('capHint').textContent = '写给' + (ME === 'a' ? B() : A()) + '，选好开启的次数。到那一次之前，对方只能看到一个上锁的信封。';
+    $('capText').value = '';
+    $('capSheet').classList.add('open');
+  });
+  $('capCancel').addEventListener('click', function(){ $('capSheet').classList.remove('open'); });
+  $('capSheet').addEventListener('click', function(ev){ if (ev.target === $('capSheet')) $('capSheet').classList.remove('open'); });
+  $('capSave').addEventListener('click', function(){
+    var text = $('capText').value.trim().slice(0, 500);
+    if (!text){ toast('写点什么再封存吧'); return; }
+    if (!capCol){ toast('云端还没连上，稍等一下'); return; }
+    capCol.add({ from: ME, text: text, unlock: capPick, ts: Date.now() }).catch(cloudFail);
+    $('capSheet').classList.remove('open');
+    toast('胶囊封存好了，第 ' + capPick + ' 次才能打开 🔒');
+  });
+
   render(); renderNotes();
 
   /* ---------- cloud sync ---------- */
@@ -1276,12 +1630,15 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
       mainRef = FS.collection('cards').doc(KEY);
       entriesCol = mainRef.collection('entries');
       notesCol = mainRef.collection('notes');
-      var initMain = false, initEntries = false, notesReady = false;
+      qaCol = mainRef.collection('qa');
+      capCol = mainRef.collection('capsules');
+      var initMain = false, initEntries = false, notesReady = false, entriesReady = false, qaReady = false;
 
       mainRef.onSnapshot(function(snap){
         var d = snap.exists ? snap.data() : {};
         var m = normalizeMain(d);
         state.names = m.names; state.chapters = m.chapters; state.letter = m.letter; state.emails = m.emails;
+        state.pokes = m.pokes; state.status = m.status; state.poke = m.poke;
         if (INIT && !initMain && !snap.metadata.fromCache){
           initMain = true;
           var patch = {};
@@ -1291,7 +1648,10 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
           if (Object.keys(patch).length) mainRef.set(patch, { merge: true }).catch(cloudFail);
         }
         cache(); render(); renderNotes();
-        if (!snap.metadata.fromCache) maybeAskMe();
+        if (!snap.metadata.fromCache){
+          if (!INIT || (d.names && (d.names.a || d.names.b))) maybeAskMe();
+          checkPoke();
+        }
       }, cloudFail);
 
       entriesCol.orderBy('ts').onSnapshot(function(snap){
@@ -1306,8 +1666,20 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
             });
           }
         }
+        var partnerStamp = null;
+        if (entriesReady && ME){
+          snap.docChanges().forEach(function(ch){
+            var x = ch.doc.data();
+            if (ch.type === 'added' && x.by && x.by !== ME && !ch.doc.metadata.hasPendingWrites) partnerStamp = x.by;
+          });
+        }
+        if (!snap.metadata.fromCache) entriesReady = true;
         state.entries = normEntries(arr);
         cache(); render();
+        if (partnerStamp){
+          toast((partnerStamp === 'a' ? A() : B()) + '刚刚盖了一个章，现在 ' + state.entries.length + ' / 100 💗');
+          hearts(window.innerWidth / 2, 120);
+        }
       }, cloudFail);
 
       notesCol.orderBy('ts', 'desc').limit(120).onSnapshot(function(snap){
@@ -1324,6 +1696,28 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
         }
         if (!snap.metadata.fromCache) notesReady = true;
         notes = arr; renderNotes();
+      }, cloudFail);
+
+      qaCol.orderBy('day', 'desc').limit(15).onSnapshot(function(snap){
+        var before = ME ? str(qaOf(todayQ().day)[ME === 'a' ? 'b' : 'a']) : '';
+        var arr = [];
+        snap.forEach(function(doc){ var x = doc.data(); x.day = str(x.day) || doc.id; arr.push(x); });
+        qaDocs = arr;
+        if (qaReady && ME){
+          var after = str(qaOf(todayQ().day)[ME === 'a' ? 'b' : 'a']);
+          if (after && !before) toast((ME === 'a' ? B() : A()) + '回答了今天的问题 👀');
+        }
+        if (!snap.metadata.fromCache) qaReady = true;
+        renderQA();
+      }, cloudFail);
+
+      capCol.orderBy('ts', 'desc').limit(60).onSnapshot(function(snap){
+        var arr = [];
+        snap.forEach(function(doc){
+          var x = doc.data();
+          arr.push({ id: doc.id, from: str(x.from), text: str(x.text).slice(0, 500), unlock: Math.max(1, Math.min(TOTAL, Number(x.unlock) || TOTAL)), ts: Number(x.ts) || 0 });
+        });
+        caps = arr; renderCaps();
       }, cloudFail);
     } catch(e){ toast('云端初始化失败，先显示这台设备上的记录'); }
   })();
