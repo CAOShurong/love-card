@@ -290,6 +290,14 @@ body .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px));}
 .love-ans.bs-cloud{background:var(--note-a);color:var(--note-a-ink);border-radius:28px;}
 .love-ans.bs-cloud::before{border-bottom-color:var(--note-a);}
 
+/* photos */
+.prevs{display:flex;gap:12px;flex-wrap:wrap;}
+.prevs:not(:has(> :not([hidden]))){display:none;}
+.nt img.photo{cursor:zoom-in;border-radius:4px;}
+.photo-sheet .sheet-box{max-width:520px;}
+#pvImg{display:block;width:100%;max-height:62vh;object-fit:contain;border-radius:12px;background:var(--bg);}
+#pvMeta{margin:8px 0 0;font-size:12px;color:var(--muted);text-align:center;}
+
 /* love */
 .love{text-align:center;margin-top:18px;}
 .love-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
@@ -459,9 +467,14 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     <div class="compose">
       <textarea id="ntText" maxlength="300" placeholder="写一张小纸条……"></textarea>
       <div class="emo" id="ntEmo"></div>
-      <div class="drawprev" id="ntPrev" hidden><img id="ntImg" alt="涂鸦预览"><button type="button" id="ntImgDel" aria-label="去掉涂鸦">✕</button></div>
+      <div class="prevs">
+        <div class="drawprev" id="ntPrev" hidden><img id="ntImg" alt="涂鸦预览"><button type="button" id="ntImgDel" aria-label="去掉涂鸦">✕</button></div>
+        <div class="drawprev" id="ntPhotoPrev" hidden><img id="ntPhotoImg" alt="照片预览"><button type="button" id="ntPhotoDel" aria-label="去掉照片">✕</button></div>
+      </div>
+      <input type="file" id="ntPhotoIn" accept="image/*" hidden>
       <div class="compose-row">
         <button class="btn sm" id="ntDraw" type="button">🎨 涂鸦</button>
+        <button class="btn sm" id="ntPhoto" type="button">📷 照片</button>
         <label class="mailchk"><input type="checkbox" id="ntMail"> 📧 同时寄到邮箱</label>
         <button class="btn main sm" id="ntSend" type="button">贴上去</button>
       </div>
@@ -614,7 +627,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
   <footer class="foot">
     <p id="footDays"></p>
     <p>© 2026 <span data-name="a"></span> 发行　<span data-name="b"></span> 专属　翻版必究</p>
-    <p class="ver">v1.4 宝箱版　2026年10月7日</p>
+    <p class="ver">v1.5 照片版　2026年10月7日</p>
   </footer>
 </div>
 </main>
@@ -762,6 +775,14 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     <p id="rpQuote"></p>
     <input id="rpText" maxlength="80" placeholder="回一句……" style="margin-top:10px">
     <div class="row2"><button class="btn" id="rpCancel" type="button">取消</button><button class="btn main" id="rpSave" type="button">回复</button></div>
+  </div>
+</div>
+
+<div class="sheet photo-sheet" id="photoView">
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-label="查看照片">
+    <img id="pvImg" alt="照片">
+    <p id="pvMeta"></p>
+    <div class="row2"><button class="btn" id="pvDraw" type="button">✏️ 在上面画</button><button class="btn main" id="pvClose" type="button">关闭</button></div>
   </div>
 </div>
 
@@ -1458,6 +1479,11 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
       var when = document.createElement('span'); when.textContent = fmtTime(nt.ts);
       head.appendChild(who); head.appendChild(when); card.appendChild(head);
       if (nt.text){ var tx = document.createElement('p'); tx.className = 'nt-text'; tx.textContent = nt.text; card.appendChild(tx); }
+      if (nt.photo && validJpeg(nt.photo.thumb)){
+        var ph = document.createElement('img'); ph.className = 'photo'; ph.src = nt.photo.thumb; ph.alt = '照片'; ph.loading = 'lazy';
+        ph.addEventListener('click', function(){ openPhoto(nt); });
+        card.appendChild(ph);
+      }
       if (nt.drawing && /^data:image\/(png|jpeg);base64,/.test(nt.drawing)){
         var im = document.createElement('img'); im.src = nt.drawing; im.alt = '涂鸦'; im.loading = 'lazy'; card.appendChild(im);
         var rl = document.createElement('button'); rl.type = 'button'; rl.className = 'nt-act'; rl.textContent = '✏️ 接着画';
@@ -1473,6 +1499,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
             return;
           }
           if (notesCol) notesCol.doc(nt.id).delete().catch(cloudFail);
+          if (nt.photo && nt.photo.id && photosCol) photosCol.doc(nt.photo.id).delete().catch(function(){});
         });
         card.appendChild(del);
       }
@@ -1569,6 +1596,74 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
   });
   $('ntImgDel').addEventListener('click', function(){ drawingData = ''; relayFrom = ''; $('ntPrev').hidden = true; dwReset(); });
 
+  /* ---------- photos ---------- */
+  var photoData = null, photosCol = null, photoCache = {}, photoViewing = null;
+  function loadImgFile(file){
+    return new Promise(function(res, rej){
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function(){ res(img); setTimeout(function(){ URL.revokeObjectURL(url); }, 2000); };
+      img.onerror = function(){ URL.revokeObjectURL(url); rej(new Error('bad image')); };
+      img.src = url;
+    });
+  }
+  function shrinkImg(img, max, q){
+    var w = img.naturalWidth || img.width, h = img.naturalHeight || img.height, k = Math.min(1, max / Math.max(w, h));
+    var c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w * k)); c.height = Math.max(1, Math.round(h * k));
+    var x = c.getContext('2d'); x.fillStyle = '#ffffff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height);
+    return { url: c.toDataURL('image/jpeg', q), w: c.width, h: c.height };
+  }
+  $('ntPhoto').addEventListener('click', function(){ if (needMe()) return; $('ntPhotoIn').click(); });
+  $('ntPhotoIn').addEventListener('change', function(){
+    var f = $('ntPhotoIn').files && $('ntPhotoIn').files[0];
+    $('ntPhotoIn').value = '';
+    if (!f) return;
+    if (!/^image\//.test(f.type || 'image/')){ toast('只能选图片哦'); return; }
+    toast('正在压缩照片……');
+    loadImgFile(f).then(function(img){
+      var max = 1400, q = 0.8, full = shrinkImg(img, max, q), tries = 0;
+      while (full.url.length > 850000 && tries < 8){ max = Math.round(max * 0.85); q = Math.max(0.5, q - 0.05); full = shrinkImg(img, max, q); tries++; }
+      var thumb = shrinkImg(img, 420, 0.68);
+      photoData = { full: full.url, thumb: thumb.url, w: full.w, h: full.h };
+      $('ntPhotoImg').src = thumb.url; $('ntPhotoPrev').hidden = false;
+      toast('照片准备好了 📷');
+    }).catch(function(){ toast('这张照片打不开，换一张试试'); });
+  });
+  $('ntPhotoDel').addEventListener('click', function(){ photoData = null; $('ntPhotoPrev').hidden = true; });
+  function validJpeg(u){ return typeof u === 'string' && /^data:image\/(jpeg|png);base64,/.test(u); }
+  function openPhoto(nt){
+    photoViewing = nt;
+    $('pvImg').src = nt.photo.thumb;
+    $('pvMeta').textContent = (nt.from === 'a' ? A() : B()) + ' · ' + fmtTime(nt.ts) + '　长按图片可以保存';
+    $('photoView').classList.add('open');
+    var id = nt.photo.id;
+    if (photoCache[id]){ $('pvImg').src = photoCache[id]; return; }
+    if (!photosCol || !id) return;
+    photosCol.doc(id).get().then(function(d){
+      var x = d.exists ? d.data() : null;
+      if (x && validJpeg(x.data)){ photoCache[id] = x.data; if (photoViewing && photoViewing.photo.id === id) $('pvImg').src = x.data; }
+    }).catch(function(){});
+  }
+  $('pvClose').addEventListener('click', function(){ $('photoView').classList.remove('open'); });
+  $('photoView').addEventListener('click', function(ev){ if (ev.target === $('photoView')) $('photoView').classList.remove('open'); });
+  $('pvDraw').addEventListener('click', function(){
+    if (!photoViewing) return;
+    var nt = photoViewing; $('photoView').classList.remove('open');
+    drawOnImage($('pvImg').src, nt.from, '在' + (nt.from === 'a' ? A() : B()) + '的照片上画');
+  });
+  function drawOnImage(src, from, title){
+    if (!ME){ openMe(); return; }
+    var img = new Image();
+    img.onload = function(){
+      dwReset();
+      var k = Math.max(dw.width / img.width, dw.height / img.height), w = img.width * k, h = img.height * k;
+      dctx.drawImage(img, (dw.width - w) / 2, (dw.height - h) / 2, w, h);
+      dDirty = true; relayFrom = from;
+      $('dwTitle').textContent = title;
+      $('drawSheet').classList.add('open');
+    };
+    img.src = src;
+  }
+
   /* ---------- email ---------- */
   function sendMail(nt, isTest){
     var em = state.emails || {};
@@ -1586,8 +1681,9 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
       _subject: '💌 ' + fromName + '给' + toName + '的小纸条',
       _template: 'box', _captcha: 'false',
       '来自': fromName,
-      '纸条': nt.text || '（这是一幅涂鸦）',
+      '纸条': nt.text || (nt.photo ? '（这是一张照片）' : '（这是一幅涂鸦）'),
       '涂鸦': nt.drawing ? '有一幅涂鸦，打开订婚卡查看' : '无',
+      '照片': nt.photo ? '附了一张照片，打开订婚卡查看' : '无',
       '打开订婚卡': location.origin + location.pathname + '#k=' + KEY
     };
     var sends = targets.map(function(t){
@@ -1611,14 +1707,20 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
   $('ntSend').addEventListener('click', function(){
     if (!ME){ openMe(); return; }
     var text = $('ntText').value.trim().slice(0, 300);
-    if (!text && !drawingData){ toast('写点什么，或者画一笔吧'); return; }
+    if (!text && !drawingData && !photoData){ toast('写点什么，画一笔，或者放张照片吧'); return; }
     if (!notesCol){ toast('云端还没连上，稍等一下'); return; }
     var nt = { from: ME, text: text, drawing: drawingData || '', ts: Date.now(), relay: drawingData ? relayFrom : '' };
+    if (photoData && photosCol){
+      var pref = photosCol.doc();
+      pref.set({ data: photoData.full, w: photoData.w, h: photoData.h, from: ME, ts: nt.ts }).catch(cloudFail);
+      photoCache[pref.id] = photoData.full;
+      nt.photo = { id: pref.id, thumb: photoData.thumb, w: photoData.w, h: photoData.h };
+    }
     notesCol.add(nt).catch(cloudFail);
     if ($('ntMail').checked) sendMail(nt);
     else toast(/爱/.test(text) ? '纸条贴上去了，' + (ME === 'a' ? B() : A()) + '会很开心的 💗' : '纸条贴上去了 📌');
     var r = $('ntSend').getBoundingClientRect(); hearts(r.left + r.width / 2, r.top);
-    $('ntText').value = ''; drawingData = ''; relayFrom = ''; $('ntPrev').hidden = true; $('ntMail').checked = false; dwReset();
+    $('ntText').value = ''; drawingData = ''; relayFrom = ''; photoData = null; $('ntPrev').hidden = true; $('ntPhotoPrev').hidden = true; $('ntMail').checked = false; dwReset();
   });
 
   /* ---------- settings ---------- */
@@ -1923,9 +2025,11 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
   $('backupBtn').addEventListener('click', function(){
     if (!mainRef){ toast('云端还没连上，稍等一下'); return; }
     toast('正在打包备份……');
-    Promise.all([mainRef.get(), entriesCol.get(), notesCol.get(), qaCol.get(), capCol.get()]).then(function(r){
+    var extra = [cpnCol, wishCol, achCol, storyCol, dropCol, qCol, photosCol].map(function(c){ return c ? c.get() : Promise.resolve(null); });
+    Promise.all([mainRef.get(), entriesCol.get(), notesCol.get(), qaCol.get(), capCol.get()].concat(extra)).then(function(r){
       function all(qs){ var a = []; qs.forEach(function(d){ var x = d.data(); x.id = d.id; a.push(x); }); return a; }
-      var data = { exportedAt: new Date().toISOString(), version: 'v1.3', card: r[0].exists ? r[0].data() : {}, entries: all(r[1]), notes: all(r[2]), qa: all(r[3]), capsules: all(r[4]) };
+      function al2(q){ return q ? all(q) : []; }
+      var data = { exportedAt: new Date().toISOString(), version: 'v1.5', card: r[0].exists ? r[0].data() : {}, entries: all(r[1]), notes: all(r[2]), qa: all(r[3]), capsules: all(r[4]), coupons: al2(r[5]), wishes: al2(r[6]), achievements: al2(r[7]), stories: al2(r[8]), drops: al2(r[9]), questions: al2(r[10]), photos: al2(r[11]) };
       var blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
       var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = '订婚卡备份-' + ymd(new Date()) + '.json';
       document.body.appendChild(a); a.click();
@@ -2360,7 +2464,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     rcLoading = true; renderRecap();
     Promise.all([notesCol.orderBy('ts', 'desc').limit(1500).get(), qaCol.get()]).then(function(r){
       var ns = [], qs = [];
-      r[0].forEach(function(d){ var x = d.data(); ns.push({ from: str(x.from), text: str(x.text), drawing: !!x.drawing, relay: str(x.relay), ts: Number(x.ts) || 0 }); });
+      r[0].forEach(function(d){ var x = d.data(); ns.push({ from: str(x.from), text: str(x.text), drawing: !!x.drawing, photo: !!x.photo, relay: str(x.relay), ts: Number(x.ts) || 0 }); });
       r[1].forEach(function(d){ var x = d.data(); x.day = str(x.day) || d.id; qs.push(x); });
       rcCache = { notes: ns, qa: qs }; rcLoading = false; renderRecap();
     }).catch(function(e){ rcLoading = false; cloudFail(e); renderRecap(); });
@@ -2385,7 +2489,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
     var stamps = state.entries.filter(function(e){ return e.day.slice(0, 7) === mk; }).length;
     var ns = rcCache.notes.filter(function(n){ return n.ts >= start && n.ts < end; });
     var na = ns.filter(function(n){ return n.from === 'a'; }).length, nb = ns.length - na;
-    var dr = ns.filter(function(n){ return n.drawing; }).length, rl = ns.filter(function(n){ return n.relay && n.relay !== n.from; }).length;
+    var ph = ns.filter(function(n){ return n.photo; }).length, dr = ns.filter(function(n){ return n.drawing; }).length, rl = ns.filter(function(n){ return n.relay && n.relay !== n.from; }).length;
     var qa = rcCache.qa.filter(function(d){ return str(d.day).slice(0, 7) === mk && d.a && d.b; }).length;
     var wd = (wishes || []).filter(function(w){ return w.done && str(w.doneDay).slice(0, 7) === mk; });
     var ac = (achs || []).filter(function(a){ return str(a.day).slice(0, 7) === mk; });
@@ -2398,7 +2502,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
       return;
     }
     if (stamps) body.appendChild(rcLine('💍', ['盖了 ', stamps, ' 个章']));
-    if (ns.length) body.appendChild(rcLine('💌', ['贴了 ', ns.length, ' 张纸条（' + A() + ' ' + na + ' 张，' + B() + ' ' + nb + ' 张）' + (dr ? '，画了 ' + dr + ' 幅涂鸦' : '') + (rl ? '，接力了 ' + rl + ' 次' : '')]));
+    if (ns.length) body.appendChild(rcLine('💌', ['贴了 ', ns.length, ' 张纸条（' + A() + ' ' + na + ' 张，' + B() + ' ' + nb + ' 张）' + (ph ? '，分享了 ' + ph + ' 张照片' : '') + (dr ? '，画了 ' + dr + ' 幅涂鸦' : '') + (rl ? '，接力了 ' + rl + ' 次' : '')]));
     if (qa) body.appendChild(rcLine('💭', ['一起回答了 ', qa, ' 道题']));
     if (wd.length) body.appendChild(rcLine('🌈', ['实现了 ', wd.length, ' 个心愿：' + wd.map(function(w){ return w.text; }).join('、')]));
     if (ac.length) body.appendChild(rcLine('🏅', ['颁发了 ', ac.length, ' 个成就：' + ac.map(function(a){ return a.e + a.title; }).join('、')]));
@@ -2480,6 +2584,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
       mainRef = FS.collection('cards').doc(KEY);
       entriesCol = mainRef.collection('entries');
       notesCol = mainRef.collection('notes');
+      photosCol = mainRef.collection('photos');
       qaCol = mainRef.collection('qa');
       capCol = mainRef.collection('capsules');
       var initMain = false, initEntries = false, notesReady = false, entriesReady = false, qaReady = false;
@@ -2536,7 +2641,7 @@ textarea{width:100%;height:96px;font:inherit;font-size:16px;padding:10px;border:
       resubNotes = function(){ if (unsubNotes) unsubNotes(); notesReady = false; unsubNotes = notesCol.orderBy('ts', 'desc').limit(notesLimit).onSnapshot(onNotes, cloudFail); };
       function onNotes(snap){
         var arr = [];
-        snap.forEach(function(doc){ var x = doc.data(); x.id = doc.id; x.ts = Number(x.ts) || 0; x.text = str(x.text).slice(0, 300); x.drawing = str(x.drawing); x.relay = str(x.relay); x.reacts = (x.reacts && typeof x.reacts === 'object') ? { a: str(x.reacts.a).slice(0, 8), b: str(x.reacts.b).slice(0, 8) } : {}; x.replies = Array.isArray(x.replies) ? x.replies.filter(function(r){ return r && r.text; }).map(function(r){ return { from: str(r.from), text: str(r.text).slice(0, 80), ts: Number(r.ts) || 0 }; }) : []; arr.push(x); });
+        snap.forEach(function(doc){ var x = doc.data(); x.id = doc.id; x.ts = Number(x.ts) || 0; x.text = str(x.text).slice(0, 300); x.drawing = str(x.drawing); x.relay = str(x.relay); x.photo = (x.photo && typeof x.photo === 'object' && str(x.photo.id)) ? { id: str(x.photo.id), thumb: str(x.photo.thumb), w: Number(x.photo.w) || 0, h: Number(x.photo.h) || 0 } : null; x.reacts = (x.reacts && typeof x.reacts === 'object') ? { a: str(x.reacts.a).slice(0, 8), b: str(x.reacts.b).slice(0, 8) } : {}; x.replies = Array.isArray(x.replies) ? x.replies.filter(function(r){ return r && r.text; }).map(function(r){ return { from: str(r.from), text: str(r.text).slice(0, 80), ts: Number(r.ts) || 0 }; }) : []; arr.push(x); });
         if (notesReady && ME){
           snap.docChanges().forEach(function(ch){
             var x = ch.doc.data();
