@@ -5,7 +5,7 @@
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💍%3C/text%3E%3C/svg%3E">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>LoveCard 2.2 Promise 💍</title>
+<title>LoveCard 2.3 Promise 💍</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
@@ -1678,6 +1678,10 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
 .sync-bar[hidden]{display:none;}
 .sync-bar span{flex:1;min-width:0;}
 .sync-b{flex:none;border:0;border-radius:999px;background:#fff;color:#3B3036;font-size:12.5px;padding:6px 11px;cursor:pointer;}
+
+/* ===== 2.3 ===== */
+.s3-plus{margin:14px 0 4px;}
+.bk-last{display:block;margin-top:6px;font-size:12px;color:var(--muted);}
 </style>
 </head>
 <body>
@@ -1764,7 +1768,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   <section class="panel wk" id="wkBox" aria-label="每周小会"></section>
   <h2>往开场白里投一句话</h2>
   <section class="panel">
-    <p class="caps-intro">写一句话，它会出现在首页最上面那一行。可以只给对方看，也可以两个人都看；可以随机冒出来，也可以定在某个时刻。</p>
+    <p class="caps-intro">写一句话，藏进首页最上面那一行，随机或者定时冒出来。</p>
     <button class="btn sm drop-open" id="dropOpen" type="button">✏️ 投一句话</button>
     <div id="dropForm" hidden>
     <textarea id="dropText" maxlength="80" placeholder="比如：姐姐今天也是最可爱的" style="height:64px;margin-top:0"></textarea>
@@ -2018,7 +2022,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   <footer class="foot">
     <p id="footDays"></p>
     <p>© 2026 <span data-name="a"></span> 发行　<span data-name="b"></span> 专属　翻版必究</p>
-    <p class="ver" id="verTag" title="点 5 下">LoveCard 2.2 Promise</p>
+    <p class="ver" id="verTag" title="点 5 下">LoveCard 2.3 Promise</p>
   </footer>
 </div>
 </main>
@@ -2414,7 +2418,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
       out.push({ id: str(e.id) || newId(ts), day: e.day, ts: ts, mood: str(e.mood).slice(0,16), note: str(e.note).slice(0,300), by: str(e.by) });
     });
     out.sort(function(x, y){ return x.ts - y.ts; });
-    return out.slice(0, TOTAL);
+    return out;
   }
   var cached = null; try { cached = JSON.parse(store.get('ep3') || 'null'); } catch(e){}
   var state = normalizeMain(cached || {});
@@ -2444,7 +2448,14 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   if (HP.init){ try { INIT = JSON.parse(decodeURIComponent(HP.init)); } catch(e){} }
   if (KEY && location.hash !== '#k=' + KEY){ try { history.replaceState(null, '', location.pathname + location.search + '#k=' + KEY); } catch(e){} }
   var FS = null, mainRef = null, entriesCol = null, notesCol = null;
+  var quotaShown = false;
+  function quotaWarn(){
+    if (quotaShown) return; quotaShown = true;
+    if (typeof syncBar === 'function') syncBar('☁️ 今天云端的免费额度用完了，日本时间下午 4～5 点会自动恢复。在那之前，改动可能存不上', '知道了', function(){ syncBar(''); });
+    else toast('今天云端的免费额度用完了，日本时间下午 4～5 点会自动恢复');
+  }
   function cloudFail(e){
+    if (e && e.code === 'resource-exhausted'){ quotaWarn(); return; }
     if (e && e.code === 'permission-denied') showLock('这个链接打不开这张卡，检查一下链接是不是完整 🔒');
     else toast('网络不太好，恢复后会自动同步');
   }
@@ -2537,7 +2548,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   $('rgBar').setAttribute('stroke-dasharray', C.toFixed(2));
 
   function render(){
-    var a = analyze(), n = a.n, p = n / TOTAL;
+    var a = analyze(), n = Math.min(a.n, TOTAL), p = n / TOTAL;
     $('nameA').textContent = A();
     $('nameB').textContent = B();
     document.querySelectorAll('[data-name]').forEach(function(el){ el.textContent = el.getAttribute('data-name') === 'a' ? A() : B(); });
@@ -2663,8 +2674,8 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     $('moreBtn').textContent = showAll ? '收起' : '展开全部（' + list.length + '）';
 
     // controls
-    $('plusBtn').textContent = n >= TOTAL ? '已集满 💍' : '+1 ♡';
-    $('plusBtn').disabled = readOnly || n >= TOTAL;
+    $('plusBtn').textContent = n >= TOTAL ? '+1 ♡ · 婚礼季' : '+1 ♡';
+    $('plusBtn').disabled = readOnly;
     $('undoBtn').disabled = readOnly || n === 0;
     $('actions').hidden = readOnly;
     $('settings').hidden = readOnly;
@@ -2767,7 +2778,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   }
 
   $('plusBtn').addEventListener('click', function(){
-    if (readOnly || state.entries.length >= TOTAL) return;
+    if (readOnly) return;
     var now = new Date(), entry = { id: newId(now.getTime()), day: ymd(now), ts: now.getTime(), mood: '', note: '' };
     var prevTs = state.entries.reduce(function(m, e){ return Math.max(m, e.ts); }, 0);
     var chB = chapterIdx(state.entries.length);
@@ -2776,7 +2787,8 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     try { navigator.vibrate && navigator.vibrate(15); } catch(e){}
     cloudAdd(entry); render(); floatPlus(); if (typeof watchSync === 'function') watchSync('刚才盖的章');
     candyAward('a', 'st_' + entry.id + '_a', STAMP_CANDY, '盖章 💍', 'stamp'); candyAward('b', 'st_' + entry.id + '_b', STAMP_CANDY, '盖章 💍', 'stamp');
-    announce(got, state.entries.length, { now: now, prevTs: prevTs }, chA > chB ? CHAPTERS[chA] : null);
+    if (state.entries.length > TOTAL) s3Stamp(state.entries.length);
+    else announce(got, state.entries.length, { now: now, prevTs: prevTs }, chA > chB ? CHAPTERS[chA] : null);
     setTimeout(function(){ openComposer(entry.ts, true); }, 350);
   });
   $('undoBtn').addEventListener('click', function(){
@@ -2808,7 +2820,6 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     var day = $('inDay').value, today = ymd(new Date());
     if (!validDay(day)){ toast('先选一个日期'); return; }
     if (day > today){ toast('不能补录未来的日期'); return; }
-    if (state.entries.length >= TOTAL){ toast('已经集满 100 次啦'); return; }
     var pts = parseDay(day).getTime() + 12*3600000 + Math.floor(Math.random() * 60000);
     var entry = { id: newId(pts), day: day, ts: pts, mood: '', note: '' };
     var chB = chapterIdx(state.entries.length);
@@ -3372,7 +3383,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   });
   $('setCount').addEventListener('click', function(){
     var v = parseInt($('inCount').value, 10), n = state.entries.length;
-    if (isNaN(v) || v < 0 || v > TOTAL){ toast('请输入 0 到 100 之间的数字'); return; }
+    if (isNaN(v) || v < 0 || v > 999){ toast('请输入 0 到 999 之间的数字'); return; }
     if (v === n){ toast('现在就是 ' + v + ' 次'); return; }
     if (v < n && !cntPinPass){ askPin('把次数从 ' + n + ' 改成 ' + v + '，会删掉最近的 ' + (n - v) + ' 个章。', function(){ cntPinPass = true; $('setCount').click(); cntPinPass = false; }); return; }
     var bt = FS && entriesCol ? FS.batch() : null;
@@ -3385,7 +3396,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
       }
     } else {
       var drop = state.entries.slice().sort(function(x, y){ return y.ts - x.ts; }).slice(0, n - v);
-      drop.forEach(function(e){ if (bt) bt.delete(entriesCol.doc(e.id)); });
+      drop.forEach(function(e){ if (bt) bt.delete(entriesCol.doc(e.id)); if (typeof candyRevoke === 'function') ['st_', 'stx_'].forEach(function(p){ candyRevoke(p + e.id + '_a'); candyRevoke(p + e.id + '_b'); }); });
       state.entries = state.entries.filter(function(e){ return drop.indexOf(e) < 0; });
     }
     if (bt) bt.commit().catch(cloudFail);
@@ -3676,7 +3687,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   }
   function snapshotAll(){
     return Promise.all([mainRef.get()].concat(BK_COLS.map(function(n){ return mainRef.collection(n).get(); }))).then(function(r){
-      var data = { exportedAt: new Date().toISOString(), version: 'v2.0', card: r[0].exists ? r[0].data() : {} };
+      var data = { exportedAt: new Date().toISOString(), version: 'v2.3', card: r[0].exists ? r[0].data() : {} };
       BK_COLS.forEach(function(n, i){ var a = []; r[i + 1].forEach(function(d){ var x = d.data(); x.id = d.id; a.push(x); }); data[n] = a; });
       return data;
     });
@@ -3745,7 +3756,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   $('backupBtn').addEventListener('click', function(){
     if (!mainRef){ toast('云端还没连上，稍等一下'); return; }
     toast('正在打包备份……');
-    snapshotAll().then(function(data){ downloadJSON(data, '订婚卡备份-' + ymd(new Date()) + '.json'); toast('备份下载好了，存好它 💾'); }).catch(cloudFail);
+    snapshotAll().then(function(data){ downloadJSON(data, '订婚卡备份-' + ymd(new Date()) + '.json'); toast('备份下载好了，存好它 💾'); if (mainRef) mainRef.set({ lastBackup: Date.now() }, { merge: true }).catch(cloudQuiet); }).catch(cloudFail);
   });
 
   /* ================= v1.4 ================= */
@@ -4313,7 +4324,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     after: ['姐姐下午好，弟弟好爱你 ☕', '下午有点困吧，弟弟给你续一杯爱 ☕', '姐姐今天下午也辛苦啦 🍰', '姐姐，下午也要记得想我 🌸'],
     eve:   ['姐姐晚上好，弟弟好爱你 🌙', '姐姐今天累不累？弟弟抱抱 🫂', '晚上好姐姐，今天也很想你 🌙', '姐姐，今天也被弟弟爱着哦 💗']
   };
-  var RARE = ['✨ 稀有台词：姐姐是全世界最好的姐姐', '✨ 恭喜触发隐藏台词：弟弟今天也超级超级爱你', '✨ 彩蛋：发行方偷偷说，想快点盖满 100 个章',
+  var GREET_RARE = ['✨ 稀有台词：姐姐是全世界最好的姐姐', '✨ 恭喜触发隐藏台词：弟弟今天也超级超级爱你', '✨ 彩蛋：发行方偷偷说，想快点盖满 100 个章',
               '✨ 今日幸运色：粉色　今日幸运人物：弟弟', '✨ 稀有掉落：一个弟弟的亲亲，请当面领取'];
   var lastGreet = '';
   function greetPool(){
@@ -4334,7 +4345,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
       var rnd = dl.filter(function(d){ return d.mode !== 'time'; });
       if (rnd.length && Math.random() < 0.4){ var r = rnd[Math.floor(Math.random() * rnd.length)]; g = '💬 ' + r.text + '　—— ' + nameOf(r.from); cls = 'drop'; }
       else {
-        var rare = Math.random() < 0.06, pool = rare ? RARE : greetPool();
+        var rare = Math.random() < 0.06, pool = rare ? GREET_RARE : greetPool();
         g = pool[Math.floor(Math.random() * pool.length)];
         if (pool.length > 1 && g === lastGreet) g = pool[(pool.indexOf(g) + 1) % pool.length];
         cls = rare ? 'rare' : '';
@@ -4530,17 +4541,32 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
       s1TimelineCard(box);
     });
   }
+  var S3_GOAL = 100;
+  function s3Stamp(len){
+    var k = len - TOTAL;
+    if (k === 1){ toast('💒 婚礼季的第一个章！两人各 +' + STAMP_CANDY + ' 🍬'); confetti(['💒', '💍', '🕊', '✨']); }
+    else if (k === S3_GOAL){ toast('💒 婚礼季圆满！一共 ' + len + ' 个章'); confetti(['💒', '💍', '🎉', '✨']); }
+    else if (k % 10 === 0) { toast('💒 婚礼季第 ' + k + ' 个章，又亮了一颗心 💗'); hearts(window.innerWidth / 2, window.innerHeight / 3); }
+    else toast('💒 婚礼季 · 第 ' + k + ' 个章，两人各 +' + STAMP_CANDY + ' 🍬');
+    try { if (SEASON === 'S3') renderHomeS3(); } catch(e){}
+  }
   function renderHomeS3(){
     var box = $('homeS3'); if (!box) return;
     keepFocus(box, function(){
       box.innerHTML = '';
-      var n = state.entries.length, open = n >= TOTAL;
-      box.appendChild(miniRing('shG3', n, TOTAL, open ? '💒' : '🔒', open ? '💒' : String(TOTAL - n), open ? 'S3 已解锁' : '次以后开启'));
-      box.appendChild(E('p', 'sh-lead', open ? 'S3 · 婚礼　已经亮起来了' : 'S3 · 婚礼　还锁着。等订婚卡集满 ' + TOTAL + ' 次，它会自己亮起来。'));
+      var n = state.entries.length, open = n >= TOTAL, k3 = Math.max(0, n - TOTAL);
+      if (open){
+        box.appendChild(miniRing('shG3', k3, S3_GOAL, '💒', String(k3), k3 >= S3_GOAL ? '婚礼季圆满' : '婚礼季的章'));
+        box.appendChild(E('p', 'sh-lead', k3 >= S3_GOAL ? 'S3 · 婚礼　圆满了。章还可以一直盖下去，每个照样两人各 +' + STAMP_CANDY + ' 🍬' : 'S3 · 婚礼　订婚卡集满了，章接着盖在这里。再盖 ' + (S3_GOAL - k3) + ' 个，婚礼季就圆满了。'));
+        if (!readOnly) box.appendChild(v2Btn('btn main v2-wide s3-plus', '+1 ♡', function(){ $('plusBtn').click(); }));
+      } else {
+        box.appendChild(miniRing('shG3', n, TOTAL, '🔒', String(TOTAL - n), '次以后开启'));
+        box.appendChild(E('p', 'sh-lead', 'S3 · 婚礼　还锁着。等订婚卡集满 ' + TOTAL + ' 次，它会自己亮起来。之后的章都会盖在这里。'));
+      }
       var c = E('div', 'sh-card'); c.appendChild(E('h3', '', '写给 S3 的我们'));
       var d = seasonDocs.S3 || {}, m = s1Has(d, ME), t = s1Has(d, OK());
       if (open && m && t){ c.appendChild(dualRow(function(k){ return [para(d[k].text, 'v2-p big')]; })); box.appendChild(c); return; }
-      c.appendChild(E('p', 'v2-sub', '现在写一句话给婚礼那一季的我们。两个人的都会封起来，等 S3 开启那天一起打开。'));
+      c.appendChild(E('p', 'v2-sub', open ? '写一句话给婚礼季的我们。两个人都写好之后，就一起打开。' : '现在写一句话给婚礼那一季的我们。两个人的都会封起来，等 S3 开启那天一起打开。'));
       if (m && !V2R.s3edit){
         c.appendChild(E('p', 'v2-wait', '你的已经封好了 ✓' + (t ? '　' + nameOf(OK()) + '的也封好了' : '　' + nameOf(OK()) + '还没写')));
         c.appendChild(v2Btn('v2-link', '重新写', function(){ V2R.s3edit = 1; renderHomeS3(); }));
@@ -5215,6 +5241,9 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     else if (!w[ME] && (dow === 0 || dow === 6)) items.push(['wk', '🗓 这周的小会还没写～', '去写', function(){ V2R.wkopen = 1; renderWeekly(); goTab('home', 'wkH'); }]);
     var sc = s1Counts();
     if (sc.waitMe) items.push(['s1', '🌱 S1 档案有 ' + sc.waitMe + ' 题' + on + '写好了，等你', '去写', function(){ goTab('home'); setSeason('S1', true); }]);
+    var lb = lastMainD && Number(lastMainD.lastBackup) || 0, bl = $('bkLast');
+    if (bl) bl.textContent = lb ? '上次备份：' + fmtTime(lb) : '还没有用 2.3 备份过';
+    if (lastMainD && now - lb > 14 * 86400000) items.push(['bk', '💾 两周没备份了，下载一份存好吧', '去备份', function(){ goTab('memory', 'settings'); }]);
     box.innerHTML = '';
     items.slice(0, 2).forEach(function(it){
       var c = E('div', 'v2-al al-' + it[0]); c.appendChild(E('span', '', it[1]));
@@ -6298,7 +6327,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   }
   /* 糖果的每一次加减都走 Firestore 事务：余额、流水、库存、兑换券、充值状态要么一起成功，要么一起不算 */
   var candyBusy = {};
-  function cloudQuiet(e){ try { console.warn(e); } catch(x){} }
+  function cloudQuiet(e){ try { console.warn(e); } catch(x){} if (e && e.code === 'resource-exhausted') quotaWarn(); }
   function txOk(){ return !!(FS && typeof FS.runTransaction === 'function' && mainRef && candyCol); }
   function candyInc(map){ var fv = FV(), p = { candy: {} }; Object.keys(map).forEach(function(k){ if (map[k]) p.candy[k] = fv ? fv.increment(map[k]) : map[k]; }); return p; }
   function candyRun(lock, fn){
@@ -8650,8 +8679,8 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   });
   function lcNotes(body){
     var w = E('div', 'lc-notes');
-    var h21 = E('div', 'lc-hero'); h21.appendChild(E('small', '', 'UPDATE')); var b21 = E('b', ''); b21.appendChild(document.createTextNode('LoveCard 2.2 ')); b21.appendChild(E('em', '', 'Promise')); h21.appendChild(b21); h21.appendChild(E('small', '', '2026.10')); w.appendChild(h21);
-    var u21 = E('ul'); ['💍 盖一个章，两个人各 +10 颗糖果（以前按 1 颗发过的章，自动补上差的）', '📬 首页最上面多了「你不在的时候」：上次打开以后，对方给你留了什么，一眼就看到', '🗓 每周小会平时收起来，想写再点开', '🎰 扭蛋修好了：免费那一次每天真的只有一次；送对方扭蛋机会改成花糖果（一次 10 颗）', '☁️ 同步更稳：回到页面会自动重连；改动没传上去时，屏幕上方会提示', '🔧 修了「去写小会」点了没反应、认罚连点会出两张券，赚糖攻略和实际数值对齐了'].forEach(function(t){ u21.appendChild(E('li', '', t)); }); w.appendChild(u21);
+    var h21 = E('div', 'lc-hero'); h21.appendChild(E('small', '', 'UPDATE')); var b21 = E('b', ''); b21.appendChild(document.createTextNode('LoveCard 2.3 ')); b21.appendChild(E('em', '', 'Promise')); h21.appendChild(b21); h21.appendChild(E('small', '', '2026.10')); w.appendChild(h21);
+    var u21 = E('ul'); ['💒 集满 100 个章以后不会停：婚礼季接着盖，每个章照样两人各 +10 🍬', '💾 每两周提醒一次备份，设置里能看到上次备份的时间', '✨ 开场白的稀有彩蛋台词回来了', '💍 盖一个章，两个人各 +10 颗糖果（以前按 1 颗发过的章，自动补上差的）', '📬 首页最上面多了「你不在的时候」：上次打开以后，对方给你留了什么，一眼就看到', '🗓 每周小会平时收起来，想写再点开', '🎰 扭蛋修好了：免费那一次每天真的只有一次；送对方扭蛋机会改成花糖果（一次 10 颗）', '☁️ 同步更稳：回到页面会自动重连；改动没传上去时，屏幕上方会提示', '🔧 修了「去写小会」点了没反应、认罚连点会出两张券，赚糖攻略和实际数值对齐了'].forEach(function(t){ u21.appendChild(E('li', '', t)); }); w.appendChild(u21);
     var hero = E('div', 'lc-hero'); hero.appendChild(E('small', '', 'RELEASE NOTES'));
     var b = E('b', ''); b.appendChild(document.createTextNode('LoveCard 2.0 ')); b.appendChild(E('em', '', 'Promise')); hero.appendChild(b);
     hero.appendChild(E('small', '', 'PREVIEW · 2026.10')); w.appendChild(hero);
@@ -8675,6 +8704,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     if (lcTaps >= 5){ lcTaps = 0; confetti(['💍', '✨']); openPage('📜 Promise 更新说明', lcNotes); }
   });
 
+  (function(){ var b = $('backupBtn'); if (b && b.parentNode){ var sp = E('small', 'bk-last'); sp.id = 'bkLast'; b.parentNode.appendChild(sp); } })();
   /* ================= 2.1：你不在的时候 ================= */
   var awaySince = 0, awayMe = '', awayOff = false, awayMore = false, awayHid = 0, awaySig = '';
   function awayKey(){ return 'ep_away_' + ME; }
@@ -8770,9 +8800,9 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   }
   setInterval(function(){ if (!document.hidden) { try { awayRender(); v21Hello(); } catch(e){ cloudQuiet(e); } } }, 2500);
   function v21Hello(){
-    if (!ME || store.get('ep_v22') || (typeof rmOn === 'function' && rmOn()) || !$('lcLaunch').hidden) return;
-    store.set('ep_v22', '1');
-    toast('💍 2.2：盖一个章，两个人各 +' + STAMP_CANDY + ' 颗糖');
+    if (!ME || store.get('ep_v23') || (typeof rmOn === 'function' && rmOn()) || !$('lcLaunch').hidden) return;
+    store.set('ep_v23', '1');
+    toast(store.get('ep_v22') ? '💒 2.3：集满 100 个章以后，婚礼季还能接着盖' : '💍 2.3：盖一个章，两个人各 +' + STAMP_CANDY + ' 颗糖');
   }
 
   /* ================= 2.1：使用统计（开发者模式） ================= */
@@ -8817,6 +8847,11 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     });
     body.appendChild(tb);
     body.appendChild(E('p', 'v2-sub', '灰色的是这段时间一次都没用过的。用一两周再看，就知道哪些该留、哪些可以合并或者下架。'));
+    var rd = 1;
+    [state.entries, notes, qaDocs, caps, coupons, wishes, achs, stories, drops, customQs, repairs, tickets, titles, prizes, draws, ledger, echoes, topups, checkins, gifts, goods, threads, thanks, pacts].forEach(function(a){ rd += awA(a).length; });
+    [weeks, s1docs, seasonDocs].forEach(function(m){ rd += Object.keys(m || {}).length; });
+    body.appendChild(E('h4', 'v2-h4', '☁️ 云端用量'));
+    body.appendChild(E('p', 'v2-sub', '按现在的数据量，每次重新打开（隔了半小时以上）大约要读 ' + rd + ' 条记录。Firebase 免费额度是每天 5 万条，大约够两个人一共打开 ' + Math.floor(50000 / rd) + ' 次。'));
   }
 
 
@@ -8924,7 +8959,8 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
         state.entries = normEntries(arr);
         cache(); render();
         if (partnerStamp){
-          toast((partnerStamp === 'a' ? A() : B()) + '刚刚盖了一个章，现在 ' + state.entries.length + ' / 100 💗 你也 +' + STAMP_CANDY + ' 🍬');
+          var pn = state.entries.length;
+          toast((partnerStamp === 'a' ? A() : B()) + '刚刚盖了一个章，' + (pn > TOTAL ? '婚礼季第 ' + (pn - TOTAL) + ' 个' : '现在 ' + pn + ' / 100') + ' 💗 你也 +' + STAMP_CANDY + ' 🍬');
           hearts(window.innerWidth / 2, 120);
         }
       }, cloudFail);
@@ -8983,7 +9019,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
       storyCol = mainRef.collection('stories'); dropCol = mainRef.collection('drops'); qCol = mainRef.collection('questions');
       v2Init();
       var cpnReady = false, cpnPrev = {}, cpnTot = {}, wishReady = false, wishPrev = {}, achReady = false, storyReady = false;
-      cpnCol.orderBy('ts', 'desc').limit(150).onSnapshot(function(snap){
+      cpnCol.orderBy('ts', 'desc').limit(600).onSnapshot(function(snap){
         var arr = [];
         snap.forEach(function(d){ var x = d.data(); arr.push({ id: d.id, from: str(x.from), e: str(x.e).slice(0, 16) || '🎟️', title: str(x.title).slice(0, 30), note: str(x.note).slice(0, 200), total: Math.max(0, Number(x.total) || 0), used: Math.max(0, Number(x.used) || 0), exp: validDay(str(x.exp)) ? x.exp : '', ts: Number(x.ts) || 0, lastUser: str(x.lastUser), lastAct: str(x.lastAct), tone: str(x.tone).slice(0, 8), src: str(x.src).slice(0, 10), uses: (Array.isArray(x.uses) ? x.uses : []).filter(function(u){ return u && typeof u === 'object' && Number(u.ts); }).map(function(u){ var o = { by: str(u.by), ts: Number(u.ts), k: str(u.k) || 'use' }; if (u.pend) o.pend = true; if (u.done) o.done = Number(u.done) || 1; if (u.doneBy) o.doneBy = str(u.doneBy); return o; }).slice(-60) }); });
         if (cpnReady && ME){
