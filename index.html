@@ -5,7 +5,7 @@
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💍%3C/text%3E%3C/svg%3E">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>LoveCard 2.0 Promise 💍</title>
+<title>LoveCard 2.2 Promise 💍</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
@@ -1651,6 +1651,33 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
 .lc-notes .lc-hero em{font-family:Georgia,serif;color:var(--accent);}
 .lc-notes .lc-hero small{color:var(--muted);letter-spacing:.2em;font-size:11px;}
 .lc-notes .lc-credit{margin-top:22px;text-align:center;font-size:12px;color:var(--muted);line-height:1.9;}
+
+/* ===== 2.1：你不在的时候 ===== */
+.away{margin:12px 0 0;background:var(--panel);border-radius:16px;padding:12px 12px 8px;box-shadow:0 4px 14px var(--shadow);text-align:left;border:1.5px solid var(--track);}
+.away[hidden]{display:none;}
+.aw-hd{display:flex;align-items:flex-start;gap:8px;margin-bottom:4px;}
+.aw-tt{flex:1;min-width:0;}
+.aw-tt b{display:block;font-family:var(--display);font-weight:400;font-size:17px;color:var(--ink);}
+.aw-tt small{display:block;font-size:12px;color:var(--muted);margin-top:1px;}
+.aw-x{flex:none;border:0;border-radius:999px;background:var(--track);color:var(--accent-deep);font-size:12.5px;padding:5px 11px;cursor:pointer;}
+.aw-row{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--ink);padding:8px 2px;border-top:1px dashed var(--line);cursor:pointer;text-align:left;font-size:14px;line-height:1.45;}
+.aw-row:first-of-type{border-top:0;}
+.aw-e{flex:none;width:24px;text-align:center;font-size:18px;}
+.aw-t{flex:1;min-width:0;}
+.aw-a{flex:none;color:var(--muted);font-size:18px;}
+.aw-more{display:block;margin:2px auto 2px;border:0;background:none;color:var(--accent);font-size:13px;padding:6px;cursor:pointer;}
+.wk .wk-open{display:block;margin:10px auto 2px;}
+.use-t td:nth-child(2),.use-t td:nth-child(3),.use-t th:nth-child(2),.use-t th:nth-child(3){text-align:center;width:56px;}
+.use-t{width:100%;border-collapse:collapse;font-size:13.5px;}
+.use-t th,.use-t td{padding:7px 4px;border-bottom:1px solid var(--line);text-align:left;}
+.use-t th{font-weight:600;color:var(--muted);font-size:12.5px;}
+.use-t td.z{color:var(--muted);opacity:.55;}
+
+/* ===== 2.2：同步提示 ===== */
+.sync-bar{position:fixed;left:12px;right:12px;margin:0 auto;top:calc(10px + env(safe-area-inset-top,0px));z-index:80;display:flex;align-items:center;gap:10px;max-width:480px;box-sizing:border-box;background:#3B3036;color:#fff;border-radius:14px;padding:9px 10px 9px 14px;font-size:13px;line-height:1.45;box-shadow:0 8px 24px rgba(0,0,0,.25);}
+.sync-bar[hidden]{display:none;}
+.sync-bar span{flex:1;min-width:0;}
+.sync-b{flex:none;border:0;border-radius:999px;background:#fff;color:#3B3036;font-size:12.5px;padding:6px 11px;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -1671,6 +1698,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     <p class="meta"><span>订婚卡 No.0001</span><span>限量 1 张</span><span>有效期：直到订婚那天</span></p>
     <p class="sub" id="subLine">订婚进度手账</p>
     </div>
+    <div class="away" id="awayBox" hidden></div>
     <div class="v2-alerts" id="v2Alerts" hidden></div>
     <div class="need-box" id="needBox"></div>
     <div class="pin-box" id="pinBox"></div>
@@ -1748,7 +1776,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     <p class="fine-l" id="dropHint">随机模式：开场白每次换句时，有一定概率换成这句。</p>
     <div class="row" style="margin-top:10px;justify-content:flex-end"><button class="btn sm" id="dropClose" type="button">收起</button><button class="btn main sm" id="dropSend" type="button">投出去</button></div>
     </div>
-    <span class="sub-h">我投出去的</span>
+    <span class="sub-h" id="dropListH" hidden>我投出去的</span>
     <ul class="wish-list" id="dropList" hidden></ul>
   </section>
   <div class="sum" id="sum">
@@ -1990,7 +2018,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   <footer class="foot">
     <p id="footDays"></p>
     <p>© 2026 <span data-name="a"></span> 发行　<span data-name="b"></span> 专属　翻版必究</p>
-    <p class="ver" id="verTag" title="点 5 下">LoveCard 2.0 Promise · Preview</p>
+    <p class="ver" id="verTag" title="点 5 下">LoveCard 2.2 Promise</p>
   </footer>
 </div>
 </main>
@@ -2251,6 +2279,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   </div>
 </div>
 <div class="rp-over" id="v2rpOver" hidden><div class="rp-card"><div class="e" id="v2rpE"></div><b id="v2rpT"></b><p id="v2rpS"></p><div class="row2"><button class="btn" id="v2rpOk" type="button">收到</button><button class="btn main" id="v2rpHug" type="button">🫂 抱回去</button></div></div></div>
+<div class="sync-bar" id="syncBar" hidden role="status"></div>
 <div class="lc-launch" id="lcLaunch" hidden role="dialog" aria-modal="true" aria-label="LoveCard 2.0 Promise">
   <div class="lc-card">
     <div class="lc-no">No.0001 · 限量 1 张</div>
@@ -2382,7 +2411,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     (Array.isArray(arr) ? arr : []).forEach(function(e){
       if (!e || !validDay(str(e.day))) return;
       var ts = Number(e.ts) || parseDay(e.day).getTime();
-      out.push({ id: str(e.id) || newId(ts), day: e.day, ts: ts, mood: str(e.mood).slice(0,16), note: str(e.note).slice(0,300) });
+      out.push({ id: str(e.id) || newId(ts), day: e.day, ts: ts, mood: str(e.mood).slice(0,16), note: str(e.note).slice(0,300), by: str(e.by) });
     });
     out.sort(function(x, y){ return x.ts - y.ts; });
     return out.slice(0, TOTAL);
@@ -2732,7 +2761,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   }
   function removeEntry(ts){
     var gone = state.entries.filter(function(e){ return e.ts === ts; });
-    gone.forEach(function(e){ if (typeof candyRevoke === 'function'){ candyRevoke('st_' + e.id + '_a'); candyRevoke('st_' + e.id + '_b'); } });
+    gone.forEach(function(e){ if (typeof candyRevoke === 'function'){ ['st_', 'stx_'].forEach(function(p){ candyRevoke(p + e.id + '_a'); candyRevoke(p + e.id + '_b'); }); } });
     state.entries = state.entries.filter(function(e){ return e.ts !== ts; });
     gone.forEach(cloudDel); render();
   }
@@ -2745,8 +2774,8 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     var got = withUnlockCheck(function(){ state.entries.push(entry); });
     var chA = chapterIdx(state.entries.length);
     try { navigator.vibrate && navigator.vibrate(15); } catch(e){}
-    cloudAdd(entry); render(); floatPlus();
-    candyAward('a', 'st_' + entry.id + '_a', 1, '盖章', 'stamp'); candyAward('b', 'st_' + entry.id + '_b', 1, '盖章', 'stamp');
+    cloudAdd(entry); render(); floatPlus(); if (typeof watchSync === 'function') watchSync('刚才盖的章');
+    candyAward('a', 'st_' + entry.id + '_a', STAMP_CANDY, '盖章 💍', 'stamp'); candyAward('b', 'st_' + entry.id + '_b', STAMP_CANDY, '盖章 💍', 'stamp');
     announce(got, state.entries.length, { now: now, prevTs: prevTs }, chA > chB ? CHAPTERS[chA] : null);
     setTimeout(function(){ openComposer(entry.ts, true); }, 350);
   });
@@ -3326,6 +3355,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
       nt.photo = { id: pref.id, thumb: photoData.thumb, w: photoData.w, h: photoData.h };
     }
     if (notePaper) nt.paper = notePaper;
+    if (typeof watchSync === 'function') watchSync('刚才的纸条');
     notesCol.add(nt).then(function(ref){ if (candyCapOk('note', 3)) candyAward(ME, 'note_' + ref.id, 1, '贴纸条', 'note'); }).catch(cloudFail);
     if ($('ntMail').checked) sendMail(nt);
     else toast(/爱/.test(text) ? '纸条贴上去了，' + (ME === 'a' ? B() : A()) + '会很开心的 💗' : '纸条贴上去了 📌');
@@ -4038,7 +4068,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
       var x = mkBtn('wish-x', '删除'); twoTap(x, '删除', '确定？', function(){ dropCol.doc(d.id).delete().catch(cloudFail); });
       li.appendChild(E('span', 'wish-ic', '💬')); li.appendChild(tx); li.appendChild(x); box.appendChild(li);
     });
-    box.hidden = !box.children.length;
+    box.hidden = !box.children.length; if ($('dropListH')) $('dropListH').hidden = box.hidden;
   }
   setInterval(function(){
     var t = visibleDrops().filter(dropActive);
@@ -5018,6 +5048,8 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
       box.appendChild(waitLine(m, t));
       if (m && !V2R.wkedit){
         box.appendChild(v2Btn('v2-link', '改一改我的', function(){ V2R.wkedit = 1; WKQ.forEach(function(q){ if (!draftGet('wk_' + id + q[0])) draftSet('wk_' + id + q[0], w[ME][q[0]] || ''); }); renderWeekly(); }));
+      } else if (!m && !V2R.wkopen && !WKQ.some(function(q){ return draftGet('wk_' + id + q[0]); })){
+        box.appendChild(v2Btn('btn sm wk-open', '✍️ 写这周的小会（三句话）', function(){ V2R.wkopen = 1; renderWeekly(); setTimeout(function(){ var el = $('wk_' + WKQ[0][0]); if (el) el.focus(); }, 60); }));
       } else {
         WKQ.forEach(function(q){ box.appendChild(E('h4', 'v2-h4', q[1])); box.appendChild(mkArea('wk_' + q[0], q[0] === 'next' ? '比如：一起去吃那家想吃很久的店' : '写一句就好，想多写也行', 500, 'wk_' + id + q[0], 2)); });
         box.appendChild(v2Btn('btn main sm v2-right', m ? '改好了' : '写好了', function(){
@@ -5026,7 +5058,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
           WKQ.forEach(function(q){ x[q[0]] = $('wk_' + q[0]).value.trim().slice(0, 500); if (x[q[0]]) any = true; });
           if (!any){ toast('至少写一个'); return; }
           var p = { ts: nowTs() }; p[ME] = x; wkCol.doc(id).set(p, { merge: true }).catch(cloudFail);
-          WKQ.forEach(function(q){ draftSet('wk_' + id + q[0], ''); }); delete V2R.wkedit;
+          WKQ.forEach(function(q){ draftSet('wk_' + id + q[0], ''); }); delete V2R.wkedit; delete V2R.wkopen;
           if (t){ confetti(['🗓', '💗', '✨']); toast('翻开了！'); } else toast('写好了，等' + nameOf(OK()) + '也写完 🤫');
         }));
       }
@@ -5070,14 +5102,18 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   function tkLog(t, k, extra){ var it = { by: ME, ts: nowTs(), k: k }; var p = extra || {}; p.log = arrU(it); tkCol.doc(t.id).set(p, { merge: true }).catch(cloudFail); return it; }
   function acceptTk(t){
     if (needCloud(cpnCol)) return;
-    cpnCol.add({ from: ME, e: '🚨', title: t.pen.slice(0, 30), note: ('罚单兑现：' + t.reason).slice(0, 200), total: 1, used: 0, exp: '', ts: nowTs(), src: 'ticket', tk: t.id }).then(function(ref){
+    if (t.status === 'accepted' || t.cpn) return;
+    t.status = 'accepted';
+    var ref = cpnCol.doc('tk_' + t.id);
+    ref.set({ from: ME, e: '🚨', title: t.pen.slice(0, 30), note: ('罚单兑现：' + t.reason).slice(0, 200), total: 1, used: 0, exp: '', ts: nowTs(), src: 'ticket', tk: t.id }).catch(cloudFail);
+    (function(){
       var it = tkLog(t, 'accept', { status: 'accepted', cpn: ref.id });
       toastAct('认罚了，「' + t.pen + '」变成了' + nameOf(t.from) + '的兑换券', '撤销', function(){
         cpnCol.doc(ref.id).delete().catch(cloudFail);
         tkCol.doc(t.id).set({ status: 'open', cpn: '', log: arrR(it) }, { merge: true }).catch(cloudFail);
         toast('撤销了，罚单还在');
       }, 30000);
-    }).catch(cloudFail);
+    })();
   }
   var TK_LOGT = { open: '开了罚单', accept: '认罚了', appeal: '申诉了', reject: '驳回了申诉', revoke: '撤销了罚单', recall: '撤回了罚单', gold: '用免罚金牌免掉了 🛡' };
   function renderTickets(){
@@ -5175,8 +5211,8 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     if (typeof cpnPendingAlert === 'function'){ var cpa = cpnPendingAlert(); if (cpa) items.push(cpa); }
     if (typeof ckAlert === 'function'){ var cka = ckAlert(); if (cka) items.push(cka); }
     var wid = weekId(new Date()), w = weeks[wid] || {}, dow = new Date().getDay();
-    if (!w[ME] && w[o]) items.push(['wk', '🗓 ' + on + '写好这周的小会了，等你', '去写', function(){ goTab('daily', 'wkH'); }]);
-    else if (!w[ME] && (dow === 0 || dow === 6)) items.push(['wk', '🗓 这周的小会还没写～', '去写', function(){ goTab('daily', 'wkH'); }]);
+    if (!w[ME] && w[o]) items.push(['wk', '🗓 ' + on + '写好这周的小会了，等你', '去写', function(){ V2R.wkopen = 1; renderWeekly(); goTab('home', 'wkH'); }]);
+    else if (!w[ME] && (dow === 0 || dow === 6)) items.push(['wk', '🗓 这周的小会还没写～', '去写', function(){ V2R.wkopen = 1; renderWeekly(); goTab('home', 'wkH'); }]);
     var sc = s1Counts();
     if (sc.waitMe) items.push(['s1', '🌱 S1 档案有 ' + sc.waitMe + ' 题' + on + '写好了，等你', '去写', function(){ goTab('home'); setSeason('S1', true); }]);
     box.innerHTML = '';
@@ -5523,12 +5559,12 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     var left = gaLeft(), pool = gaPool();
     box.appendChild(E('p', 'ga-left', !ME ? '先选身份' : left ? '今天还能扭 ' + left + ' 次' : '今天的机会用完了，明天再来'));
     var gorow = E('div', 'ga-gorow');
-    if (left || !ME){ var g1 = v2Btn('btn main ga-go', left > 0 ? '免费扭一次 🎰' : '扭一下 🎰', function(){ gaRun(1, false); }); g1.disabled = !left || !pool.length; gorow.appendChild(g1); }
-    else { var g2 = mkBtn('btn main ga-go', '🍬 ' + GA_PAID + ' 扭一次'); g2.disabled = !pool.length; twoTap(g2, '🍬 ' + GA_PAID + ' 扭一次', '确定花 ' + GA_PAID + '？', function(){ if (!gaPool().length){ toast('奖池还是空的'); return; } candySpend(GA_PAID, '扭蛋 · 单抽', 'ga', { lock: 'ga', done: function(){ gaRun(1, true); } }); }); gorow.appendChild(g2); }
+    if (left || !ME){ var g1 = v2Btn('btn main ga-go', !ME ? '扭一下 🎰' : gaFreeLeft() > 0 ? '免费扭一次 🎰' : '用一次送的机会 🎰', function(){ gaRun(1, false); }); g1.disabled = !left || !pool.length; gorow.appendChild(g1); }
+    else { var g2 = mkBtn('btn main ga-go', '🍬 ' + GA_PAID + ' 扭一次'); g2.disabled = !pool.length; twoTap(g2, '🍬 ' + GA_PAID + ' 扭一次', '确定花 ' + GA_PAID + '？', function(){ if (!gaPool().length){ toast('奖池还是空的'); return; } gaRun(1, true); }); gorow.appendChild(g2); }
     var g10 = mkBtn('btn ga-go ten big', ''); g10.disabled = !pool.length || !ME;
     function tenLabel(armed){ g10.innerHTML = ''; g10.appendChild(document.createTextNode(armed ? '再点一下 · 🍬' + GA_TEN : '✦ 十连 ✦')); g10.appendChild(E('small', '', armed ? '' : '🍬 ' + GA_TEN + ' · 必出稀有')); }
     tenLabel(false);
-    g10.addEventListener('click', function(){ if (g10.getAttribute('data-arm') !== '1'){ g10.setAttribute('data-arm', '1'); tenLabel(true); setTimeout(function(){ if (g10.getAttribute('data-arm')){ g10.removeAttribute('data-arm'); tenLabel(false); } }, 3000); return; } g10.removeAttribute('data-arm'); tenLabel(false); if (!gaPool().length){ toast('奖池还是空的'); return; } candySpend(GA_TEN, '扭蛋 · 十连', 'ga', { lock: 'ga', done: function(){ gaRun(10, true); } }); });
+    g10.addEventListener('click', function(){ if (g10.getAttribute('data-arm') !== '1'){ g10.setAttribute('data-arm', '1'); tenLabel(true); setTimeout(function(){ if (g10.getAttribute('data-arm')){ g10.removeAttribute('data-arm'); tenLabel(false); } }, 3000); return; } g10.removeAttribute('data-arm'); tenLabel(false); if (!gaPool().length){ toast('奖池还是空的'); return; } gaRun(10, true); });
     gorow.appendChild(g10);
     box.appendChild(gorow);
     var feats = pool.filter(function(p){ return p.feat; });
@@ -5548,13 +5584,13 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     if (typeof gaDevPanel === 'function') gaDevPanel(box);
     if (pool.length) box.appendChild(E('p', 'ga-pool', nameOf(otherK()) + '给你准备的奖池：普通 ' + cnt[1] + ' · 稀有 ' + cnt[2] + ' · 传说 ' + cnt[3] + ' · 神话 ' + cnt[4] + '（内容保密）'));
     else if (ME){ var em = E('div', 'ga-empty'); em.appendChild(E('b', '', '你的奖池还是空的')); em.appendChild(E('p', '', '你扭的奖池，是' + nameOf(otherK()) + '给你放的；你放进去的奖品在' + nameOf(otherK()) + '的奖池里，给 ta 扭。所以等' + nameOf(otherK()) + '往你的奖池里放东西，才能扭哦。')); box.appendChild(em); }
-    var gw = E('div', 'ga-giftrow'); gw.appendChild(E('span', '', '🎁 送' + nameOf(otherK()) + '扭蛋机会：'));
+    var gw = E('div', 'ga-giftrow'); gw.appendChild(E('span', '', '🎁 送' + nameOf(otherK()) + '扭蛋机会（一次 ' + GA_PAID + ' 🍬）：'));
     [1, 3, 5, 10].forEach(function(n){
       var g = mkBtn('v2-chip', n + ' 次');
-      twoTap(g, n + ' 次', '送 ' + n + '？', function(){
-        if (needMe() || !mainRef) return; var fv = FV(), p = { gb: {} };
-        p.gb[otherK()] = fv ? fv.increment(n) : (gaBonus[otherK()] || 0) + n;
-        mainRef.set(p, { merge: true }).catch(cloudFail); toast('送出去了，' + nameOf(otherK()) + '可以多扭 ' + n + ' 次 🎰');
+      twoTap(g, n + ' 次', '花 ' + n * GA_PAID + ' 🍬？', function(){
+        if (needMe() || !mainRef) return; var o = otherK(), fv = FV(), p = { gb: {} };
+        p.gb[o] = fv ? fv.increment(n) : (gaBonus[o] || 0) + n;
+        candySpend(n * GA_PAID, '送' + nameOf(o) + ' ' + n + ' 次扭蛋', 'ga', { lock: 'gagift', main: p, done: function(){ toast('送出去了，' + nameOf(o) + '可以多扭 ' + n + ' 次 🎰'); } });
       });
       gw.appendChild(g);
     });
@@ -5685,25 +5721,53 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
       if (hi.length){ var k = res.length - 1; while (k > 0 && res[k].feat) k--; var q = hi[Math.floor(Math.random() * hi.length)]; if (q.once) q.active = false; res[k] = { p: q, ten: true }; }
     }
     gaBusy = true;
-    if (!free && !paid){ var fv0 = FV(), q0 = { gb: {} }; q0.gb[ME] = fv0 ? fv0.increment(-1) : Math.max(0, (gaBonus[ME] || 0) - 1); mainRef.set(q0, { merge: true }).catch(cloudFail); }
-    var now = Date.now(), blanks = 0;
-    res.forEach(function(x, i){
-      var ts = now + i;
-      if (x.p){
-        var p = x.p;
-        cpnCol.add({ from: p.from, e: p.e, title: p.text.slice(0, 30), note: '扭蛋扭到的 · ' + (x.feat ? '🌟限定大奖' : RARE[p.r][0]), total: 1, used: 0, exp: '', ts: ts, tone: x.feat || p.r >= 3 ? 'lemon' : p.r === 2 ? 'lav' : 'pink', src: 'gacha' }).then(function(ref){
-          drCol.add({ by: ME, ts: ts, day: gaToday(), free: free && i === 0, pid: p.id, text: p.text, e: p.e, r: p.r, cpn: ref.id, feat: !!x.feat, pity: !!(x.pity || x.guar) }).catch(cloudFail);
-        }).catch(cloudFail);
-        if (!p.active) pzCol.doc(p.id).set({ active: false }, { merge: true }).catch(cloudFail);
-      } else {
-        blanks++;
-        drCol.add({ by: ME, ts: ts, day: gaToday(), free: free && i === 0, text: '差一点点', e: '🍃', r: 0 }).catch(cloudFail);
-      }
+    var now = Date.now(), day = gaToday(), me = ME, mode = paid ? 'paid' : free ? 'free' : 'bonus', blanks = 0;
+    /* 免费那一次用固定的记录名（每人每天一个），两台设备、连点、网慢都只能成功一次 */
+    var docs = res.map(function(x, i){
+      var fid = mode === 'free' && i === 0 ? 'free_' + me + '_' + day : '';
+      if (!x.p) blanks++;
+      return { x: x, ts: now + i, free: !!fid, dref: fid ? drCol.doc(fid) : drCol.doc(), cref: x.p ? cpnCol.doc() : null };
     });
-    if (blanks && typeof candyAward === 'function') candyAward(ME, 'gacons_' + now, blanks, '扭蛋安慰糖果', 'ga');
-    var best = res.reduce(function(m, x){ var v = x.feat ? 9 : x.p ? x.p.r : 0; return v > m ? v : m; }, 0);
-    var col = best >= 9 ? '#FFD36E' : best ? RARE[best][2] : '#CFE8D8';
-    gaPlay(n, res, best, col, blanks);
+    function writeAll(tx){
+      docs.forEach(function(d){
+        var x = d.x, p = x.p;
+        if (p){
+          tx.set(d.cref, { from: p.from, e: p.e, title: p.text.slice(0, 30), note: '扭蛋扭到的 · ' + (x.feat ? '🌟限定大奖' : RARE[p.r][0]), total: 1, used: 0, exp: '', ts: d.ts, tone: x.feat || p.r >= 3 ? 'lemon' : p.r === 2 ? 'lav' : 'pink', src: 'gacha' });
+          tx.set(d.dref, { by: me, ts: d.ts, day: day, free: d.free, pid: p.id, text: p.text, e: p.e, r: p.r, cpn: d.cref.id, feat: !!x.feat, pity: !!(x.pity || x.guar) });
+          if (!p.active) tx.set(pzCol.doc(p.id), { active: false }, { merge: true });
+        } else tx.set(d.dref, { by: me, ts: d.ts, day: day, free: d.free, text: '差一点点', e: '🍃', r: 0 });
+      });
+    }
+    function gaFail(msg){ gaBusy = false; gaDirty = false; if (msg) toast(msg); renderGa(); }
+    function gaGo(){
+      if (blanks && typeof candyAward === 'function') candyAward(me, 'gacons_' + now, blanks, '扭蛋安慰糖果', 'ga');
+      var best = res.reduce(function(m, x){ var v = x.feat ? 9 : x.p ? x.p.r : 0; return v > m ? v : m; }, 0);
+      var col = best >= 9 ? '#FFD36E' : best ? RARE[best][2] : '#CFE8D8';
+      gaPlay(n, res, best, col, blanks);
+    }
+    if (mode === 'paid'){
+      candySpend(n >= 10 ? GA_TEN : GA_PAID, n >= 10 ? '扭蛋 · 十连' : '扭蛋 · 单抽', 'ga', { lock: 'ga', writes: function(tx){ writeAll(tx); }, done: gaGo })
+        .then(function(ok){ if (!ok) gaFail(''); }, function(){ gaFail(''); });
+      return;
+    }
+    if (!txOk()){ gaFail('云端还没连上，等一下再扭'); return; }
+    candyRun('ga', function(tx){
+      var ref0 = mode === 'free' ? docs[0].dref : mainRef;
+      return tx.get(ref0).then(function(sn){
+        if (mode === 'free'){ if (sn.exists) return { err: '今天的免费次数已经用过了' }; }
+        else {
+          var dd = sn.exists ? (sn.data() || {}) : {}, gb = dd.gb && typeof dd.gb === 'object' ? Math.max(0, Number(dd.gb[me]) || 0) : 0;
+          if (gb <= 0) return { err: '没有多扭的次数了' };
+          var q = { gb: {} }, fv = FV(); q.gb[me] = fv ? fv.increment(-1) : gb - 1; tx.set(mainRef, q, { merge: true });
+        }
+        writeAll(tx);
+        return { ok: true };
+      });
+    }).then(function(r){
+      if (!r){ gaFail('正在扭，稍等一下'); return; }
+      if (r.err){ gaFail(r.err); return; }
+      gaGo();
+    }, function(e){ cloudQuiet(e); gaFail('网络不太好，这次没扭成，也没用掉次数，再试一次就好'); });
   }
   /* ================= 扭蛋动画 v3：物理翻滚 · 点开胶囊 · 十连逐个开 ================= */
   var GA_TELLC = { 0: '#CFE8D8', 1: '#FFC2D4', 2: '#BFA8FF', 3: '#FFD36E', 4: '#FF5C93', 9: '#FFD36E' };
@@ -6216,11 +6280,11 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   /* ================= v2.0：🍬 糖 · 小卖部 · 🫧 回声 ================= */
   var candyCol = null, ecCol = null, CANDY = { a: 0, b: 0 }, candySeen = null, ledger = [], ledgerReady = false, awarded = {}, awardPending = {};
   var echoes = [], ecReady = false, ringHead = '', skinsOwned = [], papersOwned = { a: [], b: [] }, notePaper = '';
-  var V20_START = '2026-10-08';
+  var V20_START = '2026-10-08', STAMP_CANDY = 10;
   var EC_PICK = 15, EC_BLIND = 8, GA_PAID = 10, GA_TEN = 90;
   var PAPERS = [['grid', '方格纸', 20], ['dot', '波点纸', 20], ['kraft', '牛皮纸', 20], ['star', '星空纸', 30], ['love', '情书纸', 30], ['sakura', '樱花纸', 30], ['news', '复古报纸', 40], ['holo', '镭射纸', 52]];
   var SKINS = [['💍', '戒指', 0], ['🌸', '樱花', 18], ['💎', '钻石', 18], ['🐰', '兔兔', 18], ['⭐', '星星', 18], ['🍓', '草莓', 18], ['🦄', '独角兽', 28], ['👑', '皇冠', 28], ['🧸', '小熊', 28], ['🌙', '月亮', 28], ['🎀', '蝴蝶结', 28], ['🐱', '小猫', 28], ['🪐', '星球', 38], ['💐', '花束', 38]];
-  var EARN = [['每日签到', '1~3 颗，连签第 7 天 8 / 10 / 12 颗'], ['盖一个章', '两人各 +1'], ['贴一张纸条', '+1（每天最多 3 次）'], ['回答每日一问', '+1'], ['每日一问两人都答完', '各 +1'], ['写每周小会', '+3'], ['写故事 / 续写一章 / 接一段龙', '+2（每天最多 2 次）'], ['写 S1 档案', '+1'], ['S1 时间线加一个时刻', '+1（每天最多 2 个）'], ['完成一个心愿', '各 +3'], ['往感谢罐丢一张谢谢', '+1（每天最多 2 次）'], ['和好', '各 +3'], ['小店卖出东西', '售价全归你'], ['对方送你糖果', '看对方心情'], ['充值（转账给对方，对方确认）', '1 元 = 1 颗，买得多有折扣']];
+  var EARN = [['💍 盖一个章', '两人各 +10（撤销会退回）'], ['每日签到', '1~3 颗，一周签满再开宝箱 8 / 10 / 12 / 14 颗'], ['贴一张纸条', '+1（每天最多 3 次）'], ['回答每日一问', '+1'], ['每日一问两人都答完', '各 +1'], ['写每周小会', '+3'], ['写故事 / 续写一章 / 接一段龙', '+3（每天最多 3 次）'], ['写 S1 档案', '+1'], ['S1 时间线加一个时刻', '+1（每天最多 3 个）'], ['完成一个心愿', '各 +3'], ['往感谢罐丢一张谢谢', '+1（每天最多 2 次）'], ['和好', '各 +3'], ['小店卖出东西', '售价全归你'], ['对方送你糖果', '看对方心情'], ['充值（转账给对方，对方确认）', '1 元 = 1 颗，买得多有折扣']];
   function PAPERS_OK(p){ return !!(p && PAPERS && PAPERS.some(function(x){ return x[0] === p; })); }
   function tday(){ return ymd(new Date()); }
 
@@ -6326,6 +6390,27 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     (wishes || []).forEach(function(x){ if (x.done && x.doneDay && x.doneDay >= V20_START) candyAward(ME, 'wish_' + x.id + '_' + ME, 3, '完成心愿', 'wish'); });
     (repairs || []).forEach(function(r){ if (r.status === 'done' && (r.doneTs || 0) >= t0) candyAward(ME, 'rep_' + r.id + '_' + ME, 3, '和好', 'rep'); });
     Object.keys(s1docs || {}).forEach(function(id){ var x = s1docs[id]; if (x && x[ME] && x[ME].text && (x[ME].ts || 0) >= t0) candyAward(ME, 's1_' + id + '_' + ME, 1, '写 S1 档案', 's1'); });
+    stampTopUp(t0);
+  }
+  /* 2.1：一个章从 1 颗涨到 10 颗。以前按 1 颗发过的章，补上差的部分（每个章、每个人只补一次） */
+  var stxDone = {};
+  function stampTopUp(t0){
+    if (!txOk() || !ME || !state || !state.entries) return;
+    state.entries.forEach(function(e){
+      if (!e || !e.id || e.ts < t0) return;
+      var k = 'stx_' + e.id + '_' + ME; if (stxDone[k] || awarded[k]) return; stxDone[k] = 1;
+      var src = candyCol.doc('st_' + e.id + '_' + ME), ref = candyCol.doc(k);
+      candyRun(null, function(tx){
+        return Promise.all([tx.get(src), tx.get(ref)]).then(function(sn){
+          if (!sn[0].exists || sn[1].exists) return 0;
+          var add = STAMP_CANDY - (Number((sn[0].data() || {}).delta) || 0); if (add <= 0) return 0;
+          var inc = {}; inc[ME] = add;
+          tx.set(ref, { who: ME, delta: add, reason: '盖章补差（一个章现在是 ' + STAMP_CANDY + ' 颗）', cat: 'stamp', ts: Date.now(), day: tday() });
+          tx.set(mainRef, candyInc(inc), { merge: true });
+          return add;
+        });
+      }).then(function(n){ if (n) awarded[k] = 1; }, function(err){ delete stxDone[k]; cloudQuiet(err); });
+    });
   }
 
   /* ---------- 小卖部 ---------- */
@@ -6363,7 +6448,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     if (!box) return; box.innerHTML = '';
     box.appendChild(E('p', 'v2-intro', '糖果是我们俩的货币，1 颗 = ¥1。主要靠一起玩来赚，也可以充值。'));
     var tb = E('table', 'earn-t'); EARN.forEach(function(r){ var tr = E('tr'); tr.appendChild(E('td', '', r[0])); tr.appendChild(E('td', '', r[1])); tb.appendChild(tr); });
-    box.appendChild(tb); box.appendChild(E('p', 'v2-sub', '开业红包：每人先送 20 颗。'));
+    box.appendChild(tb); box.appendChild(E('p', 'v2-sub', '2.0 首发红包：每人 100 颗。一个章 = 10 颗 = 扭一次蛋。'));
   }
   function renderPapers(body){
     body.appendChild(E('p', 'v2-intro', '买下之后，写纸条时可以选这张纸。只有买的人能用，对方看到的就是这张纸。我有 🍬 ' + bal()));
@@ -6692,8 +6777,10 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     var f = rb.closest('.field') || rb.parentNode.parentNode;
     var nf = E('div', 'field'); nf.appendChild(E('span', 'lb', '开发者模式（在这台设备上开关，可以调扭蛋的爆率）'));
     var b = mkBtn('btn sm', ''); b.id = 'devBtn'; nf.appendChild(b);
+    var us = mkBtn('btn sm', '📊 使用统计'); us.id = 'useBtn'; us.style.marginLeft = '8px'; nf.appendChild(us);
+    us.addEventListener('click', function(){ openPage('📊 使用统计', useStats); });
     f.parentNode.insertBefore(nf, f.nextSibling);
-    function sync(){ b.textContent = devOn() ? '🛠 开发者模式：开' : '🔒 开发者模式：关'; }
+    function sync(){ b.textContent = devOn() ? '🛠 开发者模式：开' : '🔒 开发者模式：关'; us.hidden = !devOn(); }
     b.addEventListener('click', function(){
       if (devOn()){ store.set('ep_dev', '0'); sync(); renderGa(); toast('开发者模式关了'); return; }
       askPin('打开开发者模式（只在这台设备上）。', function(){ store.set('ep_dev', '1'); sync(); renderGa(); toast('🛠 开发者模式开了，去扭蛋机看看'); });
@@ -6718,6 +6805,10 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
       mainRef.set({ gaW: w }, { merge: true }).catch(cloudFail); toast('爆率改好了 🛠');
     }));
     c.appendChild(acts);
+    var gbr = E('div', 'row'); gbr.style.marginTop = '10px'; gbr.style.alignItems = 'center';
+    gbr.appendChild(E('small', '', '多扭次数：' + nameOf('a') + ' ' + (gaBonus.a || 0) + ' · ' + nameOf('b') + ' ' + (gaBonus.b || 0)));
+    var gz = mkBtn('btn sm', '清零'); twoTap(gz, '清零', '确定清零？', function(){ mainRef.set({ gb: { a: 0, b: 0 } }, { merge: true }).catch(cloudFail); toast('两个人的多扭次数都清零了'); });
+    gbr.appendChild(gz); c.appendChild(gbr);
     box.appendChild(c);
   }
 
@@ -8532,7 +8623,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     if (lastMainD) t(function(){ v2Main(lastMainD); });
     [renderShop, renderSkinShop, renderPactSec, renderCoupons, renderTickets, renderBag, renderWishes, renderAchs, renderTitles, renderCaps,
      renderQA, renderWeekly, renderNeeds, renderStatus, renderStories, renderStore, renderGa, renderEchoW, renderPin, renderActStat, renderPokeStat,
-     renderNotePapers, pactAlert, pactBadges, askAlert, mallBadges, updateNav, v2Alerts, pageRefresh, applyLooks, applyDeco, rmSync, candyScan].forEach(t);
+     renderNotePapers, pactAlert, pactBadges, askAlert, mallBadges, updateNav, v2Alerts, pageRefresh, applyLooks, applyDeco, rmSync, candyScan, awayRender].forEach(t);
   }
 
   /* ================= LoveCard 2.0 Promise · 首发仪式 & 彩蛋 ================= */
@@ -8559,6 +8650,8 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   });
   function lcNotes(body){
     var w = E('div', 'lc-notes');
+    var h21 = E('div', 'lc-hero'); h21.appendChild(E('small', '', 'UPDATE')); var b21 = E('b', ''); b21.appendChild(document.createTextNode('LoveCard 2.2 ')); b21.appendChild(E('em', '', 'Promise')); h21.appendChild(b21); h21.appendChild(E('small', '', '2026.10')); w.appendChild(h21);
+    var u21 = E('ul'); ['💍 盖一个章，两个人各 +10 颗糖果（以前按 1 颗发过的章，自动补上差的）', '📬 首页最上面多了「你不在的时候」：上次打开以后，对方给你留了什么，一眼就看到', '🗓 每周小会平时收起来，想写再点开', '🎰 扭蛋修好了：免费那一次每天真的只有一次；送对方扭蛋机会改成花糖果（一次 10 颗）', '☁️ 同步更稳：回到页面会自动重连；改动没传上去时，屏幕上方会提示', '🔧 修了「去写小会」点了没反应、认罚连点会出两张券，赚糖攻略和实际数值对齐了'].forEach(function(t){ u21.appendChild(E('li', '', t)); }); w.appendChild(u21);
     var hero = E('div', 'lc-hero'); hero.appendChild(E('small', '', 'RELEASE NOTES'));
     var b = E('b', ''); b.appendChild(document.createTextNode('LoveCard 2.0 ')); b.appendChild(E('em', '', 'Promise')); hero.appendChild(b);
     hero.appendChild(E('small', '', 'PREVIEW · 2026.10')); w.appendChild(hero);
@@ -8579,8 +8672,197 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
   $('verTag').addEventListener('click', function(){
     lcTaps++; clearTimeout(lcTapT); lcTapT = setTimeout(function(){ lcTaps = 0; }, 1500);
     if (lcTaps === 3) toast('再点两下……');
-    if (lcTaps >= 5){ lcTaps = 0; confetti(['💍', '✨']); openPage('📜 2.0 Promise', lcNotes); }
+    if (lcTaps >= 5){ lcTaps = 0; confetti(['💍', '✨']); openPage('📜 Promise 更新说明', lcNotes); }
   });
+
+  /* ================= 2.1：你不在的时候 ================= */
+  var awaySince = 0, awayMe = '', awayOff = false, awayMore = false, awayHid = 0, awaySig = '';
+  function awayKey(){ return 'ep_away_' + ME; }
+  function awayInit(){
+    if (!ME || awayMe === ME) return;
+    awayMe = ME; awayOff = false; awayMore = false; awaySig = '';
+    awaySince = Number(store.get(awayKey())) || (Date.now() - 2 * 86400000);
+  }
+  function awayMark(){ if (ME) store.set(awayKey(), String(Date.now())); }
+  document.addEventListener('visibilitychange', function(){
+    if (!ME) return;
+    if (document.hidden){ awayHid = Date.now(); awayMark(); }
+    else if (awayHid && Date.now() - awayHid > 10 * 60000){ awaySince = awayHid; awayOff = false; awayMore = false; awaySig = ''; awayRender(); }
+  });
+  window.addEventListener('pagehide', awayMark);
+  function awA(v){ return Array.isArray(v) ? v : []; }
+  function awayItems(since){
+    var o = OK(), now = Date.now(), it = [], n;
+    function add(e, t, go){ it.push([e, t, go]); }
+    function cnt(arr, f){ return awA(arr).filter(f).length; }
+    n = cnt(state.entries, function(e){ return e.by === o && e.ts > since; });
+    if (n) add('💍', '盖了 ' + n + ' 个章，你也 +' + n * STAMP_CANDY + ' 🍬', function(){ goTab('home'); });
+    n = cnt(notes, function(x){ return x.from === o && x.ts > since; });
+    if (n) add('💌', '贴了 ' + n + ' 张纸条', function(){ goTab('notes'); });
+    var rc = 0;
+    awA(notes).forEach(function(x){ awA(x.replies).forEach(function(r){ if (r && r.from === o && (Number(r.ts) || 0) > since) rc++; }); });
+    rc += cnt(threads, function(t){ return t.by === o && t.ts > since; });
+    awA(stories).forEach(function(st){ awA(st.cmts).forEach(function(c){ if (c.by === o && c.ts > since) rc++; }); });
+    if (rc) add('💬', '回复和评论了 ' + rc + ' 次', function(){ goTab('notes'); });
+    var sw = 0;
+    awA(stories).forEach(function(st){
+      if (st.from === o && st.ts > since) sw++;
+      awA(st.turns).forEach(function(t){ if (t.by === o && (t.ts || 0) > since) sw++; });
+      if (st.from === o) awA(st.chapters).forEach(function(c){ if (c.ts > since) sw++; });
+    });
+    if (sw) add('📖', '写了 ' + sw + ' 段故事', function(){ goTab('daily', 'storyH'); });
+    var q = qaOf(todayQ().day);
+    if (q[o] && !q[ME]) add('❓', '答好了今天的问题，等你来答', function(){ goTab('home', 'qaH'); });
+    n = cnt(prizes, function(p){ return p.from === o && p.to === ME && p.active && p.ts > since; });
+    if (n) add('🎰', '往你的扭蛋池里放了 ' + n + ' 个新奖品', function(){ goTab('shop', 'gaH'); });
+    var mine = {}; awA(prizes).forEach(function(p){ if (p.from === ME) mine[p.id] = 1; });
+    n = cnt(draws, function(d){ return d.by === o && d.ts > since && d.pid && mine[d.pid]; });
+    if (n) add('🎁', '扭中了你放的 ' + n + ' 个奖', function(){ goTab('shop', 'gaH'); });
+    n = cnt(echoes, function(e){ return e.by === o && !e.hidden && !e.opened && e.availAt > since && e.availAt <= now; });
+    if (n) add('🫧', '有 ' + n + ' 条回声上架了，可以去听', function(){ goTab('shop', 'ecShopH'); });
+    n = cnt(echoes, function(e){ return e.by === o && !e.hidden && e.ts > since && e.availAt > now; });
+    if (n) add('🫧', '封存了 ' + n + ' 条新回声，还没上架', function(){ goTab('shop', 'ecShopH'); });
+    n = cnt(echoes, function(e){ return e.by === ME && e.opened && e.openedTs > since; });
+    if (n) add('👂', '听到了你的 ' + n + ' 条回声', function(){ goTab('daily', 'echoH'); });
+    n = cnt(coupons, function(c){ return c.from === o && c.ts > since && ['gacha', 'ticket', 'store', 'launch'].indexOf(c.src) < 0; });
+    if (n) add('🎟️', '发给你 ' + n + ' 张券', function(){ goTab('fun', 'cpnH'); });
+    var cu = 0; awA(coupons).forEach(function(c){ if (c.from === ME) awA(c.uses).forEach(function(u){ if (u.by === o && u.k === 'use' && u.ts > since) cu++; }); });
+    if (cu) add('🎟️', '用了你的 ' + cu + ' 张券', function(){ goTab('fun', 'cpnH'); });
+    n = cnt(tickets, function(t){ return t.from === o && t.to === ME && t.ts > since; });
+    if (n) add('🚨', '给你开了 ' + n + ' 张罚单', function(){ goTab('fun', 'tkH'); });
+    n = cnt(titles, function(t){ return t.from === o && t.to === ME && t.ts > since; });
+    if (n) add('🏷', '给你颁了 ' + n + ' 个称号', function(){ goTab('fun', 'achH'); });
+    n = cnt(gifts, function(g){ return g.from === o && g.to === ME && g.ts > since; });
+    if (n) add('🎀', '送了你 ' + n + ' 份礼物', function(){ goTab('shop', 'giftH'); });
+    var cg = 0; awA(ledger).forEach(function(l){ if (l.who === ME && l.cat === 'gift' && l.delta > 0 && l.ts > since) cg += l.delta; });
+    if (cg) add('🍬', '送了你 ' + cg + ' 颗糖果', function(){ goTab('shop'); });
+    n = cnt(ledger, function(l){ return l.who === ME && l.cat === 'store' && l.delta > 0 && l.ts > since; });
+    if (n) add('🏪', '买了你小店里的 ' + n + ' 件东西', function(){ goTab('shop', 'storeH'); });
+    n = cnt(wishes, function(w){ return w.from === o && w.ts > since; });
+    if (n) add('🌈', '加了 ' + n + ' 个心愿', function(){ goTab('daily'); });
+    n = cnt(thanks, function(t){ return t.by === o && t.ts > since; });
+    if (n) add('🫙', '往感谢罐里丢了 ' + n + ' 张谢谢（月初才能开）', function(){ goTab('home'); });
+    return it;
+  }
+  function awayRender(){
+    var box = $('awayBox'); if (!box) return;
+    awayInit();
+    if (!ME || awayOff || (typeof rmOn === 'function' && rmOn())){ box.hidden = true; awaySig = ''; return; }
+    var items = awayItems(awaySince);
+    var sig = items.map(function(x){ return x[1]; }).join('|') + (awayMore ? '+' : '');
+    if (sig === awaySig) return; awaySig = sig;
+    box.innerHTML = '';
+    if (!items.length){ box.hidden = true; return; }
+    var hd = E('div', 'aw-hd'), tt = E('div', 'aw-tt');
+    tt.appendChild(E('b', '', '📬 你不在的时候'));
+    tt.appendChild(E('small', '', '从 ' + fmtTime(awaySince) + ' 到现在，' + nameOf(OK()) + '……'));
+    hd.appendChild(tt);
+    hd.appendChild(v2Btn('aw-x', '知道啦', function(){ awayOff = true; awaySince = Date.now(); awayMark(); box.hidden = true; awaySig = ''; }));
+    box.appendChild(hd);
+    var lim = awayMore ? items.length : Math.min(items.length, 4);
+    items.slice(0, lim).forEach(function(x){
+      var r = v2Btn('aw-row', '', function(){ x[2](); });
+      r.appendChild(E('span', 'aw-e', x[0])); r.appendChild(E('span', 'aw-t', x[1])); r.appendChild(E('span', 'aw-a', '›'));
+      box.appendChild(r);
+    });
+    if (items.length > lim) box.appendChild(v2Btn('aw-more', '还有 ' + (items.length - lim) + ' 件 ▾', function(){ awayMore = true; awayRender(); }));
+    box.hidden = false;
+  }
+  setInterval(function(){ if (!document.hidden) { try { awayRender(); v21Hello(); } catch(e){ cloudQuiet(e); } } }, 2500);
+  function v21Hello(){
+    if (!ME || store.get('ep_v22') || (typeof rmOn === 'function' && rmOn()) || !$('lcLaunch').hidden) return;
+    store.set('ep_v22', '1');
+    toast('💍 2.2：盖一个章，两个人各 +' + STAMP_CANDY + ' 颗糖');
+  }
+
+  /* ================= 2.1：使用统计（开发者模式） ================= */
+  var USE_T0 = '2026-10-13';
+  function useStats(body){
+    var t0 = Date.parse(USE_T0 + 'T00:00:00'), K = ['a', 'b'];
+    function per(f){ var r = { a: 0, b: 0 }; K.forEach(function(k){ r[k] = f(k); }); return r; }
+    function c(arr, f){ return awA(arr).filter(f).length; }
+    var rows = [
+      ['💍 盖章', per(function(k){ return c(state.entries, function(e){ return e.by === k && e.ts >= t0; }); })],
+      ['💌 纸条', per(function(k){ return c(notes, function(x){ return x.from === k && x.ts >= t0; }); })],
+      ['💬 回复 / 评论', per(function(k){ var n = c(threads, function(t){ return t.by === k && t.ts >= t0; }); awA(notes).forEach(function(x){ awA(x.replies).forEach(function(r){ if (r && r.from === k && (Number(r.ts) || 0) >= t0) n++; }); }); awA(stories).forEach(function(st){ awA(st.cmts).forEach(function(m){ if (m.by === k && m.ts >= t0) n++; }); }); return n; })],
+      ['🤔 确认一下', per(function(k){ var n = 0; awA(notes).forEach(function(x){ var m = x.asks && typeof x.asks === 'object' ? x.asks : {}; Object.keys(m).forEach(function(id){ var a = m[id] || {}; if (a.by === k && (Number(a.ts) || 0) >= t0) n++; }); }); return n; })],
+      ['❓ 每日一问', per(function(k){ return c(qaDocs, function(d){ return d.day >= USE_T0 && d[k]; }); })],
+      ['🗓 每周小会', per(function(k){ return Object.keys(weeks || {}).filter(function(w){ var x = weeks[w] && weeks[w][k]; return x && (Number(x.ts) || 0) >= t0; }).length; })],
+      ['📖 故事 / 接龙 / 续章', per(function(k){ var n = 0; awA(stories).forEach(function(st){ if (st.from === k && st.ts >= t0) n++; awA(st.turns).forEach(function(t){ if (t.by === k && (t.ts || 0) >= t0) n++; }); if (st.from === k) awA(st.chapters).forEach(function(ch){ if (ch.ts >= t0) n++; }); }); return n; })],
+      ['🫧 写回声', per(function(k){ return c(echoes, function(e){ return e.by === k && e.ts >= t0; }); })],
+      ['👂 听回声', per(function(k){ return c(echoes, function(e){ return e.by !== k && e.opened && e.openedTs >= t0; }); })],
+      ['🎰 扭蛋', per(function(k){ return c(draws, function(d){ return d.by === k && d.ts >= t0; }); })],
+      ['🎁 往对方奖池放奖品', per(function(k){ return c(prizes, function(p){ return p.from === k && p.ts >= t0; }); })],
+      ['🎟️ 发券', per(function(k){ return c(coupons, function(x){ return x.from === k && x.ts >= t0 && ['gacha', 'ticket', 'store', 'launch'].indexOf(x.src) < 0; }); })],
+      ['🎟️ 用券', per(function(k){ var n = 0; awA(coupons).forEach(function(x){ awA(x.uses).forEach(function(u){ if (u.by === k && u.k === 'use' && u.ts >= t0) n++; }); }); return n; })],
+      ['🚨 开罚单', per(function(k){ return c(tickets, function(t){ return t.from === k && t.ts >= t0; }); })],
+      ['🏷 颁称号', per(function(k){ return c(titles, function(t){ return t.from === k && t.ts >= t0; }); })],
+      ['🎀 送礼物', per(function(k){ return c(gifts, function(g){ return g.from === k && g.ts >= t0; }); })],
+      ['🍬 送糖果', per(function(k){ return c(ledger, function(l){ return l.who === k && l.cat === 'gift' && l.delta < 0 && l.ts >= t0 && /^送给/.test(l.reason); }); })],
+      ['🛍 花糖买东西', per(function(k){ return c(ledger, function(l){ return l.who === k && l.delta < 0 && l.ts >= t0; }); })],
+      ['📅 签到', per(function(k){ return c(checkins, function(x){ return x.who === k && !x.week && !x.fill && x.day >= USE_T0; }); })],
+      ['🫙 感谢罐', per(function(k){ return c(thanks, function(t){ return t.by === k && t.ts >= t0; }); })],
+      ['🌈 心愿', per(function(k){ return c(wishes, function(w){ return w.from === k && w.ts >= t0; }); })],
+      ['📜 约定', per(function(k){ return c(pacts, function(p){ return p.by === k && p.ts >= t0; }); })],
+      ['💬 开场白投句', per(function(k){ return c(drops, function(d){ return d.from === k && d.ts >= t0; }); })]
+    ];
+    body.appendChild(E('p', 'v2-intro', '从 2.0 上线（10 月 13 日）到现在，每个功能两个人各用了几次。按这台设备已经加载的记录算，很老的记录可能没算进去。'));
+    var tb = E('table', 'use-t'), hr = E('tr');
+    hr.appendChild(E('th', '', '功能')); hr.appendChild(E('th', '', nameOf('a'))); hr.appendChild(E('th', '', nameOf('b'))); tb.appendChild(hr);
+    rows.sort(function(x, y){ return (y[1].a + y[1].b) - (x[1].a + x[1].b); });
+    rows.forEach(function(r){
+      var tr = E('tr'), z = !(r[1].a + r[1].b);
+      tr.appendChild(E('td', z ? 'z' : '', r[0])); tr.appendChild(E('td', z ? 'z' : '', String(r[1].a))); tr.appendChild(E('td', z ? 'z' : '', String(r[1].b)));
+      tb.appendChild(tr);
+    });
+    body.appendChild(tb);
+    body.appendChild(E('p', 'v2-sub', '灰色的是这段时间一次都没用过的。用一两周再看，就知道哪些该留、哪些可以合并或者下架。'));
+  }
+
+
+  /* ================= 2.2：同步守护 ================= */
+  var syncWarnOn = false, syncTries = 0, netHid = 0, liveT = null, cloudLive = false;
+  function realFS(){ return !!(FS && typeof FS.waitForPendingWrites === 'function' && typeof FS.disableNetwork === 'function'); }
+  function cloudKick(){ if (!realFS()) return Promise.resolve(); return FS.disableNetwork().then(function(){ return FS.enableNetwork(); }).catch(cloudQuiet); }
+  function syncBar(msg, btn, fn){
+    var b = $('syncBar'); if (!b) return;
+    if (!msg){ b.hidden = true; b.innerHTML = ''; return; }
+    b.innerHTML = ''; b.appendChild(E('span', '', msg));
+    if (btn) b.appendChild(v2Btn('sync-b', btn, fn));
+    b.hidden = false;
+  }
+  function syncOk(){ if (syncWarnOn){ syncWarnOn = false; syncTries = 0; syncBar(''); toast('☁️ 同步上了'); } }
+  function syncWarn(what){
+    syncWarnOn = true;
+    if (syncTries >= 1) syncBar('☁️ 还是没连上云端。' + (what ? what + '先存在这台手机里，' : '') + '对方暂时看不到', '刷新页面', function(){ location.reload(); });
+    else syncBar('☁️ 云端好像断开了。' + (what ? what + '还没传上去，' : '') + '对方暂时看不到', '重新连接', function(){ syncTries++; syncBar('☁️ 正在重新连接……'); cloudKick().then(function(){ watchSync(what, 6000); }); });
+  }
+  /* 写完之后等它真的传到云端；超过时间还没传上去就提示 */
+  function watchSync(what, ms){
+    if (!realFS()) return;
+    var done = false, t = setTimeout(function(){ if (!done) syncWarn(what); }, ms || 9000);
+    FS.waitForPendingWrites().then(function(){ done = true; clearTimeout(t); syncOk(); }, function(){});
+  }
+  function syncWatchMain(){
+    if (!realFS() || !mainRef) return;
+    try {
+      mainRef.onSnapshot({ includeMetadataChanges: true }, function(snap){
+        cloudLive = !snap.metadata.fromCache;
+        clearTimeout(liveT);
+        if (cloudLive){ syncOk(); return; }
+        liveT = setTimeout(function(){ if (!cloudLive && !document.hidden) syncWarn(''); }, 15000);
+      }, cloudQuiet);
+    } catch(e){ cloudQuiet(e); }
+  }
+  document.addEventListener('visibilitychange', function(){
+    if (!realFS()) return;
+    if (document.hidden){ netHid = Date.now(); return; }
+    /* 手机锁屏或切到别的 app 一阵子再回来，连接经常已经断了但不报错：主动重连一次 */
+    if (netHid && Date.now() - netHid > 30000) cloudKick().then(function(){ watchSync('', 12000); });
+  });
+  window.addEventListener('online', function(){ cloudKick(); });
+  window.addEventListener('pageshow', function(ev){ if (ev && ev.persisted) location.reload(); });
+
   /* ---------- cloud sync ---------- */
   (function(){
     if (!KEY){ showLock('这张卡需要用专属链接打开 🔒'); return; }
@@ -8588,6 +8870,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
     try {
       firebase.initializeApp(FB);
       FS = firebase.firestore();
+      try { FS.settings({ experimentalAutoDetectLongPolling: true, merge: true }); } catch(e){}
       try { FS.enablePersistence({ synchronizeTabs: true }).catch(function(){}); } catch(e){}
       mainRef = FS.collection('cards').doc(KEY);
       entriesCol = mainRef.collection('entries');
@@ -8597,6 +8880,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
       capCol = mainRef.collection('capsules');
       var initMain = false, initEntries = false, notesReady = false, entriesReady = false, qaReady = false;
 
+      syncWatchMain();
       mainRef.onSnapshot(function(snap){
         var d = snap.exists ? snap.data() : {};
         var m = normalizeMain(d);
@@ -8640,7 +8924,7 @@ body[class*="th-"] .shop-tabs,body[class*="th-"] .mall-nav,body[class*="th-"] .m
         state.entries = normEntries(arr);
         cache(); render();
         if (partnerStamp){
-          toast((partnerStamp === 'a' ? A() : B()) + '刚刚盖了一个章，现在 ' + state.entries.length + ' / 100 💗');
+          toast((partnerStamp === 'a' ? A() : B()) + '刚刚盖了一个章，现在 ' + state.entries.length + ' / 100 💗 你也 +' + STAMP_CANDY + ' 🍬');
           hearts(window.innerWidth / 2, 120);
         }
       }, cloudFail);
